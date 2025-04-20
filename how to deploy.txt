@@ -1,0 +1,47 @@
+how to deploy spacetime
+
+
+setup your coolify stuff with docker compose
+i had smth like this
+
+version: '3.9'
+services:
+  spacetime:
+    healthcheck:
+      test: curl --fail https://spacetime.[YOUR DOMAIN].com:3000/v1/ping || exit 1
+    user: root
+    image: 'clockworklabs/spacetime:latest'
+    command: 'start --data-dir=/stdb/data'
+    ports:
+      - '3000:3000'
+    volumes:
+      -
+        type: bind
+        source: /root/links/spacetime/modules
+        target: /modules
+        isDirectory: true
+      - 'spacetime_data:/etc/spacetimedb'
+      - /stdb
+    restart: always
+volumes:
+  spacetime_data: null
+
+  
+then go to the service that it created
+name it smth like "spacetime service"
+
+go to the service and for the app domain enter "https://spacetime.[YOUR DOMAIN].com:3000"
+
+then it works !
+
+spacetime server add --url http://myserver.com fried
+
+spacetime publish project1 --server fried
+
+spacetime call project1 SayHello --server fried
+
+spacetime logs project1 --server fried
+
+
+
+i also linked up a filebrowser resource using the same bind volume but thats not needed
