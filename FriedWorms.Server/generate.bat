@@ -1,0 +1,1 @@
+spacetime generate --lang csharp --out-dir ../FriedWorms.Client/autogen
