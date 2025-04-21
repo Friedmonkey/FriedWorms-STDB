@@ -105,7 +105,11 @@ partial class Program
         CameraPosX = MathF.Round(CameraPosX);
         CameraPosY = MathF.Round(CameraPosY);
 
-        HandlePhysics(elapsedTime);
+        //do 10 physics steps
+        for (int i = 0; i < 10; i++)
+        { 
+            HandlePhysics(elapsedTime);
+        }
     }
 
     static void CreateMap()
