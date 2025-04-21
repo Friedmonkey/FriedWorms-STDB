@@ -158,11 +158,11 @@ partial class Program
         int windowWidth = GetScreenWidth();
         int windowHeight = GetScreenHeight();
 
-        float baseScale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
-        float totalScale = baseScale * Zoom;
+        // Use same zoom logic as drawing code!
+        float zoom = (windowWidth / (float)TARGET_WIDTH) * Zoom;
 
-        int scaledWidth = (int)(TARGET_WIDTH * totalScale);
-        int scaledHeight = (int)(TARGET_HEIGHT * totalScale);
+        int scaledWidth = (int)(TARGET_WIDTH * zoom);
+        int scaledHeight = (int)(TARGET_HEIGHT * zoom);
 
         int offsetX = (windowWidth - scaledWidth) / 2;
         int offsetY = (windowHeight - scaledHeight) / 2;
@@ -173,8 +173,8 @@ partial class Program
             return false; // Mouse is outside the game area :(
 
         // Convert to render texture space
-        float renderMouseX = (mouse.X - offsetX) / totalScale;
-        float renderMouseY = (mouse.Y - offsetY) / totalScale;
+        float renderMouseX = (mouse.X - offsetX) / zoom;
+        float renderMouseY = (mouse.Y - offsetY) / zoom;
 
         // Convert to world space
         float worldX = renderMouseX + CameraPosX;
@@ -183,6 +183,7 @@ partial class Program
 
         return true;
     }
+
 
 
 
