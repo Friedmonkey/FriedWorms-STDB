@@ -39,7 +39,9 @@ partial class Program
             int windowHeight = GetScreenHeight();
             float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
 
-            float zoom = scale * Zoom; // this replaces the previous scale logic
+            //float zoom = scale * Zoom; // this replaces the previous scale logic
+            float zoom = (windowWidth / (float)TARGET_WIDTH) * Zoom;
+
             // Calculate new width and height of the scaled texture
             int scaledWidth = (int)(TARGET_WIDTH * zoom);
             int scaledHeight = (int)(TARGET_HEIGHT * zoom);
