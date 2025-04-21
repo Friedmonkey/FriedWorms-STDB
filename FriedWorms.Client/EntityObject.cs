@@ -23,11 +23,15 @@ public static partial class Program
     public static void DrawDummy(Entity entity)
     {
         // Inside entity.Draw
-        float screenX = (entity.Position.X - CameraPosX) * Zoom;
-        float screenY = (entity.Position.Y - CameraPosY) * Zoom;
+        float screenX = (entity.Position.X - CameraPosX);
+        float screenY = (entity.Position.Y - CameraPosY);
 
         // Now draw it
-        Raylib.DrawRectangle((int)screenX, (int)screenY, (int)MathF.Ceiling(Zoom), (int)MathF.Ceiling(Zoom), Color.Red);
+        //Raylib.DrawRectangle((int)screenX, (int)screenY, (int)MathF.Ceiling(Zoom), (int)MathF.Ceiling(Zoom), Color.Red);
+
+        DrawPixel((int)screenX, (int)screenY, Color.Red);
+        //Raylib.DrawRectangle((int)MathF.Round(screenX), (int)MathF.Round(screenY), 1, 1, Color.Red);
+
     }
     static readonly List<Vector2> triangle = new()
     {
@@ -55,7 +59,7 @@ public static partial class Program
         switch ((EntityModelType)entity.ModelData)
         {
             case EntityModelType.None:
-                DrawScaledPixel((int)entity.Position.X, (int)entity.Position.Y, Color.Magenta);
+                DrawPixel((int)entity.Position.X, (int)entity.Position.Y, Color.Magenta);
                 break;
             case EntityModelType.Worm:
                 DrawWorm(entity);

@@ -15,7 +15,7 @@ partial class Program
     static float CameraPosX = 0.0f;
     static float CameraPosY = 0.0f;
 
-    static float Zoom = 2.0f;
+    static float Zoom = 1.0f;
 
     static void Load()
     {
@@ -26,8 +26,8 @@ partial class Program
         MapWidth = config.MapWidth;
         MapHeight = config.MapHeight;
 
-        CameraPosY = (MapHeight - TARGET_HEIGHT / Zoom) / 2;
-        CameraPosX = (MapWidth - TARGET_WIDTH / Zoom) / 4;
+        CameraPosY = (MapHeight - TARGET_HEIGHT) / 2;
+        CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
 
         Map = new byte[MapWidth * MapHeight];
         CreateMap();
@@ -85,19 +85,26 @@ partial class Program
             CameraPosY -= mapScrollSpeed * elapsedTime;
         if (IsKeyDown(KeyboardKey.Down))
             CameraPosY += mapScrollSpeed * elapsedTime;
-
         if (IsKeyDown(KeyboardKey.Left))
             CameraPosX -= mapScrollSpeed * elapsedTime;
         if (IsKeyDown(KeyboardKey.Right))
             CameraPosX += mapScrollSpeed * elapsedTime;
 
-        float viewWidth = TARGET_WIDTH / Zoom;
-        float viewHeight = TARGET_HEIGHT / Zoom;
+        // Adjust view size based on zoom
+        float viewWidth = TARGET_WIDTH;
+        float viewHeight = TARGET_HEIGHT;
 
+        // Clamp camera to world bounds
         if (CameraPosX < 0) CameraPosX = 0;
-        if (CameraPosX >= MapWidth - viewWidth) CameraPosX = MapWidth - viewWidth;
+        if (CameraPosX > MapWidth - viewWidth) CameraPosX = MapWidth - viewWidth;
         if (CameraPosY < 0) CameraPosY = 0;
-        if (CameraPosY >= MapHeight - viewHeight) CameraPosY = MapHeight - viewHeight;
+        if (CameraPosY > MapHeight - viewHeight) CameraPosY = MapHeight - viewHeight;
+
+        // Optional: pixel-perfect rounding
+        CameraPosX = MathF.Round(CameraPosX);
+        CameraPosY = MathF.Round(CameraPosY);
+
+
 
     }
 
@@ -133,30 +140,32 @@ partial class Program
         int windowWidth = GetScreenWidth();
         int windowHeight = GetScreenHeight();
 
-        float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
+        float baseScale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
+        float totalScale = baseScale * Zoom;
 
-        int scaledWidth = (int)(TARGET_WIDTH * scale);
-        int scaledHeight = (int)(TARGET_HEIGHT * scale);
+        int scaledWidth = (int)(TARGET_WIDTH * totalScale);
+        int scaledHeight = (int)(TARGET_HEIGHT * totalScale);
 
         int offsetX = (windowWidth - scaledWidth) / 2;
         int offsetY = (windowHeight - scaledHeight) / 2;
 
-        // Check if mouse is inside the render texture part
+        // Check if mouse is inside the game render area
         if (mouse.X < offsetX || mouse.X > offsetX + scaledWidth ||
             mouse.Y < offsetY || mouse.Y > offsetY + scaledHeight)
             return false; // Mouse is outside the game area :(
 
         // Convert to render texture space
-        float renderMouseX = (mouse.X - offsetX) / scale;
-        float renderMouseY = (mouse.Y - offsetY) / scale;
+        float renderMouseX = (mouse.X - offsetX) / totalScale;
+        float renderMouseY = (mouse.Y - offsetY) / totalScale;
 
         // Convert to world space
-        float worldX = renderMouseX / Zoom + CameraPosX;
-        float worldY = renderMouseY / Zoom + CameraPosY;
+        float worldX = renderMouseX + CameraPosX;
+        float worldY = renderMouseY + CameraPosY;
         output = new Vector2(worldX, worldY);
 
         return true;
     }
+
 
 
     // Taken from Perlin Noise Video https://youtu.be/6-0UaeJBumA

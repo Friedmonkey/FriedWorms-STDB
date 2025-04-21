@@ -34,26 +34,35 @@ partial class Program
             Display();
             EndTextureMode();
 
+            // Use your custom Zoom value here
             int windowWidth = GetScreenWidth();
             int windowHeight = GetScreenHeight();
-
             float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
 
-            int scaledWidth = (int)(TARGET_WIDTH * scale);
-            int scaledHeight = (int)(TARGET_HEIGHT * scale);
+            float zoom = scale * Zoom; // this replaces the previous scale logic
+            // Calculate new width and height of the scaled texture
+            int scaledWidth = (int)(TARGET_WIDTH * zoom);
+            int scaledHeight = (int)(TARGET_HEIGHT * zoom);
 
+            // Offset so the zoom centers in the middle of the screen
             int offsetX = (windowWidth - scaledWidth) / 2;
             int offsetY = (windowHeight - scaledHeight) / 2;
-            
             BeginDrawing();
             ClearBackground(Color.RayWhite);
-            DrawTexturePro(renderTexture.Texture,
-                new Rectangle(0, 0, TARGET_WIDTH, -TARGET_HEIGHT), // Flip Y
-                new Rectangle(offsetX, offsetY, scaledWidth, scaledHeight),
-                new Vector2(0, 0),
+
+
+            // Draw the render texture scaled from center using your zoom
+            DrawTexturePro(
+                renderTexture.Texture,
+                new Rectangle(0, 0, TARGET_WIDTH, -TARGET_HEIGHT), // Source (flipped Y)
+                new Rectangle(offsetX, offsetY, scaledWidth, scaledHeight), // Destination
+                new Vector2(0, 0), // Origin
                 0,
-                Color.White);
+                Color.White
+            );
+
             EndDrawing();
+
         }
 
         UnloadRenderTexture(renderTexture);

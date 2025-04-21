@@ -13,16 +13,16 @@ partial class Program
 {
     static void Display()
     {
-        int screenWidthInTiles = (int)MathF.Ceiling(TARGET_WIDTH / Zoom);
-        int screenHeightInTiles = (int)MathF.Ceiling(TARGET_HEIGHT / Zoom);
+        //int screenWidthInTiles = (int)MathF.Ceiling(TARGET_WIDTH / Zoom);
+        //int screenHeightInTiles = (int)MathF.Ceiling(TARGET_HEIGHT / Zoom);
 
 
-        for (int x = 0; x < screenWidthInTiles; x++)
+        for (int x = 0; x < TARGET_WIDTH; x++)
         {
             int mapX = x + (int)CameraPosX;
             if (mapX >= MapWidth) continue;
 
-            for (int y = 0; y < screenHeightInTiles; y++)
+            for (int y = 0; y < TARGET_HEIGHT; y++)
             {
                 int mapY = y + (int)CameraPosY;
                 if (mapY >= MapHeight) continue;
@@ -32,10 +32,10 @@ partial class Program
                 switch (Map[index])
                 {
                     case 0:
-                        DrawScaledPixel(x, y, Color.SkyBlue);
+                        DrawPixel(x, y, Color.SkyBlue);
                         break;
                     case 1:
-                        DrawScaledPixel(x, y, Color.DarkGreen);
+                        DrawPixel(x, y, Color.DarkGreen);
                         break;
                 }
             }
@@ -47,20 +47,20 @@ partial class Program
         }
 
     }
-    static void DrawScaledPixel(int x, int y, Color color)
-    {
-        int px = (int)(x * Zoom);
-        int py = (int)(y * Zoom);
-        int size = (int)MathF.Ceiling(Zoom);
+    //static void DrawScaledPixel(int x, int y, Color color)
+    //{
+    //    int px = (int)(x * Zoom);
+    //    int py = (int)(y * Zoom);
+    //    int size = (int)MathF.Ceiling(Zoom);
 
-        for (int dx = 0; dx < size; dx++)
-        {
-            for (int dy = 0; dy < size; dy++)
-            {
-                DrawPixel(px + dx, py + dy, color);
-            }
-        }
-    }
+    //    for (int dx = 0; dx < size; dx++)
+    //    {
+    //        for (int dy = 0; dy < size; dy++)
+    //        {
+    //            DrawPixel(px + dx, py + dy, color);
+    //        }
+    //    }
+    //}
     static void DrawWireFrameModelStaticSize(
     List<Vector2> modelCoords,
     float x, float y,
@@ -93,8 +93,8 @@ partial class Program
             float worldY = rotatedY + y;
 
             // Convert world → screen (zoom affects position, not size)
-            float screenX = (worldX - CameraPosX) * Zoom;
-            float screenY = (worldY - CameraPosY) * Zoom;
+            float screenX = (worldX - CameraPosX);
+            float screenY = (worldY - CameraPosY);
 
             transformed.Add(new Vector2(screenX, screenY));
         }
@@ -141,8 +141,8 @@ partial class Program
             float worldY = rotatedY + y;
 
             // Convert world → screen (Zoom + CameraPos)
-            float screenX = (worldX - CameraPosX) * Zoom;
-            float screenY = (worldY - CameraPosY) * Zoom;
+            float screenX = (worldX - CameraPosX);
+            float screenY = (worldY - CameraPosY);
 
             transformed.Add(new Vector2(screenX, screenY));
         }
