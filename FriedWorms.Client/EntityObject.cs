@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Numerics;
+using System.Runtime.Intrinsics;
 
 namespace FriedWorms.Client;
 
@@ -22,37 +23,24 @@ public static partial class Program
 {
     public static void DrawDummy(Entity entity)
     {
-        // Inside entity.Draw
-        float screenX = (entity.Position.X - CameraPosX);
-        float screenY = (entity.Position.Y - CameraPosY);
+        //// Inside entity.Draw
+        //float screenX = (entity.Position.X - CameraPosX);
+        //float screenY = (entity.Position.Y - CameraPosY);
 
-        // Now draw it
-        //Raylib.DrawRectangle((int)screenX, (int)screenY, (int)MathF.Ceiling(Zoom), (int)MathF.Ceiling(Zoom), Color.Red);
+        //// Now draw it
+        ////Raylib.DrawRectangle((int)screenX, (int)screenY, (int)MathF.Ceiling(Zoom), (int)MathF.Ceiling(Zoom), Color.Red);
 
-        DrawPixel((int)screenX, (int)screenY, Color.Red);
-        //Raylib.DrawRectangle((int)MathF.Round(screenX), (int)MathF.Round(screenY), 1, 1, Color.Red);
-
+        //DrawPixel((int)screenX, (int)screenY, Color.Red);
+        ////Raylib.DrawRectangle((int)MathF.Round(screenX), (int)MathF.Round(screenY), 1, 1, Color.Red);
+        DrawWireFrameModel(dummy, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.Red);
     }
-    static readonly List<Vector2> triangle = new()
-    {
-        new Vector2(0, -10),
-        new Vector2(10, 10),
-        new Vector2(-10, 10),
-    };
-    static readonly List<Vector2> shape = new()
-    {
-        new Vector2(-4, -4),
-        new Vector2(4, -4),
-        new Vector2(4, 4),
-        new Vector2(-4, 4),
-    };
     public static void DrawWorm(Entity entity)
     {
         DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.Red);
     }
     public static void DrawMissile(Entity entity)
     {
-        DrawWireFrameModel(triangle, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.Red);
+        DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.Red);
     }
     public static void Draw(this Entity entity)
     {

@@ -19,6 +19,7 @@ partial class Program
 
     static void Load()
     {
+        LoadModels();
         var config = gameManager.Conn.Db.Config.Id.Find(0);
         if (config is null)
             throw new Exception("Unable to get config from server!");
