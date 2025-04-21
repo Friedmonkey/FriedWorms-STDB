@@ -15,7 +15,7 @@ partial class Program
     static float CameraPosX = 0.0f;
     static float CameraPosY = 0.0f;
 
-    static float Zoom = 1.0f;
+    static float Zoom = 1.5f;
 
     static void Load()
     {
@@ -90,22 +90,40 @@ partial class Program
         if (IsKeyDown(KeyboardKey.Right))
             CameraPosX += mapScrollSpeed * elapsedTime;
 
-        // Adjust view size based on zoom
+
+
+        //int windowWidth = GetScreenWidth();
+        //int windowHeight = GetScreenHeight();
+        //float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
+        //
+        //float zoom = scale * Zoom; // this replaces the previous scale logic
+        //                           // Calculate new width and height of the scaled texture
+        //int scaledWidth = (int)(TARGET_WIDTH / zoom);
+        //int scaledHeight = (int)(TARGET_HEIGHT / zoom);
+
+
+
+        //// Offset so the zoom centers in the middle of the screen
+        //int offsetX = (windowWidth - scaledWidth) / 2;
+        //int offsetY = (windowHeight - scaledHeight) / 2;
+
+
+
         float viewWidth = TARGET_WIDTH;
         float viewHeight = TARGET_HEIGHT;
 
-        // Clamp camera to world bounds
+        //float viewWidth = scaledWidth;
+        //float viewHeight = scaledHeight;
+
+        //clamp camera
         if (CameraPosX < 0) CameraPosX = 0;
         if (CameraPosX > MapWidth - viewWidth) CameraPosX = MapWidth - viewWidth;
         if (CameraPosY < 0) CameraPosY = 0;
         if (CameraPosY > MapHeight - viewHeight) CameraPosY = MapHeight - viewHeight;
 
-        // Optional: pixel-perfect rounding
+        // fix pixels sometimes disapearing because of floating point stuff
         CameraPosX = MathF.Round(CameraPosX);
         CameraPosY = MathF.Round(CameraPosY);
-
-
-
     }
 
     static void CreateMap()
