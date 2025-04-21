@@ -6,45 +6,42 @@ using SpacetimeDB.ClientApi;
 using FriedWorms.Client;
 
 
-namespace FriedWorms;
+namespace FriedWorms.Client;
 
-internal class Program
+partial class Program
 {
     static GameManager gameManager;
     static void Main(string[] args)
     {
         gameManager = new GameManager();
         //gameManager.OnConnected += MainGame;
+        string serverUrl = string.Empty;
 
-        Console.WriteLine("Enter the server url:");
-        string serverUrl = Console.ReadLine() ?? string.Empty;
+        if (File.Exists("../../../../server.txt"))
+            serverUrl = File.ReadAllText("../../../../server.txt");
+        else
+        { 
+            Console.WriteLine("Enter the server url:");
+            serverUrl = Console.ReadLine() ?? string.Empty;
+        }
         gameManager.Start(serverUrl);
 
         var cancellationTokenSource = new CancellationTokenSource();
         // Spawn a thread to call process updates and process commands
         var thread = new Thread(() => ProcessThread(gameManager.Conn, cancellationTokenSource.Token));
         thread.Start();
+
+        Console.WriteLine("Connecting...");
+        while (!gameManager.IsConnected)
+        {
+            Thread.Sleep(100);
+        }
         // Handles the main game
         MainGame();
         // This signals the ProcessThread to stop
         cancellationTokenSource.Cancel();
         thread.Join();
         CloseWindow();
-    }
-    static void MainGame()
-    {
-        InitWindow(800, 480, "Hello World");
-
-        while (!WindowShouldClose())
-        {
-            gameManager.Conn.FrameTick();
-            BeginDrawing();
-            ClearBackground(Color.White);
-
-            DrawText("Hello, world!", 12, 12, 20, Color.Black);
-
-            EndDrawing();
-        }
     }
     static void ProcessThread(DbConnection conn, CancellationToken ct)
     {

@@ -12,11 +12,12 @@ public class GameManager
     public event Action? OnConnected;
     public event Action? OnSubscriptionApplied;
 
+
     public DbConnection Conn { get; private set; }
     public Identity LocalIdentity { get; private set; }
 
     private string? AuthToken = null;
-
+    private bool connected = false;
 
     public void Start(string server)
     {
@@ -46,6 +47,7 @@ public class GameManager
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
             .SubscribeToAllTables();
+        connected = true;
     }
     void HandleConnectError(Exception e)
     {
@@ -68,10 +70,11 @@ public class GameManager
         OnSubscriptionApplied?.Invoke();
     }
 
-    public bool IsConnected => Conn?.IsActive ?? false;
+    public bool IsConnected => (Conn?.IsActive ?? false) && connected;
     public void Disconnect()
     {
         Conn.Disconnect();
         Conn = null;
+        connected = false;
     }
 }
