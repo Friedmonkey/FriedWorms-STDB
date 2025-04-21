@@ -61,5 +61,100 @@ partial class Program
             }
         }
     }
+    static void DrawWireFrameModelStaticSize(
+    List<Vector2> modelCoords,
+    float x, float y,
+    float rotation = 0.0f,
+    float scale = 1.0f,
+    Color color = default)
+    {
+        if (color.Equals(default(Color)))
+            color = Color.White;
+
+        int vertexCount = modelCoords.Count;
+        if (vertexCount < 2) return;
+
+        List<Vector2> transformed = new(vertexCount);
+
+        for (int i = 0; i < vertexCount; i++)
+        {
+            var pt = modelCoords[i];
+
+            // Rotate
+            float rotatedX = pt.X * MathF.Cos(rotation) - pt.Y * MathF.Sin(rotation);
+            float rotatedY = pt.X * MathF.Sin(rotation) + pt.Y * MathF.Cos(rotation);
+
+            // Scale (local shape size only, not zoom!)
+            rotatedX *= scale;
+            rotatedY *= scale;
+
+            // Offset from world position
+            float worldX = rotatedX + x;
+            float worldY = rotatedY + y;
+
+            // Convert world → screen (zoom affects position, not size)
+            float screenX = (worldX - CameraPosX) * Zoom;
+            float screenY = (worldY - CameraPosY) * Zoom;
+
+            transformed.Add(new Vector2(screenX, screenY));
+        }
+
+        for (int i = 0; i < vertexCount; i++)
+        {
+            Vector2 p1 = transformed[i];
+            Vector2 p2 = transformed[(i + 1) % vertexCount];
+
+            // Screen pixels — don’t scale line length with zoom
+            DrawLine((int)p1.X, (int)p1.Y, (int)p2.X, (int)p2.Y, color);
+        }
+    }
+
+    static void DrawWireFrameModel(
+    List<Vector2> modelCoords,
+    float x, float y,
+    float rotation = 0.0f,
+    float scale = 1.0f,
+    Color color = default)
+    {
+        if (color.Equals(default(Color)))
+            color = Color.White;
+
+        int vertexCount = modelCoords.Count;
+        if (vertexCount < 2) return;
+
+        // Transform each point
+        List<Vector2> transformed = new(vertexCount);
+        for (int i = 0; i < vertexCount; i++)
+        {
+            var pt = modelCoords[i];
+
+            // Rotate
+            float rotatedX = pt.X * MathF.Cos(rotation) - pt.Y * MathF.Sin(rotation);
+            float rotatedY = pt.X * MathF.Sin(rotation) + pt.Y * MathF.Cos(rotation);
+
+            // Scale
+            rotatedX *= scale;
+            rotatedY *= scale;
+
+            // Translate to world position
+            float worldX = rotatedX + x;
+            float worldY = rotatedY + y;
+
+            // Convert world → screen (Zoom + CameraPos)
+            float screenX = (worldX - CameraPosX) * Zoom;
+            float screenY = (worldY - CameraPosY) * Zoom;
+
+            transformed.Add(new Vector2(screenX, screenY));
+        }
+
+        // Draw lines
+        for (int i = 0; i < vertexCount; i++)
+        {
+            Vector2 p1 = transformed[i];
+            Vector2 p2 = transformed[(i + 1) % vertexCount]; // loop back around
+
+            DrawLine((int)p1.X, (int)p1.Y, (int)p2.X, (int)p2.Y, color);
+        }
+    }
 
 }

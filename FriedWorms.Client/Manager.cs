@@ -33,12 +33,12 @@ partial class Program
         CreateMap();
 
         Entities = gameManager.Conn.Db.Entities.Iter().ToList();
-        //if (Entities.Count == 0)
-        //    Entities.Add(new Entity()
-        //    {
-        //        ModelData = (uint)EntityModelType.Dummy,
-        //        Position = new(MapWidth/2, MapHeight/2)
-        //    });
+        if (Entities.Count == 0)
+            Entities.Add(new Entity()
+            {
+                ModelData = (uint)EntityModelType.Dummy,
+                Position = new(MapWidth / 2, MapHeight / 2)
+            });
     }
     static void Tick()
     { 
@@ -47,11 +47,28 @@ partial class Program
         if (IsKeyPressed(KeyboardKey.M))
             CreateMap();
 
-        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out var world))
+        if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out var world))
+        {
+            Entities.Add(new Entity()
+            {
+                ModelData = (uint)EntityModelType.Missile,
+                Position = new(world.X, world.Y),
+            });
+        }
+        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out world))
         {
             Entities.Add(new Entity()
             {
                 ModelData = (uint)EntityModelType.Dummy,
+                Position = new(world.X, world.Y),
+            });
+        }
+
+        if (IsMouseButtonPressed(MouseButton.Middle) && TryGetMouseWorldPos(out world))
+        {
+            Entities.Add(new Entity()
+            {
+                ModelData = (uint)EntityModelType.Worm,
                 Position = new(world.X, world.Y),
             });
         }
