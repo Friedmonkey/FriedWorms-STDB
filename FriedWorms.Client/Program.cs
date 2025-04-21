@@ -32,7 +32,7 @@ partial class Program
         thread.Start();
 
         Console.WriteLine("Connecting...");
-        while (!gameManager.IsConnected)
+        while (!(gameManager.IsConnected && gameManager.Subscribed))
         {
             Thread.Sleep(100);
         }

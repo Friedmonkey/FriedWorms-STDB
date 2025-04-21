@@ -18,6 +18,7 @@ public class GameManager
 
     private string? AuthToken = null;
     private bool connected = false;
+    public bool Subscribed { get; private set; }
 
     public void Start(string server)
     {
@@ -47,6 +48,9 @@ public class GameManager
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
             .SubscribeToAllTables();
+            //.Subscribe([
+            //    "SELECT * FROM Config"
+            //]);
         connected = true;
     }
     void HandleConnectError(Exception e)
@@ -68,6 +72,7 @@ public class GameManager
     {
         Console.WriteLine("Subscription applied!");
         OnSubscriptionApplied?.Invoke();
+        Subscribed = true;
     }
 
     public bool IsConnected => (Conn?.IsActive ?? false) && connected;
@@ -76,5 +81,6 @@ public class GameManager
         Conn.Disconnect();
         Conn = null;
         connected = false;
+        Subscribed = false;
     }
 }
