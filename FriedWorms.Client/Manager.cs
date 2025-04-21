@@ -13,6 +13,8 @@ partial class Program
     static float CameraPosX = 0.0f;
     static float CameraPosY = 0.0f;
 
+    static float Zoom = 1.0f;
+
     static void Load(Config config)
     {
         MapWidth = config.MapWidth;
@@ -26,11 +28,13 @@ partial class Program
             CreateMap();
 
         float elapsedTime = GetFrameTime();
-        var mousePos = GetMousePosition();
-        var screenX = GetScreenWidth();
-        var screenY = GetScreenHeight();
 
-        float mapScrollSpeed = 400.0f;
+        if (IsKeyDown(KeyboardKey.Equal)) Zoom += 0.1f;
+        if (IsKeyDown(KeyboardKey.Minus)) Zoom -= 0.1f;
+        Zoom = Math.Clamp(Zoom, 1.0f, 5.0f);
+
+
+        float mapScrollSpeed = 400.0f / Zoom;
 
         if (IsKeyDown(KeyboardKey.Up))
             CameraPosY -= mapScrollSpeed * elapsedTime;
@@ -42,10 +46,14 @@ partial class Program
         if (IsKeyDown(KeyboardKey.Right))
             CameraPosX += mapScrollSpeed * elapsedTime;
 
+        float viewWidth = TARGET_WIDTH / Zoom;
+        float viewHeight = TARGET_HEIGHT / Zoom;
+
         if (CameraPosX < 0) CameraPosX = 0;
-        if (CameraPosX >= MapWidth - TARGET_WIDTH) CameraPosX = MapWidth - TARGET_WIDTH;
+        if (CameraPosX >= MapWidth - viewWidth) CameraPosX = MapWidth - viewWidth;
         if (CameraPosY < 0) CameraPosY = 0;
-        if (CameraPosY >= MapHeight - TARGET_HEIGHT) CameraPosY = MapHeight - TARGET_HEIGHT;
+        if (CameraPosY >= MapHeight - viewHeight) CameraPosY = MapHeight - viewHeight;
+
     }
 
     static void CreateMap()
@@ -59,9 +67,9 @@ partial class Program
         NoiseSeed[0] = 0.5f;
         PerlinNoise1D(MapWidth, NoiseSeed, 8, 2.0f, ref Surface);
 
-        for (int x = 1; x < MapWidth; x++)
+        for (int x = 0; x < MapWidth; x++)
         {
-            for (int y = 1; y < MapHeight; y++)
+            for (int y = 0; y < MapHeight; y++)
             {
                 if (y >= Surface[x] * MapHeight)
                     Map[y * MapWidth + x] = 1;

@@ -13,27 +13,49 @@ partial class Program
 {
     static void Display()
     {
-        for (int x = 0; x < MapWidth; x++)
-        {
-            for (int y = 0; y < MapHeight; y++)
-            {
-                int mapX = x + (int)CameraPosX;
-                int mapY = y + (int)CameraPosY;
+        int screenWidthInTiles = (int)MathF.Ceiling(TARGET_WIDTH / Zoom);
+        int screenHeightInTiles = (int)MathF.Ceiling(TARGET_HEIGHT / Zoom);
 
-                if (!(mapX >= 0 && mapX < MapWidth && mapY >= 0 && mapY < MapHeight))
-                    continue;
+
+        for (int x = 0; x < screenWidthInTiles; x++)
+        {
+            int mapX = x + (int)CameraPosX;
+            if (mapX >= MapWidth) continue;
+
+            for (int y = 0; y < screenHeightInTiles; y++)
+            {
+                int mapY = y + (int)CameraPosY;
+                if (mapY >= MapHeight) continue;
 
                 int index = mapY * MapWidth + mapX;
+
                 switch (Map[index])
                 {
                     case 0:
-                        DrawPixel(x, y, Color.SkyBlue);
+                        DrawScaledPixel(x, y, Zoom, Color.SkyBlue);
                         break;
                     case 1:
-                        DrawPixel(x, y, Color.DarkGreen);
+                        DrawScaledPixel(x, y, Zoom, Color.DarkGreen);
                         break;
                 }
             }
         }
+
+
     }
+    static void DrawScaledPixel(int x, int y, float scale, Color color)
+    {
+        int px = (int)(x * scale);
+        int py = (int)(y * scale);
+        int size = (int)MathF.Ceiling(scale);
+
+        for (int dx = 0; dx < size; dx++)
+        {
+            for (int dy = 0; dy < size; dy++)
+            {
+                DrawPixel(px + dx, py + dy, color);
+            }
+        }
+    }
+
 }
