@@ -15,121 +15,58 @@ public class GameManager
     public DbConnection Conn { get; private set; }
     public Identity LocalIdentity { get; private set; }
 
-    //public static GameManager Instance => _instance ?? throw new Exception("Call the constructor first to load this");
-    //private static GameManager? _instance;
-
     private string? AuthToken = null;
 
 
-    //public void Start(string server)
-    //{
-    //    var builder = DbConnection.Builder()
-    //        .OnConnect(HandleConnect)
-    //        .OnConnectError(HandleConnectError)
-    //        .OnDisconnect(HandleDisconnect)
-    //        .WithUri(server)
-    //        .WithModuleName("worms");
-
-    //    if (AuthToken != null)
-    //    {
-    //        builder = builder.WithToken(AuthToken);
-    //    }
-
-    //    Conn = builder.Build();
-    //}
-
-    //void HandleConnect(DbConnection _conn, Identity identity, string token)
-    //{
-    //    Console.WriteLine("Connected!");
-    //    AuthToken = token;
-    //    LocalIdentity = identity;
-
-    //    OnConnected?.Invoke();
-
-    //    Conn.SubscriptionBuilder()
-    //        .OnApplied(HandleSubscriptionApplied)
-    //        .SubscribeToAllTables();
-    //}
-    //void HandleConnectError(Exception e)
-    //{
-    //    Console.WriteLine("Connection error:" + e.Message);
-    //}
-    //void HandleDisconnect(DbConnection conn, Exception? e)
-    //{
-    //    Console.WriteLine($"Disconnected.");
-    //    if (e != null)
-    //    { 
-    //        Console.ForegroundColor = ConsoleColor.Red;
-    //        Console.WriteLine(e.Message);
-    //        Console.ResetColor();
-    //    }
-    //}
-
-    //void HandleSubscriptionApplied(SubscriptionEventContext context)
-    //{
-    //    Console.WriteLine("Subscription applied!");
-    //    OnSubscriptionApplied?.Invoke();
-    //}
-
     public void Start(string server)
     {
-        // In order to build a connection to SpacetimeDB we need to register
-        // our callbacks and specify a SpacetimeDB server URI and module name.
         var builder = DbConnection.Builder()
             .OnConnect(HandleConnect)
             .OnConnectError(HandleConnectError)
             .OnDisconnect(HandleDisconnect)
             .WithUri(server)
-            .WithToken("")
             .WithModuleName("worms");
 
-        //// If the user has a SpacetimeDB auth token stored in the Unity PlayerPrefs,
-        //// we can use it to authenticate the connection.
-        //if (AuthToken != "")
-        //{
-        //    builder = builder.WithToken(AuthToken);
-        //}
+        if (AuthToken != null)
+        {
+            builder = builder.WithToken(AuthToken);
+        }
 
-        // Building the connection will establish a connection to the SpacetimeDB
-        // server.
         Conn = builder.Build();
     }
 
-    // Called when we connect to SpacetimeDB and receive our client identity
     void HandleConnect(DbConnection _conn, Identity identity, string token)
     {
-        Console.WriteLine("Connected.");
+        Console.WriteLine("Connected!");
         AuthToken = token;
         LocalIdentity = identity;
 
         OnConnected?.Invoke();
 
-        // Request all tables
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
             .SubscribeToAllTables();
     }
-
-    void HandleConnectError(Exception ex)
+    void HandleConnectError(Exception e)
     {
-        Console.WriteLine($"Connection error: {ex}");
+        Console.WriteLine("Connection error:" + e.Message);
     }
-
-    void HandleDisconnect(DbConnection _conn, Exception? ex)
+    void HandleDisconnect(DbConnection conn, Exception? e)
     {
-        Console.WriteLine("Disconnected.");
-        if (ex != null)
+        Console.WriteLine($"Disconnected.");
+        if (e != null)
         {
-            Console.WriteLine(ex);
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(e.Message);
+            Console.ResetColor();
         }
     }
 
-    private void HandleSubscriptionApplied(SubscriptionEventContext ctx)
+    void HandleSubscriptionApplied(SubscriptionEventContext context)
     {
         Console.WriteLine("Subscription applied!");
         OnSubscriptionApplied?.Invoke();
     }
-
 
     public bool IsConnected => Conn?.IsActive ?? false;
     public void Disconnect()
