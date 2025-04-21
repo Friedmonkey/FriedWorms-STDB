@@ -23,9 +23,7 @@ namespace SpacetimeDB.Types
             AddTable(Config = new(conn));
             AddTable(Entities = new(conn));
             AddTable(LoggedOutPlayers = new(conn));
-            AddTable(Missiles = new(conn));
             AddTable(Players = new(conn));
-            AddTable(Worms = new(conn));
         }
     }
 

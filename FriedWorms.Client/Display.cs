@@ -32,22 +32,26 @@ partial class Program
                 switch (Map[index])
                 {
                     case 0:
-                        DrawScaledPixel(x, y, Zoom, Color.SkyBlue);
+                        DrawScaledPixel(x, y, Color.SkyBlue);
                         break;
                     case 1:
-                        DrawScaledPixel(x, y, Zoom, Color.DarkGreen);
+                        DrawScaledPixel(x, y, Color.DarkGreen);
                         break;
                 }
             }
         }
 
+        foreach (var entity in Entities)
+        {
+            entity.Draw();
+        }
 
     }
-    static void DrawScaledPixel(int x, int y, float scale, Color color)
+    static void DrawScaledPixel(int x, int y, Color color)
     {
-        int px = (int)(x * scale);
-        int py = (int)(y * scale);
-        int size = (int)MathF.Ceiling(scale);
+        int px = (int)(x * Zoom);
+        int py = (int)(y * Zoom);
+        int size = (int)MathF.Ceiling(Zoom);
 
         for (int dx = 0; dx < size; dx++)
         {

@@ -17,10 +17,7 @@ partial class Program
     const int TARGET_HEIGHT = 160*2;
     static void MainGame()
     {
-        var config = gameManager.Conn.Db.Config.Id.Find(0);
-        if (config is null)
-            throw new Exception("Unable to get config from server!");
-        Load(config);
+        Load();
 
         SetConfigFlags(ConfigFlags.ResizableWindow);
         InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");

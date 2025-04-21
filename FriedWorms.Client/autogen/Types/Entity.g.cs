@@ -15,30 +15,51 @@ namespace SpacetimeDB.Types
     {
         [DataMember(Name = "Id")]
         public uint Id;
+        [DataMember(Name = "PlayerId")]
+        public uint PlayerId;
         [DataMember(Name = "Position")]
         public DbVector2 Position;
         [DataMember(Name = "Velocity")]
         public DbVector2 Velocity;
+        [DataMember(Name = "Acceleration")]
+        public DbVector2 Acceleration;
         [DataMember(Name = "Rotation")]
         public float Rotation;
+        [DataMember(Name = "Radius")]
+        public float Radius;
+        [DataMember(Name = "Stable")]
+        public bool Stable;
+        [DataMember(Name = "ModelData")]
+        public uint ModelData;
 
         public Entity(
             uint Id,
+            uint PlayerId,
             DbVector2 Position,
             DbVector2 Velocity,
-            float Rotation
+            DbVector2 Acceleration,
+            float Rotation,
+            float Radius,
+            bool Stable,
+            uint ModelData
         )
         {
             this.Id = Id;
+            this.PlayerId = PlayerId;
             this.Position = Position;
             this.Velocity = Velocity;
+            this.Acceleration = Acceleration;
             this.Rotation = Rotation;
+            this.Radius = Radius;
+            this.Stable = Stable;
+            this.ModelData = ModelData;
         }
 
         public Entity()
         {
             this.Position = new();
             this.Velocity = new();
+            this.Acceleration = new();
         }
     }
 }

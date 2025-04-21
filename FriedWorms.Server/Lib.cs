@@ -30,29 +30,19 @@ public static partial class Module
     {
         [PrimaryKey, AutoInc]
         public uint Id;
+
+        [SpacetimeDB.Index.BTree]
+        public uint PlayerId;
+
         public DbVector2 Position;
         public DbVector2 Velocity;
+        public DbVector2 Acceleration;
         public float Rotation;
-    }
 
-    [Table(Name = "Worms", Public = true)]
-    public partial struct Worm
-    {
-        [PrimaryKey, AutoInc]
-        public uint Id;
+        public float Radius;
+        public bool Stable;
 
-        [SpacetimeDB.Index.BTree]
-        public uint PlayerId;
-    }
-
-    [Table(Name = "Missiles", Public = true)]
-    public partial struct Missile
-    {
-        [PrimaryKey, AutoInc]
-        public uint Id;
-
-        [SpacetimeDB.Index.BTree]
-        public uint PlayerId;
+        public uint ModelData;
     }
 
     [Table(Name = "Players", Public = true)]

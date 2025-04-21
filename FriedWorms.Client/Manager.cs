@@ -1,11 +1,13 @@
 ﻿using Raylib_cs;
 using SpacetimeDB.Types;
+using System.Numerics;
 using static Raylib_cs.Raylib;
 
 namespace FriedWorms.Client;
 
 partial class Program
 {
+    static List<Entity> Entities = new List<Entity>();
     static byte[] Map = new byte[0];
     static int MapWidth = 0;
     static int MapHeight = 0;
@@ -13,21 +15,47 @@ partial class Program
     static float CameraPosX = 0.0f;
     static float CameraPosY = 0.0f;
 
-    static float Zoom = 1.0f;
+    static float Zoom = 2.0f;
 
-    static void Load(Config config)
+    static void Load()
     {
+        var config = gameManager.Conn.Db.Config.Id.Find(0);
+        if (config is null)
+            throw new Exception("Unable to get config from server!");
+
         MapWidth = config.MapWidth;
         MapHeight = config.MapHeight;
+
+        CameraPosY = (MapHeight - TARGET_HEIGHT / Zoom) / 2;
+        CameraPosX = (MapWidth - TARGET_WIDTH / Zoom) / 4;
+
         Map = new byte[MapWidth * MapHeight];
         CreateMap();
+
+        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
+        //if (Entities.Count == 0)
+        //    Entities.Add(new Entity()
+        //    {
+        //        ModelData = (uint)EntityModelType.Dummy,
+        //        Position = new(MapWidth/2, MapHeight/2)
+        //    });
     }
     static void Tick()
     { 
+        float elapsedTime = GetFrameTime();
+
         if (IsKeyPressed(KeyboardKey.M))
             CreateMap();
 
-        float elapsedTime = GetFrameTime();
+        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out var world))
+        {
+            Entities.Add(new Entity()
+            {
+                ModelData = (uint)EntityModelType.Dummy,
+                Position = new(world.X, world.Y),
+            });
+        }
+
 
         if (IsKeyDown(KeyboardKey.Equal)) Zoom += 0.1f;
         if (IsKeyDown(KeyboardKey.Minus)) Zoom -= 0.1f;
@@ -78,6 +106,41 @@ partial class Program
             }
         }
     }
+
+    static bool TryGetMouseWorldPos(out Vector2 output)
+    {
+        output = Vector2.Zero;
+
+        Vector2 mouse = GetMousePosition();
+
+        int windowWidth = GetScreenWidth();
+        int windowHeight = GetScreenHeight();
+
+        float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
+
+        int scaledWidth = (int)(TARGET_WIDTH * scale);
+        int scaledHeight = (int)(TARGET_HEIGHT * scale);
+
+        int offsetX = (windowWidth - scaledWidth) / 2;
+        int offsetY = (windowHeight - scaledHeight) / 2;
+
+        // Check if mouse is inside the render texture part
+        if (mouse.X < offsetX || mouse.X > offsetX + scaledWidth ||
+            mouse.Y < offsetY || mouse.Y > offsetY + scaledHeight)
+            return false; // Mouse is outside the game area :(
+
+        // Convert to render texture space
+        float renderMouseX = (mouse.X - offsetX) / scale;
+        float renderMouseY = (mouse.Y - offsetY) / scale;
+
+        // Convert to world space
+        float worldX = renderMouseX / Zoom + CameraPosX;
+        float worldY = renderMouseY / Zoom + CameraPosY;
+        output = new Vector2(worldX, worldY);
+
+        return true;
+    }
+
 
     // Taken from Perlin Noise Video https://youtu.be/6-0UaeJBumA
     static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)
