@@ -39,6 +39,7 @@ partial class Program
         //    {
         //        ModelData = (uint)EntityModelType.Dummy,
         //        Position = new(MapWidth / 2, MapHeight / 2)
+        //        Radius = 4.0f
         //    });
     }
     static void Tick()
@@ -54,6 +55,7 @@ partial class Program
             {
                 ModelData = (uint)EntityModelType.Missile,
                 Position = new(world.X, world.Y),
+                Radius = 4.0f
             });
         }
         if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out world))
@@ -62,6 +64,7 @@ partial class Program
             {
                 ModelData = (uint)EntityModelType.Worm,
                 Position = new(world.X, world.Y),
+                Radius = 4.0f
             });
         }
 
@@ -71,6 +74,7 @@ partial class Program
             {
                 ModelData = (uint)EntityModelType.Dummy,
                 Position = new(world.X, world.Y),
+                Radius = 4.0f
             });
         }
 

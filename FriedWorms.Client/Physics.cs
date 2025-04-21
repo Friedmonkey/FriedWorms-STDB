@@ -52,11 +52,12 @@ public partial class Program
                 }
 
 
+                float magVelocity = MathF.Sqrt(entity.Velocity.X * entity.Velocity.X + entity.Velocity.Y * entity.Velocity.Y);
+                float magResponse = MathF.Sqrt(responseX*responseX + responseY*responseY);
+
                 if (collison)
                 {
                     entity.Stable = true;
-                    //float magVelocity = MathF.Sqrt(entity.Velocity.X * entity.Velocity.X + entity.Velocity.Y * entity.Velocity.Y);
-                    float magResponse = MathF.Sqrt(responseX*responseX + responseY*responseY);
 
                     float dot = entity.Velocity.X * (responseX / magResponse) + entity.Velocity.Y * (responseY / magResponse);
                     entity.Velocity.X = (-2.0f * dot * (responseX / magResponse) + entity.Velocity.X);
@@ -67,6 +68,8 @@ public partial class Program
                 {   
                     entity.Position = new(potentialX, potentialY);
                 }
+
+                if (magVelocity < 0.1f) entity.Stable = true;
             }
 
         }
