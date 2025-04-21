@@ -34,12 +34,12 @@ partial class Program
         CreateMap();
 
         Entities = gameManager.Conn.Db.Entities.Iter().ToList();
-        if (Entities.Count == 0)
-            Entities.Add(new Entity()
-            {
-                ModelData = (uint)EntityModelType.Dummy,
-                Position = new(MapWidth / 2, MapHeight / 2)
-            });
+        //if (Entities.Count == 0)
+        //    Entities.Add(new Entity()
+        //    {
+        //        ModelData = (uint)EntityModelType.Dummy,
+        //        Position = new(MapWidth / 2, MapHeight / 2)
+        //    });
     }
     static void Tick()
     { 
@@ -91,33 +91,12 @@ partial class Program
         if (IsKeyDown(KeyboardKey.Right))
             CameraPosX += mapScrollSpeed * elapsedTime;
 
-
-
-        //int windowWidth = GetScreenWidth();
-        //int windowHeight = GetScreenHeight();
-        //float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
-        //
-        //float zoom = scale * Zoom; // this replaces the previous scale logic
-        //                           // Calculate new width and height of the scaled texture
-        //int scaledWidth = (int)(TARGET_WIDTH / zoom);
-        //int scaledHeight = (int)(TARGET_HEIGHT / zoom);
-
-
-
-        //// Offset so the zoom centers in the middle of the screen
-        //int offsetX = (windowWidth - scaledWidth) / 2;
-        //int offsetY = (windowHeight - scaledHeight) / 2;
-
-
-
         float viewWidth = TARGET_WIDTH;
         float viewHeight = TARGET_HEIGHT;
 
-        //float viewWidth = scaledWidth;
-        //float viewHeight = scaledHeight;
 
         //clamp camera
-        if (CameraPosX < 0) CameraPosX = 0;
+        if (CameraPosX < 0) CameraPosX = 0; //remove this line to make terrain inf going left somehow
         if (CameraPosX > MapWidth - viewWidth) CameraPosX = MapWidth - viewWidth;
         if (CameraPosY < 0) CameraPosY = 0;
         if (CameraPosY > MapHeight - viewHeight) CameraPosY = MapHeight - viewHeight;
@@ -125,6 +104,8 @@ partial class Program
         // fix pixels sometimes disapearing because of floating point stuff
         CameraPosX = MathF.Round(CameraPosX);
         CameraPosY = MathF.Round(CameraPosY);
+
+        HandlePhysics(elapsedTime);
     }
 
     static void CreateMap()

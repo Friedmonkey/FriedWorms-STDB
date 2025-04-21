@@ -23,15 +23,15 @@ public static partial class Program
 {
     public static void DrawDummy(Entity entity)
     {
-        DrawWireFrameModel(dummy, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.White);
+        DrawWireFrameModel(dummy, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.White);
     }
     public static void DrawWorm(Entity entity)
     {
-        DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.Red);
+        DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X    ), 1.0f, Color.Red);
     }
     public static void DrawMissile(Entity entity)
     {
-        DrawWireFrameModel(missile, entity.Position.X, entity.Position.Y, entity.Rotation, 1.0f, Color.Red);
+        DrawWireFrameModel(missile, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X  ), 1.0f, Color.Red);
     }
     public static void Draw(this Entity entity)
     {
