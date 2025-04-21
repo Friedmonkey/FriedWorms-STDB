@@ -60,7 +60,7 @@ partial class Program
         {
             Entities.Add(new Entity()
             {
-                ModelData = (uint)EntityModelType.Dummy,
+                ModelData = (uint)EntityModelType.Worm,
                 Position = new(world.X, world.Y),
             });
         }
@@ -69,7 +69,7 @@ partial class Program
         {
             Entities.Add(new Entity()
             {
-                ModelData = (uint)EntityModelType.Worm,
+                ModelData = (uint)EntityModelType.Dummy,
                 Position = new(world.X, world.Y),
             });
         }
