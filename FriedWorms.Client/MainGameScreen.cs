@@ -11,8 +11,10 @@ namespace FriedWorms.Client;
 
 partial class Program
 {
-    const int TARGET_WIDTH = 1280;
-    const int TARGET_HEIGHT = 720;
+    //const int TARGET_WIDTH = 1280;
+    //const int TARGET_HEIGHT = 720;
+    const int TARGET_WIDTH = 256*2;
+    const int TARGET_HEIGHT = 160*2;
     static void MainGame()
     {
         var config = gameManager.Conn.Db.Config.Id.Find(0);
@@ -21,7 +23,7 @@ partial class Program
         Load(config);
 
         SetConfigFlags(ConfigFlags.ResizableWindow);
-        InitWindow(800, 480, "Hello World");
+        InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");
         SetTargetFPS(60);
 
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
