@@ -7,7 +7,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace FriedWorms.Client;
 
-public class GameManager
+public class NetworkManager
 {
     public event Action? OnConnected;
     public event Action? OnSubscriptionApplied;

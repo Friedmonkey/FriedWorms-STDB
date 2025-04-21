@@ -9,7 +9,8 @@ public static partial class Module
         [PrimaryKey]
         public uint Id;
 
-        public ulong WorldSize;
+        public int MapWidth;
+        public int MapHeight;
     }
 
     [SpacetimeDB.Type]
@@ -73,7 +74,8 @@ public static partial class Module
         Log.Info("Initializing...");
         ctx.Db.Config.Insert(new Config() 
         {
-            WorldSize = 20
+            MapWidth = 1024,
+            MapHeight = 512
         });
     }
 

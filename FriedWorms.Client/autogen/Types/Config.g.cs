@@ -15,16 +15,20 @@ namespace SpacetimeDB.Types
     {
         [DataMember(Name = "Id")]
         public uint Id;
-        [DataMember(Name = "WorldSize")]
-        public ulong WorldSize;
+        [DataMember(Name = "MapWidth")]
+        public int MapWidth;
+        [DataMember(Name = "MapHeight")]
+        public int MapHeight;
 
         public Config(
             uint Id,
-            ulong WorldSize
+            int MapWidth,
+            int MapHeight
         )
         {
             this.Id = Id;
-            this.WorldSize = WorldSize;
+            this.MapWidth = MapWidth;
+            this.MapHeight = MapHeight;
         }
 
         public Config()

@@ -10,10 +10,10 @@ namespace FriedWorms.Client;
 
 partial class Program
 {
-    static GameManager gameManager;
+    static NetworkManager gameManager;
     static void Main(string[] args)
     {
-        gameManager = new GameManager();
+        gameManager = new NetworkManager();
         //gameManager.OnConnected += MainGame;
         string serverUrl = string.Empty;
 
