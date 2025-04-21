@@ -15,7 +15,7 @@ partial class Program
     static float CameraPosX = 0.0f;
     static float CameraPosY = 0.0f;
 
-    static float Zoom = 1.5f;
+    static float Zoom = 1.0f;
 
     static void Load()
     {
@@ -76,10 +76,10 @@ partial class Program
 
         if (IsKeyDown(KeyboardKey.Equal)) Zoom += 0.1f;
         if (IsKeyDown(KeyboardKey.Minus)) Zoom -= 0.1f;
-        Zoom = Math.Clamp(Zoom, 1.0f, 5.0f);
+        Zoom = Math.Clamp(Zoom, 1.0f, 3.0f);
 
 
-        float mapScrollSpeed = 400.0f / Zoom;
+        float mapScrollSpeed = 300.0f / Zoom;
 
         if (IsKeyDown(KeyboardKey.Up))
             CameraPosY -= mapScrollSpeed * elapsedTime;

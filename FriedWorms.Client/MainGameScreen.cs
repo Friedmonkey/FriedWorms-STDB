@@ -13,14 +13,14 @@ partial class Program
 {
     //const int TARGET_WIDTH = 1280;
     //const int TARGET_HEIGHT = 720;
-    const int TARGET_WIDTH = 256*2;
-    const int TARGET_HEIGHT = 160*2;
+    const int TARGET_WIDTH = 256;
+    const int TARGET_HEIGHT = 160;
     static void MainGame()
     {
         Load();
 
         SetConfigFlags(ConfigFlags.ResizableWindow);
-        InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");
+        InitWindow(TARGET_WIDTH*4, TARGET_HEIGHT*4, "Hello World");
         SetTargetFPS(60);
 
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
