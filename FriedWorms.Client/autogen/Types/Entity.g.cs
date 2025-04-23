@@ -29,6 +29,12 @@ namespace SpacetimeDB.Types
         public float Radius;
         [DataMember(Name = "Stable")]
         public bool Stable;
+        [DataMember(Name = "Friction")]
+        public float Friction;
+        [DataMember(Name = "MaxBounceCount")]
+        public int MaxBounceCount;
+        [DataMember(Name = "Dead")]
+        public bool Dead;
         [DataMember(Name = "ModelData")]
         public uint ModelData;
 
@@ -41,6 +47,9 @@ namespace SpacetimeDB.Types
             float Rotation,
             float Radius,
             bool Stable,
+            float Friction,
+            int MaxBounceCount,
+            bool Dead,
             uint ModelData
         )
         {
@@ -52,6 +61,9 @@ namespace SpacetimeDB.Types
             this.Rotation = Rotation;
             this.Radius = Radius;
             this.Stable = Stable;
+            this.Friction = Friction;
+            this.MaxBounceCount = MaxBounceCount;
+            this.Dead = Dead;
             this.ModelData = ModelData;
         }
 

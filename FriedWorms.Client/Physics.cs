@@ -33,7 +33,7 @@ public partial class Program
             float responseY = 0F;
             bool collison = false;
 
-            for (float radius = (angle - 3.14159f / 2.0f); radius < angle + 3.14159f / 2; radius += 3.14159f / 10.0f)
+            for (float radius = (angle - MathF.PI / 2.0f); radius < angle + MathF.PI / 2; radius += MathF.PI / 10.0f)
             {
                 float testPosX = (entity.Radius) * MathF.Cos(radius) + potentialX;
                 float testPosY = (entity.Radius) * MathF.Sin(radius) + potentialY;

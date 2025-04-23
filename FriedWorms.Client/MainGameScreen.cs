@@ -21,6 +21,7 @@ partial class Program
     const int TARGET_WIDTH = 384;
     const int TARGET_HEIGHT = 240;
     const int OverlayScale = 4;
+    const int UiScale = 4;
     static void MainGame()
     {
         Load();
@@ -31,101 +32,66 @@ partial class Program
 
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
         RenderTexture2D overlayRenderTexture = LoadRenderTexture(TARGET_WIDTH*OverlayScale, TARGET_HEIGHT* OverlayScale);
+        RenderTexture2D UIRenderTexture = LoadRenderTexture(TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
 
         while (!WindowShouldClose())
         {
-            Tick();
-            BeginTextureMode(renderTexture);
+            int windowWidth = GetScreenWidth();
+            int windowHeight = GetScreenHeight();
 
+            Tick();
+
+            BeginTextureMode(renderTexture);
             ClearBackground(Color.White);
             Display();
             EndTextureMode();
 
-
             BeginTextureMode(overlayRenderTexture);
-            ClearBackground(new Color(0,0,0,0));
-            foreach (var entity in Entities.Where(e=>e.ModelData == (uint)EntityModelType.Dummy))
-            {
-                float angle = MathF.Atan2(entity.Velocity.Y, entity.Velocity.X);
-
-                var elapsedTime = GetFrameTime();
-
-                float potentialX = entity.Position.X + entity.Velocity.X * elapsedTime;
-                float potentialY = entity.Position.Y + entity.Velocity.Y * elapsedTime;
-
-                for (float radius = (angle - 3.14159f / 2.0f); radius < angle + 3.14159f / 2; radius += 3.14159f / 10.0f)
-                {
-                    float testPosX = (entity.Radius) * MathF.Cos(radius) + potentialX;
-                    float testPosY = (entity.Radius) * MathF.Sin(radius) + potentialY;
-
-                    // Constrain to test within map boundary
-                    if (testPosX >= MapWidth) testPosX = MapWidth - 1;
-                    if (testPosY >= MapHeight) testPosY = MapHeight - 1;
-                    if (testPosX < 0) testPosX = 0;
-                    if (testPosY < 0) testPosY = 0;
-
-                    int newX = (int)Math.Round((testPosX * OverlayScale) - (CameraPosX * OverlayScale));
-                    int newY = (int)Math.Round((testPosY * OverlayScale) - (CameraPosY * OverlayScale));
-
-                    DrawPixel(newX, newY, Color.Red);
-                }
-            }
+            ClearBackground(new Color(0, 0, 0, 0));
+            Overlay();
             EndTextureMode();
 
-            // Use your custom Zoom value here
-            int windowWidth = GetScreenWidth();
-            int windowHeight = GetScreenHeight();
-            float scale = Math.Min(windowWidth / (float)TARGET_WIDTH, windowHeight / (float)TARGET_HEIGHT);
+            BeginTextureMode(UIRenderTexture);
+            ClearBackground(new Color(0, 0, 0, 0));
+            RenderUI();
+            EndTextureMode();
 
-            //float zoom = scale * Zoom; // this replaces the previous scale logic
-            float zoom = (windowWidth / (float)TARGET_WIDTH) * Zoom;
-
-            // Calculate new width and height of the scaled texture
-            int scaledWidth = (int)(TARGET_WIDTH * zoom);
-            int scaledHeight = (int)(TARGET_HEIGHT * zoom);
-
-            // Offset so the zoom centers in the middle of the screen
-            int offsetX = (windowWidth - scaledWidth) / 2;
-            int offsetY = (windowHeight - scaledHeight) / 2;
             BeginDrawing();
             ClearBackground(Color.RayWhite);
-
-
-            // Draw the render texture scaled from center using your zoom
-            DrawTexturePro(
-                renderTexture.Texture,
-                new Rectangle(0, 0, TARGET_WIDTH, -TARGET_HEIGHT), // Source (flipped Y)
-                new Rectangle(offsetX, offsetY, scaledWidth, scaledHeight), // Destination
-                new Vector2(0, 0), // Origin
-                0,
-                Color.White
-            );
-
-
-            scale = Math.Min(windowWidth / (float)(TARGET_WIDTH*OverlayScale), windowHeight / (float)(TARGET_HEIGHT*OverlayScale));
-
-            //float zoom = scale * Zoom; // this replaces the previous scale logic
-            zoom = (windowWidth / (float)(TARGET_WIDTH * OverlayScale)) * Zoom;
-
-            // Calculate new width and height of the scaled texture
-            scaledWidth = (int)((TARGET_WIDTH * OverlayScale) * zoom);
-            scaledHeight = (int)((TARGET_HEIGHT * OverlayScale) * zoom);
-
-            // Offset so the zoom centers in the middle of the screen
-            offsetX = (windowWidth - scaledWidth) / 2;
-            offsetY = (windowHeight - scaledHeight) / 2;
-
-            DrawTexturePro(
-                overlayRenderTexture.Texture,
-                new Rectangle(0, 0, (TARGET_WIDTH * OverlayScale), -(TARGET_HEIGHT * OverlayScale)), // Source (flipped Y)
-                new Rectangle(offsetX, offsetY, scaledWidth, scaledHeight), // Destination
-                new Vector2(0, 0), // Origin
-                0,
-                Color.White
-            );
-
+            
+            DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
+            DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
+            DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
             EndDrawing();
 
+
+
+
+
+            void DrawTextureScaled(RenderTexture2D texture, float width, float hight)
+            {
+                float scale = Math.Min(windowWidth / (float)width, windowHeight / (float)hight);
+
+                //float zoom = scale * Zoom; // this replaces the previous scale logic
+                float zoom = (windowWidth / (float)width) * Zoom;
+
+                // Calculate new width and height of the scaled texture
+                int scaledWidth = (int)(width * zoom);
+                int scaledHeight = (int)(hight * zoom);
+
+                // Offset so the zoom centers in the middle of the screen
+                int offsetX = (windowWidth - scaledWidth) / 2;
+                int offsetY = (windowHeight - scaledHeight) / 2;
+
+                DrawTexturePro(
+                    texture.Texture,
+                    new Rectangle(0, 0, width, -hight), // Source (flipped Y)
+                    new Rectangle(offsetX, offsetY, scaledWidth, scaledHeight), // Destination
+                    new Vector2(0, 0), // Origin
+                    0,
+                    Color.White
+                );
+            }
         }
 
         UnloadRenderTexture(renderTexture);

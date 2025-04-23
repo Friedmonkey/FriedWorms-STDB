@@ -41,6 +41,12 @@ public static partial class Module
 
         public float Radius;
         public bool Stable;
+        public float Friction;
+
+        //how many times it can bounce before dying (negative means it dont matter)
+        int MaxBounceCount;
+        bool Dead;
+
 
         public uint ModelData;
     }
