@@ -1,9 +1,5 @@
-﻿using Raylib_cs;
-using static Raylib_cs.Raylib;
-using SpacetimeDB;
+﻿using static Raylib_cs.Raylib;
 using SpacetimeDB.Types;
-using SpacetimeDB.ClientApi;
-using FriedWorms.Client;
 
 
 namespace FriedWorms.Client;
@@ -14,7 +10,6 @@ partial class Program
     static void Main(string[] args)
     {
         gameManager = new NetworkManager();
-        //gameManager.OnConnected += MainGame;
         string serverUrl = string.Empty;
 
         if (File.Exists("../../../../server.txt"))

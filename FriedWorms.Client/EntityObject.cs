@@ -1,14 +1,6 @@
 ﻿using Raylib_cs;
 using static Raylib_cs.Raylib;
 using SpacetimeDB.Types;
-using System;
-using System.Collections.Generic;
-//using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Numerics;
-using System.Runtime.Intrinsics;
 
 namespace FriedWorms.Client;
 
@@ -48,7 +40,6 @@ public static partial class Program
                 break;
             case EntityModelType.Dummy:
                 DrawDummy(entity);
-                //DrawScaledPixel((int)entity.Position.X, (int)entity.Position.Y, Color.Magenta);
 
                 break;
             default:

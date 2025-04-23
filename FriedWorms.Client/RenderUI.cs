@@ -1,10 +1,4 @@
 ﻿using Raylib_cs;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Numerics;
-using System.Text;
-using System.Threading.Tasks;
 using static Raylib_cs.Raylib;
 
 namespace FriedWorms.Client;
@@ -17,6 +11,10 @@ partial class Program
         var width = (TARGET_WIDTH * UiScale);
         var height = (TARGET_HEIGHT * UiScale);
 
-        DrawCircle(width/2, height/2, 10f, Color.DarkPurple);
+        var startLeft = (height / 2)-100;
+        for (int i = 1; i < 11; i++)
+        {
+            DrawCircle(15, startLeft + i*20, 10f, Color.DarkPurple);
+        }
     }
 }

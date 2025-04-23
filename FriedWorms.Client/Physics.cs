@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FriedWorms.Client;
+﻿namespace FriedWorms.Client;
 
 public partial class Program
 {
@@ -72,9 +66,4 @@ public partial class Program
 
         }
     }
-    static void ApplyGravity()
-    { 
-        
-    }
-
 }

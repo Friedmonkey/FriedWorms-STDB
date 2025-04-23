@@ -1,9 +1,5 @@
 ﻿using SpacetimeDB;
 using SpacetimeDB.Types;
-using System.Diagnostics;
-using System.Linq;
-using System.Reflection;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FriedWorms.Client;
 

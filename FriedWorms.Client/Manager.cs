@@ -36,13 +36,6 @@ partial class Program
         CreateMap();
 
         Entities = gameManager.Conn.Db.Entities.Iter().ToList();
-        //if (Entities.Count == 0)
-        //    Entities.Add(new Entity()
-        //    {
-        //        ModelData = (uint)EntityModelType.Dummy,
-        //        Position = new(MapWidth / 2, MapHeight / 2)
-        //        Radius = 4.0f
-        //    });
     }
     static void Tick()
     { 
