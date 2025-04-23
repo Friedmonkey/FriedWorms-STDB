@@ -36,10 +36,10 @@ partial class Program
             Display();
             EndTextureMode();
 
-            //BeginTextureMode(overlayRenderTexture);
-            //ClearBackground(new Color(0, 0, 0, 0));
-            //Overlay();
-            //EndTextureMode();
+            BeginTextureMode(overlayRenderTexture);
+            ClearBackground(new Color(0, 0, 0, 0));
+            Overlay();
+            EndTextureMode();
 
             //BeginTextureMode(UIRenderTexture);
             //ClearBackground(new Color(0, 0, 0, 0));
@@ -50,15 +50,17 @@ partial class Program
             ClearBackground(Color.RayWhite);
             
             DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
-            //DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
-            //DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
+            DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
+            //DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);
             EndDrawing();
 
 
 
-            void DrawTextureScaled(RenderTexture2D texture, float width, float hight)
+            void DrawTextureScaled(RenderTexture2D texture, float width, float hight, bool zoomAffected = true)
             {
-                float zoom = (windowWidth / (float)width) * Zoom;
+                float zoom = (windowWidth / (float)width);
+                if (zoomAffected)
+                    zoom *= Zoom;
 
                 // Calculate new width and height of the scaled texture
                 int scaledWidth = (int)(width * zoom);

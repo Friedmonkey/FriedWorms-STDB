@@ -8,7 +8,7 @@ public partial class Program
     {
         dummy = DefineDummy();
         missile = DefineMissile();
-        debris = DefineDebris();
+        worm = DefineWorm();
     }
     static List<Vector2> DefineMissile(float radius = 2.5f)
     {
@@ -50,20 +50,70 @@ public partial class Program
 
         return vecModel;
     }
-    static List<Vector2> DefineDebris(float radius = 4.0f)
+    static List<Vector2> DefineWorm(float radius = 4.0f)
     {
         List<Vector2> vecModel = new();
-        vecModel.Add(new(0.0f, 0.0f));
-        vecModel.Add(new(1.0f, 0.0f));
-        vecModel.Add(new(1.0f, 1.0f));
-        vecModel.Add(new(0.0f, 1.0f));
+
+        int segments = 6; // how many "body chunks"
+        float width = 1.0f;
+        float height = 1.0f;
+
+        // Centering offset
+        float totalLength = segments * height;
+        float startY = -totalLength / 2;
+
+        for (int i = 0; i < segments; i++)
+        {
+            float y = startY + i * height;
+
+            // Wiggle left and right like a worm :3
+            float xOffset = (i % 2 == 0) ? -0.2f : 0.2f;
+
+            vecModel.Add(new Vector2(-width / 2 + xOffset, y));
+            vecModel.Add(new Vector2(width / 2 + xOffset, y));
+        }
+
+        // Close the shape (go backward through the same Y points)
+        for (int i = segments - 1; i >= 0; i--)
+        {
+            float y = startY + i * height;
+            float xOffset = (i % 2 == 0) ? -0.2f : 0.2f;
+
+            vecModel.Add(new Vector2(width / 2 + xOffset, y + height));
+            vecModel.Add(new Vector2(-width / 2 + xOffset, y + height));
+        }
+
         return vecModel;
     }
 
 
+
     static List<Vector2> missile;
     static List<Vector2> dummy;
-    static List<Vector2> debris;
+    static List<Vector2> worm;
+    static readonly List<Vector2> gravestone = new()
+    {
+        new Vector2(-4, -4),
+        new Vector2(4, -4),
+        new Vector2(4, 4),
+        new Vector2(-4, 4),
+    };
+    static readonly List<Vector2> granade = new()
+    {
+        new Vector2(-2.0f, -2.0f),
+        new Vector2(2.0f, -2.0f),
+        new Vector2(2.0f, 2.0f),
+        new Vector2(0.0f, 3.0f), // Sticking out point (like a fuse or something cool)
+        new Vector2(-2.0f, 2.0f),
+    };
+
+    static readonly List<Vector2> debris = new()
+    {
+        new Vector2(-0.5f, -0.5f),
+        new Vector2(0.5f, -0.5f),
+        new Vector2(0.5f, 0.5f),
+        new Vector2(-0.5f, 0.5f),
+    };
     static readonly List<Vector2> shape = new()
     {
         new Vector2(-4, -4),

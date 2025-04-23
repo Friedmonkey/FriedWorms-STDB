@@ -32,7 +32,7 @@ partial class Program
             }
         }
 
-        foreach (var entity in Entities)
+        foreach (var entity in Entities.Where(e => !e.Dead))
         {
             entity.Draw();
         }

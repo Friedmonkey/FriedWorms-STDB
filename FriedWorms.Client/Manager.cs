@@ -56,16 +56,13 @@ partial class Program
         {
             Entities.Add(CreateEntityDummy(new(world.X, world.Y)));
         }
-        if (IsKeyPressed(KeyboardKey.Q) && TryGetMouseWorldPos(out world))
+        if (IsKeyPressed(KeyboardKey.G) && TryGetMouseWorldPos(out world))
         {
-            for (int i = 0; i < 20; i++)
-            {
-                Entities.Add(CreateEntityDebris(new(world.X, world.Y)));
-            }
+            Entities.Add(CreateEntityGranade(new(world.X, world.Y)));
         }
         if (IsKeyPressed(KeyboardKey.E) && TryGetMouseWorldPos(out world))
         {
-            CreateExplosion(world.X, world.Y, 10.0f);
+            CreateExplosion(world.X, world.Y, 10.0f, 50);
         }
 
 

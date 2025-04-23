@@ -43,6 +43,9 @@ public static partial class Module
         public bool Stable;
         public float Friction;
 
+        public float MaxHealth;
+        public float Health;
+
         //how many times it can bounce before dying (negative means it dont matter)
         int MaxBounceCount;
         bool Dead;
