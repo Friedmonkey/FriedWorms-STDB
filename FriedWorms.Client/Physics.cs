@@ -1,11 +1,15 @@
-﻿namespace FriedWorms.Client;
+﻿using SpacetimeDB.Types;
+
+namespace FriedWorms.Client;
 
 public partial class Program
 {
     static void HandlePhysics(float elapsedTime)
     {
-        foreach (var entity in Entities)
+        for (int i = 0; i < Entities.Count; i++)
         {
+            Entity? entity = Entities[i];
+
             //add gravity
             entity.Acceleration.Y += 2.0f;
 
@@ -61,6 +65,9 @@ public partial class Program
                 {
                     entity.MaxBounceCount--;
                     entity.Dead = (entity.MaxBounceCount == 0);
+
+                    if (entity.Dead)
+                        entity.OnDeath();
                 }
             }
             else

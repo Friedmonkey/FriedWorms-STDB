@@ -6,8 +6,10 @@ namespace FriedWorms.Client;
 
 partial class Program
 {
-    const int TARGET_WIDTH = 384;
-    const int TARGET_HEIGHT = 240;
+    //const int TARGET_WIDTH = 384;
+    //const int TARGET_HEIGHT = 240;
+    const int TARGET_WIDTH = 448;
+    const int TARGET_HEIGHT = 280;
     const int OverlayScale = 4;
     const int UiScale = 4;
     static void MainGame()

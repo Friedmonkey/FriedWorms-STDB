@@ -44,11 +44,11 @@ partial class Program
         if (IsKeyPressed(KeyboardKey.M))
             CreateMap();
 
-        if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out var world))
+        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out var world))
         {
             Entities.Add(CreateEntityMissile(new(world.X, world.Y)));
         }
-        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out world))
+        if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out world))
         {
             Entities.Add(CreateEntityWorm(new(world.X, world.Y)));
         }
@@ -62,6 +62,10 @@ partial class Program
             {
                 Entities.Add(CreateEntityDebris(new(world.X, world.Y)));
             }
+        }
+        if (IsKeyPressed(KeyboardKey.E) && TryGetMouseWorldPos(out world))
+        {
+            CreateExplosion(world.X, world.Y, 10.0f);
         }
 
 

@@ -14,22 +14,41 @@ public enum EntityModelType : uint
 }
 public static partial class Program
 {
-    public static void DrawWorm(Entity entity)
+    public static void Draw(this Entity entity)
     {
-        DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.Red);
+        switch ((EntityModelType)entity.ModelData)
+        {
+            case EntityModelType.None:
+                DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.Magenta);
+                break;
+            case EntityModelType.Worm:
+                DrawWireFrameModel(shape, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.Red);
+                break;
+            case EntityModelType.Missile:
+                DrawWireFrameModel(missile, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X  ), 1.0f, Color.Red);
+                break;
+            case EntityModelType.Dummy:
+                DrawWireFrameModel(dummy, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.White);
+                break;
+            case EntityModelType.Debris:
+                DrawWireFrameModel(debris, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.DarkGreen);
+                break;
+            default:
+                throw new Exception($"Unknow model data {entity.ModelData}");
+        }
     }
-    public static void DrawMissile(Entity entity)
+    public static void OnDeath(this Entity entity)
     {
-        DrawWireFrameModel(missile, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X  ), 1.0f, Color.Red);
+        switch ((EntityModelType)entity.ModelData)
+        {
+            case EntityModelType.Missile:
+                CreateExplosion(entity.Position.X, entity.Position.Y, 20.0f);
+                break;
+            default:
+                break;
+        }
     }
-    public static void DrawDummy(Entity entity)
-    {
-        DrawWireFrameModel(dummy, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.White);
-    }
-    public static void DrawDebris(Entity entity)
-    {
-        DrawWireFrameModel(debris, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, Color.DarkGreen);
-    }
+
     public static Entity CreateEntityDummy(DbVector2 position)
     {
         return new Entity()
@@ -57,12 +76,13 @@ public static partial class Program
             ModelData = (uint)EntityModelType.Missile,
             Position = position,
             Radius = 4.0f,
-            Friction = 0.8f
+            Friction = 0.8f,
+            MaxBounceCount = 1 //after one bounce it dies (explodes too!)
         };
     }
     public static Entity CreateEntityDebris(DbVector2 position)
     {
-        float rnd() => (Random.Shared.NextSingle()*2*MathF.PI);
+        float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
         return new Entity()
         {
             ModelData = (uint)EntityModelType.Debris,
@@ -72,28 +92,5 @@ public static partial class Program
             Radius = 0.8f,
             Friction = 0.8f
         };
-    }
-    public static void Draw(this Entity entity)
-    {
-        switch ((EntityModelType)entity.ModelData)
-        {
-            case EntityModelType.None:
-                DrawPixel((int)entity.Position.X, (int)entity.Position.Y, Color.Magenta);
-                break;
-            case EntityModelType.Worm:
-                DrawWorm(entity);
-                break;
-            case EntityModelType.Missile:
-                DrawMissile(entity);
-                break;
-            case EntityModelType.Dummy:
-                DrawDummy(entity);
-                break;
-            case EntityModelType.Debris:
-                DrawDebris(entity);
-                break;
-            default:
-                throw new Exception($"Unknow model data {entity.ModelData}");
-        }
     }
 }
