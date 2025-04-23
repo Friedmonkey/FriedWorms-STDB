@@ -54,8 +54,14 @@ public partial class Program
                 entity.Stable = true;
 
                 float dot = entity.Velocity.X * (responseX / magResponse) + entity.Velocity.Y * (responseY / magResponse);
-                entity.Velocity.X = (-2.0f * dot * (responseX / magResponse) + entity.Velocity.X);
-                entity.Velocity.Y = (-2.0f * dot * (responseY / magResponse) + entity.Velocity.Y);
+                entity.Velocity.X = entity.Friction * (-2.0f * dot * (responseX / magResponse) + entity.Velocity.X);
+                entity.Velocity.Y = entity.Friction * (-2.0f * dot * (responseY / magResponse) + entity.Velocity.Y);
+
+                if (entity.MaxBounceCount > 0)
+                {
+                    entity.MaxBounceCount--;
+                    entity.Dead = (entity.MaxBounceCount == 0);
+                }
             }
             else
             {   
@@ -63,7 +69,9 @@ public partial class Program
             }
 
             if (magVelocity < 0.1f) entity.Stable = true;
-
         }
+
+        //remove dead entities
+        Entities.RemoveAll(x => x.Dead);
     }
 }

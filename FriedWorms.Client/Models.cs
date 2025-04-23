@@ -8,6 +8,7 @@ public partial class Program
     {
         dummy = DefineDummy();
         missile = DefineMissile();
+        debris = DefineDebris();
     }
     static List<Vector2> DefineMissile(float radius = 2.5f)
     {
@@ -49,10 +50,20 @@ public partial class Program
 
         return vecModel;
     }
+    static List<Vector2> DefineDebris(float radius = 4.0f)
+    {
+        List<Vector2> vecModel = new();
+        vecModel.Add(new(0.0f, 0.0f));
+        vecModel.Add(new(1.0f, 0.0f));
+        vecModel.Add(new(1.0f, 1.0f));
+        vecModel.Add(new(0.0f, 1.0f));
+        return vecModel;
+    }
 
 
     static List<Vector2> missile;
     static List<Vector2> dummy;
+    static List<Vector2> debris;
     static readonly List<Vector2> shape = new()
     {
         new Vector2(-4, -4),

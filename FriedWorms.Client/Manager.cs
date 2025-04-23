@@ -46,37 +46,28 @@ partial class Program
 
         if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out var world))
         {
-            Entities.Add(new Entity()
-            {
-                ModelData = (uint)EntityModelType.Missile,
-                Position = new(world.X, world.Y),
-                Radius = 4.0f
-            });
+            Entities.Add(CreateEntityMissile(new(world.X, world.Y)));
         }
         if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out world))
         {
-            Entities.Add(new Entity()
-            {
-                ModelData = (uint)EntityModelType.Worm,
-                Position = new(world.X, world.Y),
-                Radius = 4.0f
-            });
+            Entities.Add(CreateEntityWorm(new(world.X, world.Y)));
         }
-
         if (IsMouseButtonPressed(MouseButton.Middle) && TryGetMouseWorldPos(out world))
         {
-            Entities.Add(new Entity()
+            Entities.Add(CreateEntityDummy(new(world.X, world.Y)));
+        }
+        if (IsKeyPressed(KeyboardKey.Q) && TryGetMouseWorldPos(out world))
+        {
+            for (int i = 0; i < 20; i++)
             {
-                ModelData = (uint)EntityModelType.Dummy,
-                Position = new(world.X, world.Y),
-                Radius = 4.0f
-            });
+                Entities.Add(CreateEntityDebris(new(world.X, world.Y)));
+            }
         }
 
 
         if (IsKeyDown(KeyboardKey.Equal)) Zoom += 0.1f;
         if (IsKeyDown(KeyboardKey.Minus)) Zoom -= 0.1f;
-        Zoom = Math.Clamp(Zoom, 1.0f, MaxZoom*OverlayScale);
+        Zoom = Math.Clamp(Zoom, 1.0f, MaxZoom); // *OverlayScale);
 
 
         float mapScrollSpeed = 300.0f / Zoom;
