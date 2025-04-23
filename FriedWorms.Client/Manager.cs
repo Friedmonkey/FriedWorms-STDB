@@ -16,6 +16,8 @@ partial class Program
     static float CameraPosY = 0.0f;
 
     static float Zoom = 1.0f;
+    static float MaxZoom = 3.0f;
+    static bool PhysicsPaused = false;
 
     static void Load()
     {
@@ -81,10 +83,12 @@ partial class Program
 
         if (IsKeyDown(KeyboardKey.Equal)) Zoom += 0.1f;
         if (IsKeyDown(KeyboardKey.Minus)) Zoom -= 0.1f;
-        Zoom = Math.Clamp(Zoom, 1.0f, 3.0f);
+        Zoom = Math.Clamp(Zoom, 1.0f, MaxZoom*OverlayScale);
 
 
         float mapScrollSpeed = 300.0f / Zoom;
+        if (mapScrollSpeed < 30)
+            mapScrollSpeed = 30;
 
         if (IsKeyDown(KeyboardKey.Up))
             CameraPosY -= mapScrollSpeed * elapsedTime;
@@ -109,10 +113,21 @@ partial class Program
         CameraPosX = MathF.Round(CameraPosX);
         CameraPosY = MathF.Round(CameraPosY);
 
-        //do 10 physics steps
-        for (int i = 0; i < 10; i++)
-        { 
-            HandlePhysics(elapsedTime);
+        if (IsKeyPressed(KeyboardKey.P))
+            PhysicsPaused = !PhysicsPaused;
+
+        if (PhysicsPaused)
+        {
+            if (IsKeyDown(KeyboardKey.Space))
+                HandlePhysics(elapsedTime);
+        }
+        else
+        {
+            //do 10 physics steps
+            for (int i = 0; i < 10; i++)
+            {
+                HandlePhysics(elapsedTime);
+            }
         }
     }
 

@@ -33,7 +33,7 @@ public partial class Program
             float responseY = 0F;
             bool collison = false;
 
-            for (float radius = (angle - MathF.PI / 2.0f); radius < angle + MathF.PI/2; radius += MathF.PI / 8.0f)
+            for (float radius = (angle - 3.14159f / 2.0f); radius < angle + 3.14159f / 2; radius += 3.14159f / 10.0f)
             {
                 float testPosX = (entity.Radius) * MathF.Cos(radius) + potentialX;
                 float testPosY = (entity.Radius) * MathF.Sin(radius) + potentialY;
@@ -44,33 +44,31 @@ public partial class Program
                 if (testPosX < 0) testPosX = 0;
                 if (testPosY < 0) testPosY = 0;
 
-                if (Map[(int)testPosY * MapWidth + (int)testPosX] != 0) //if sky
+                if (Map[(int)testPosY * MapWidth + (int)testPosX] != 0) //if not sky
                 {
                     responseX += potentialX - testPosX;
                     responseY += potentialY - testPosY;
                     collison = true;
                 }
-
-
-                float magVelocity = MathF.Sqrt(entity.Velocity.X * entity.Velocity.X + entity.Velocity.Y * entity.Velocity.Y);
-                float magResponse = MathF.Sqrt(responseX*responseX + responseY*responseY);
-
-                if (collison)
-                {
-                    entity.Stable = true;
-
-                    float dot = entity.Velocity.X * (responseX / magResponse) + entity.Velocity.Y * (responseY / magResponse);
-                    entity.Velocity.X = (-2.0f * dot * (responseX / magResponse) + entity.Velocity.X);
-                    entity.Velocity.Y = (-2.0f * dot * (responseY / magResponse) + entity.Velocity.Y);
-
-                }
-                else
-                {   
-                    entity.Position = new(potentialX, potentialY);
-                }
-
-                if (magVelocity < 0.1f) entity.Stable = true;
             }
+
+            float magVelocity = MathF.Sqrt(entity.Velocity.X * entity.Velocity.X + entity.Velocity.Y * entity.Velocity.Y);
+            float magResponse = MathF.Sqrt(responseX*responseX + responseY*responseY);
+
+            if (collison)
+            {
+                entity.Stable = true;
+
+                float dot = entity.Velocity.X * (responseX / magResponse) + entity.Velocity.Y * (responseY / magResponse);
+                entity.Velocity.X = (-2.0f * dot * (responseX / magResponse) + entity.Velocity.X);
+                entity.Velocity.Y = (-2.0f * dot * (responseY / magResponse) + entity.Velocity.Y);
+            }
+            else
+            {   
+                entity.Position = new(potentialX, potentialY);
+            }
+
+            if (magVelocity < 0.1f) entity.Stable = true;
 
         }
     }
