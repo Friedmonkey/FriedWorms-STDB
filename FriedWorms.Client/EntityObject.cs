@@ -89,7 +89,8 @@ public static partial class Program
             Radius = 4.0f,
             Friction = 0.8f,
             MaxHealth = 150,
-            Health = 50
+            Health = 50,
+            Rotation = float.NegativeZero,
         };
     }
     public static Entity CreateEntityWorm(DbVector2 position)
@@ -101,7 +102,8 @@ public static partial class Program
             Radius = 2.5f,
             Friction = 0.2f,
             MaxHealth = 100.0f,
-            Health = 100.0f
+            Health = 100.0f,
+            Rotation = float.NegativeZero,
         };
     }
     public static Entity CreateEntityGravestone(DbVector2 position)
@@ -111,7 +113,8 @@ public static partial class Program
             ModelData = (uint)EntityModelType.Gravestone,
             Position = position,
             Radius = 4f,
-            Friction = 0.2f
+            Friction = 0.2f,
+            Rotation = float.NegativeZero,
         };
     }
     public static Entity CreateEntityGranade(DbVector2 position)
@@ -122,7 +125,8 @@ public static partial class Program
             Position = position,
             Radius = 1f,
             Friction = 0.8f,
-            MaxBounceCount = 3
+            MaxBounceCount = 3,
+            Rotation = float.NegativeZero,
         };
     }
     public static Entity CreateEntityMissile(DbVector2 position)
@@ -133,7 +137,8 @@ public static partial class Program
             Position = position,
             Radius = 4.0f,
             Friction = 0.8f,
-            MaxBounceCount = 1 //after one bounce it dies (explodes too!)
+            MaxBounceCount = 1, //after one bounce it dies (explodes too!)
+            Rotation = float.NegativeZero,
         };
     }
     public static Entity CreateEntityDebris(DbVector2 position)
@@ -146,7 +151,8 @@ public static partial class Program
             Velocity = new(10 * MathF.Cos(rnd()), 10 * MathF.Sin(rnd())),
             MaxBounceCount = 5,
             Radius = 0.8f,
-            Friction = 0.8f
+            Friction = 0.8f,
+            Rotation = float.NegativeZero,
         };
     }
 }

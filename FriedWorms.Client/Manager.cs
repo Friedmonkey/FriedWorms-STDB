@@ -22,7 +22,7 @@ partial class Program
     static bool PhysicsPaused = false;
     static bool UserHasControl = true;
 
-    static Entity ObjectUnderControl = null!;
+    static Entity ControlWorm = null!;
     static Entity CameraTracking = null!;
 
     static void Load()
@@ -63,9 +63,9 @@ partial class Program
         CameraPosY = MathF.Round(CameraPosY);
 
 
-        if (ObjectUnderControl != null)
+        if (ControlWorm != null)
         {
-            if (ObjectUnderControl.Stable)
+            if (ControlWorm.Stable)
             { 
                 HandleWormControl(elapsedTime);
             }
@@ -73,7 +73,7 @@ partial class Program
 
         if (PhysicsPaused)
         {
-            if (IsKeyDown(KeyboardKey.Space))
+            if (IsKeyDown(KeyboardKey.O))
                 HandlePhysics(elapsedTime);
         }
         else

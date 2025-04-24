@@ -19,7 +19,11 @@ partial class Program
         if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out world))
         {
             var worm = CreateEntityWorm(new(world.X, world.Y));
-            ObjectUnderControl = worm;
+            if (ControlWorm != null)
+                ControlWorm.Rotation = float.NegativeZero;
+
+            ControlWorm = worm;
+            ControlWorm.Rotation = 1;
             //CameraTracking = worm;
             Entities.Add(worm);
         }
@@ -30,10 +34,6 @@ partial class Program
         if (IsKeyPressed(KeyboardKey.G) && TryGetMouseWorldPos(out world))
         {
             Entities.Add(CreateEntityGranade(new(world.X, world.Y)));
-        }
-        if (IsKeyPressed(KeyboardKey.E) && TryGetMouseWorldPos(out world))
-        {
-            CreateExplosion(world.X, world.Y, 10.0f, 50);
         }
 
         if (IsKeyDown(KeyboardKey.Equal) || IsKeyDown(KeyboardKey.Minus))
