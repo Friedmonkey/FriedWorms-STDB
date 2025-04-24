@@ -61,7 +61,12 @@ public static partial class Program
                 CreateExplosion(entity.Position.X, entity.Position.Y, 10.0f, 20, 0.2f);
                 break;
             case EntityModelType.Worm:
-                Entities.Add(CreateEntityGravestone(entity.Position));
+                {
+                    var gravestone = CreateEntityGravestone(entity.Position);
+                    gravestone.Velocity = entity.Velocity;
+                    gravestone.Velocity.Y = MathF.Abs(gravestone.Velocity.Y) + 100f;
+                    Entities.Add(gravestone);
+                }
                 break;
             default:
                 break;

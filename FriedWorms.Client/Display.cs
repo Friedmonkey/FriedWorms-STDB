@@ -8,12 +8,15 @@ partial class Program
 {
     static void Display()
     {
-        for (int x = 0; x < TARGET_WIDTH; x++)
+        var displayX = TARGET_WIDTH / Zoom;
+        var displayY = TARGET_HEIGHT / Zoom;
+
+        for (int x = 0; x < displayX; x++)
         {
             int mapX = x + (int)CameraPosX;
             if (mapX >= MapWidth) continue;
 
-            for (int y = 0; y < TARGET_HEIGHT; y++)
+            for (int y = 0; y < displayY; y++)
             {
                 int mapY = y + (int)CameraPosY;
                 if (mapY >= MapHeight) continue;

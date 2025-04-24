@@ -59,8 +59,6 @@ partial class Program
             void DrawTextureScaled(RenderTexture2D texture, float width, float hight, bool zoomAffected = true)
             {
                 float zoom = (windowWidth / (float)width);
-                if (zoomAffected)
-                    zoom *= Zoom;
 
                 // Calculate new width and height of the scaled texture
                 int scaledWidth = (int)(width * zoom);
@@ -69,6 +67,12 @@ partial class Program
                 // Offset so the zoom centers in the middle of the screen
                 int offsetX = (windowWidth - scaledWidth) / 2;
                 int offsetY = (windowHeight - scaledHeight) / 2;
+
+                if (zoomAffected)
+                { 
+                    scaledWidth = (int)(scaledWidth * Zoom);
+                    scaledHeight = (int)(scaledHeight * Zoom);
+                }
 
                 DrawTexturePro(
                     texture.Texture,

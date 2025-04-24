@@ -66,9 +66,26 @@ partial class Program
         }
 
 
-        if (IsKeyDown(KeyboardKey.Equal)) Zoom += 0.1f;
-        if (IsKeyDown(KeyboardKey.Minus)) Zoom -= 0.1f;
-        Zoom = Math.Clamp(Zoom, 1.0f, MaxZoom); // *OverlayScale);
+        if (IsKeyDown(KeyboardKey.Equal) || IsKeyDown(KeyboardKey.Minus))
+        {
+            float oldZoom = Zoom;
+
+            Vector2 center = new(TARGET_WIDTH / 2f, TARGET_HEIGHT / 2f);
+            Vector2 worldCenter = new Vector2(CameraPosX, CameraPosY) + center / oldZoom;
+
+            if (IsKeyDown(KeyboardKey.Equal))
+                Zoom = Math.Clamp(Zoom + 0.1f, 1.0f, MaxZoom);
+            else 
+                Zoom = Math.Clamp(Zoom - 0.1f, 1.0f, MaxZoom);
+
+            if (Zoom != oldZoom)
+            {
+                Vector2 newCam = worldCenter - center / Zoom;
+                CameraPosX = newCam.X;
+                CameraPosY = newCam.Y;
+            }
+        }
+
 
 
         float mapScrollSpeed = 300.0f / Zoom;
@@ -84,8 +101,8 @@ partial class Program
         if (IsKeyDown(KeyboardKey.Right))
             CameraPosX += mapScrollSpeed * elapsedTime;
 
-        float viewWidth = TARGET_WIDTH;
-        float viewHeight = TARGET_HEIGHT;
+        float viewWidth = TARGET_WIDTH / Zoom;
+        float viewHeight = TARGET_HEIGHT / Zoom;
 
 
         //clamp camera
@@ -142,37 +159,44 @@ partial class Program
     static bool TryGetMouseWorldPos(out Vector2 output)
     {
         output = Vector2.Zero;
-
         Vector2 mouse = GetMousePosition();
 
         int windowWidth = GetScreenWidth();
         int windowHeight = GetScreenHeight();
 
-        // Use same zoom logic as drawing code!
-        float zoom = (windowWidth / (float)TARGET_WIDTH) * Zoom;
+        // 1) “Base” zoom that you always use first
+        float baseZoom = windowWidth / (float)TARGET_WIDTH;
 
-        int scaledWidth = (int)(TARGET_WIDTH * zoom);
-        int scaledHeight = (int)(TARGET_HEIGHT * zoom);
+        // 2) Size of the render texture before applying your extra Zoom
+        float preZoomW = TARGET_WIDTH * baseZoom;
+        float preZoomH = TARGET_HEIGHT * baseZoom;
 
-        int offsetX = (windowWidth - scaledWidth) / 2;
-        int offsetY = (windowHeight - scaledHeight) / 2;
+        // 3) Center it on-screen using those pre-zoom sizes
+        float offsetX = (windowWidth - preZoomW) / 2f;
+        float offsetY = (windowHeight - preZoomH) / 2f;
 
-        // Check if mouse is inside the game render area
-        if (mouse.X < offsetX || mouse.X > offsetX + scaledWidth ||
-            mouse.Y < offsetY || mouse.Y > offsetY + scaledHeight)
-            return false; // Mouse is outside the game area :(
+        // 4) Combine with your camera Zoom factor
+        float fullZoom = baseZoom * Zoom;
 
-        // Convert to render texture space
-        float renderMouseX = (mouse.X - offsetX) / zoom;
-        float renderMouseY = (mouse.Y - offsetY) / zoom;
+        // 5) Final on-screen size (for hit-testing)
+        float destW = preZoomW * Zoom;
+        float destH = preZoomH * Zoom;
 
-        // Convert to world space
-        float worldX = renderMouseX + CameraPosX;
-        float worldY = renderMouseY + CameraPosY;
-        output = new Vector2(worldX, worldY);
+        // 6) Is the mouse inside that rectangle?
+        if (mouse.X < offsetX || mouse.X > offsetX + destW ||
+            mouse.Y < offsetY || mouse.Y > offsetY + destH)
+            return false; // mouse outside render area :(
 
+        // 7) Map screen→render-texture coords
+        float renderX = (mouse.X - offsetX) / fullZoom;
+        float renderY = (mouse.Y - offsetY) / fullZoom;
+
+        // 8) Then render-texture→world coords
+        output = new Vector2(renderX + CameraPosX,
+                             renderY + CameraPosY);
         return true;
     }
+
 
 
 
