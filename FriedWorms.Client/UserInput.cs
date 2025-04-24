@@ -10,7 +10,10 @@ partial class Program
     static void HandleUserInput(float elapsedTime)
     {
         if (IsKeyPressed(KeyboardKey.M))
+        { 
             CreateMap();
+            Entities.Clear();
+        }
 
         if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out var world))
         {
@@ -24,7 +27,7 @@ partial class Program
 
             ControlWorm = worm;
             ControlWorm.Rotation = 1;
-            //CameraTracking = worm;
+            CameraTracking = worm;
             Entities.Add(worm);
         }
         if (IsMouseButtonPressed(MouseButton.Middle) && TryGetMouseWorldPos(out world))

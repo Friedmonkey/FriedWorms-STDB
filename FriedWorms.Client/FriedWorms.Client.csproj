@@ -16,4 +16,19 @@
     <Folder Include="autogen\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <EmbeddedResource Include="Assets/Audio/*.wav" />
+    <EmbeddedResource Include="Assets/Audio/*.mp3" />
+    <EmbeddedResource Include="Assets/Fonts/*.ttf" />
+    <EmbeddedResource Include="Assets/Images/*.ico" />
+    <EmbeddedResource Include="Assets/Images/*.png" />
+    <EmbeddedResource Include="Assets/Images/*.gif" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Assets\Images\skyatlas.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

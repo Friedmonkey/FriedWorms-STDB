@@ -40,6 +40,7 @@ partial class Program
 
     static void Load()
     {
+        LoadAssets();
         LoadModels();
         var config = gameManager.Conn.Db.Config.Id.Find(0);
         if (config is null)
@@ -57,13 +58,22 @@ partial class Program
         Entities = gameManager.Conn.Db.Entities.Iter().ToList();
     }
     static void Tick()
-    { 
+    {
+        UpdateMusicStream(music);
         float elapsedTime = GetFrameTime();
 
         HandleUserInput(elapsedTime);
 
         float viewWidth = TARGET_WIDTH / Zoom;
         float viewHeight = TARGET_HEIGHT / Zoom;
+
+
+        if (CameraTracking != null)
+        {
+            CameraPosX = CameraTracking.Position.X - viewWidth / 2;
+            CameraPosY = CameraTracking.Position.Y - viewHeight / 2;
+            if (CameraTracking.Dead) CameraTracking = null;
+        }
 
         //clamp camera
         if (CameraPosX < 0) CameraPosX = 0; //remove this line to make terrain inf going left somehow

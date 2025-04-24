@@ -42,7 +42,7 @@ public partial class Program
                 if (testPosX < 0) testPosX = 0;
                 if (testPosY < 0) testPosY = 0;
 
-                if (Map[(int)testPosY * MapWidth + (int)testPosX] != 0) //if not sky
+                if (!(Map[(int)testPosY * MapWidth + (int)testPosX] is (int)MapColor.Skyblue or (int)MapColor.Cloud)) //if not sky
                 {
                     responseX += potentialX - testPosX;
                     responseY += potentialY - testPosY;

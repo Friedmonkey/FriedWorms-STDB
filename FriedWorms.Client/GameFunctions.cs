@@ -34,7 +34,7 @@ partial class Program
     }
     static void CreateExplosion(float worldX, float worldY, float radius, float baseDamage, float damageFalloff = 1.5f)
     {
-
+        explosions.Play();
         CreateCircle((int)worldX, (int)worldY, (int)radius);
 
         var currentEntities = Entities.Where(e => !e.Dead).ToList();

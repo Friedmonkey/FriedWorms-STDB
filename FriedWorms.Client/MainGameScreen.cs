@@ -14,11 +14,11 @@ partial class Program
     const int UiScale = 4;
     static void MainGame()
     {
-        Load();
-
         SetConfigFlags(ConfigFlags.ResizableWindow);
         InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");
         SetTargetFPS(60);
+
+        Load();
 
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
         RenderTexture2D overlayRenderTexture = LoadRenderTexture(TARGET_WIDTH*OverlayScale, TARGET_HEIGHT* OverlayScale);
