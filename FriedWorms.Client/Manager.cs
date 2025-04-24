@@ -14,10 +14,15 @@ partial class Program
 
     static float CameraPosX = 0.0f;
     static float CameraPosY = 0.0f;
+    static float TargetCameraPosX = 0.0f;
+    static float TargetCameraPosY = 0.0f;
 
     static float Zoom = 1.0f;
     static float MaxZoom = 3.0f;
     static bool PhysicsPaused = false;
+
+    static Entity ObjectUnderControl = null!;
+    static Entity CameraTracking = null!;
 
     static void Load()
     {
@@ -41,66 +46,10 @@ partial class Program
     { 
         float elapsedTime = GetFrameTime();
 
-        if (IsKeyPressed(KeyboardKey.M))
-            CreateMap();
-
-        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out var world))
-        {
-            Entities.Add(CreateEntityMissile(new(world.X, world.Y)));
-        }
-        if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out world))
-        {
-            Entities.Add(CreateEntityWorm(new(world.X, world.Y)));
-        }
-        if (IsMouseButtonPressed(MouseButton.Middle) && TryGetMouseWorldPos(out world))
-        {
-            Entities.Add(CreateEntityDummy(new(world.X, world.Y)));
-        }
-        if (IsKeyPressed(KeyboardKey.G) && TryGetMouseWorldPos(out world))
-        {
-            Entities.Add(CreateEntityGranade(new(world.X, world.Y)));
-        }
-        if (IsKeyPressed(KeyboardKey.E) && TryGetMouseWorldPos(out world))
-        {
-            CreateExplosion(world.X, world.Y, 10.0f, 50);
-        }
-
-        if (IsKeyDown(KeyboardKey.Equal) || IsKeyDown(KeyboardKey.Minus))
-        {
-            float oldZoom = Zoom;
-
-            Vector2 center = new(TARGET_WIDTH / 2f, TARGET_HEIGHT / 2f);
-            Vector2 worldCenter = new Vector2(CameraPosX, CameraPosY) + center / oldZoom;
-
-            if (IsKeyDown(KeyboardKey.Equal))
-                Zoom = Math.Clamp(Zoom + 0.1f, 1.0f, MaxZoom);
-            else 
-                Zoom = Math.Clamp(Zoom - 0.1f, 1.0f, MaxZoom);
-
-            if (Zoom != oldZoom)
-            {
-                Vector2 newCam = worldCenter - center / Zoom;
-                CameraPosX = newCam.X;
-                CameraPosY = newCam.Y;
-            }
-        }
-
-        float mapScrollSpeed = 300.0f / Zoom;
-        if (mapScrollSpeed < 30)
-            mapScrollSpeed = 30;
-
-        if (IsKeyDown(KeyboardKey.Up))
-            CameraPosY -= mapScrollSpeed * elapsedTime;
-        if (IsKeyDown(KeyboardKey.Down))
-            CameraPosY += mapScrollSpeed * elapsedTime;
-        if (IsKeyDown(KeyboardKey.Left))
-            CameraPosX -= mapScrollSpeed * elapsedTime;
-        if (IsKeyDown(KeyboardKey.Right))
-            CameraPosX += mapScrollSpeed * elapsedTime;
+        HandleUserInput(elapsedTime);
 
         float viewWidth = TARGET_WIDTH / Zoom;
         float viewHeight = TARGET_HEIGHT / Zoom;
-
 
         //clamp camera
         if (CameraPosX < 0) CameraPosX = 0; //remove this line to make terrain inf going left somehow
@@ -111,9 +60,6 @@ partial class Program
         // fix pixels sometimes disapearing because of floating point stuff
         CameraPosX = MathF.Round(CameraPosX);
         CameraPosY = MathF.Round(CameraPosY);
-
-        if (IsKeyPressed(KeyboardKey.P))
-            PhysicsPaused = !PhysicsPaused;
 
         if (PhysicsPaused)
         {
