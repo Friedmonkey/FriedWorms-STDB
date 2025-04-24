@@ -14,8 +14,8 @@ partial class Program
             if (entity.MaxHealth != 0)
                 RenderHealthBar(entity);
 
-            if (entity.ModelData != (int)EntityModelType.Debris)
-                DisplayRotation(entity);
+            //if (entity.ModelData != (int)EntityModelType.Debris)
+            //    DisplayRotation(entity);
         }
     }
     static void DisplayRotation(Entity entity)

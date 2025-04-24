@@ -20,6 +20,7 @@ partial class Program
     static float Zoom = 1.0f;
     static float MaxZoom = 3.0f;
     static bool PhysicsPaused = false;
+    static bool UserHasControl = true;
 
     static Entity ObjectUnderControl = null!;
     static Entity CameraTracking = null!;
@@ -60,6 +61,15 @@ partial class Program
         // fix pixels sometimes disapearing because of floating point stuff
         CameraPosX = MathF.Round(CameraPosX);
         CameraPosY = MathF.Round(CameraPosY);
+
+
+        if (ObjectUnderControl != null)
+        {
+            if (ObjectUnderControl.Stable)
+            { 
+                HandleWormControl(elapsedTime);
+            }
+        }
 
         if (PhysicsPaused)
         {

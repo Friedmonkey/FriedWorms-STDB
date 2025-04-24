@@ -18,7 +18,10 @@ partial class Program
         }
         if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out world))
         {
-            Entities.Add(CreateEntityWorm(new(world.X, world.Y)));
+            var worm = CreateEntityWorm(new(world.X, world.Y));
+            ObjectUnderControl = worm;
+            //CameraTracking = worm;
+            Entities.Add(worm);
         }
         if (IsMouseButtonPressed(MouseButton.Middle) && TryGetMouseWorldPos(out world))
         {
