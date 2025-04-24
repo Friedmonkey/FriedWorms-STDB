@@ -23,15 +23,31 @@ partial class Program
 
                 int index = mapY * MapWidth + mapX;
 
-                switch (Map[index])
+                var color = (Map[index]) switch
                 {
-                    case 0:
-                        DrawPixel(x, y, Color.SkyBlue);
-                        break;
-                    case 1:
-                        DrawPixel(x, y, Color.DarkGreen);
-                        break;
+                    (int)MapColor.Skyblue => Color.SkyBlue,
+                    (int)MapColor.Grass1 => Color.DarkGreen,
+                    (int)MapColor.Grass2 => DarkGreen2,
+                    (int)MapColor.Rock1 => Color.Gray,
+                    (int)MapColor.Rock2 => Color.DarkGray,
+                    (int)MapColor.Cloud => Color.White,
+                    _ => throw new Exception("Unknown color index:" + Map[index])
+                };
+                DrawPixel(x, y, color);
+
+                if (Map[index] == (int)MapColor.Cloud)
+                {
+                    //DrawCircle(x, y, 10, color);
+                    DrawEllipse(x, y, 15, 6, color);
                 }
+
+                    //case 0:
+                    //    DrawPixel(x, y, Color.SkyBlue);
+                    //    break;
+                    //case 1:
+                    //        colo
+                    //    DrawPixel(x, y, Color.DarkGreen);
+                    //    break;
             }
         }
 

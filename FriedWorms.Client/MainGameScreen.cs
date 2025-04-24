@@ -86,5 +86,7 @@ partial class Program
         }
 
         UnloadRenderTexture(renderTexture);
+        UnloadRenderTexture(overlayRenderTexture);
+        UnloadRenderTexture(UIRenderTexture);
     }
 }

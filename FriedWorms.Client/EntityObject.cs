@@ -21,6 +21,7 @@ public static partial class Program
     public static readonly Color Green = new Color(0, 228, 48, 255);
     public static readonly Color DarkGreen = new Color(0, 117, 44, 255);
     public static readonly Color GrenadeGreen = new Color(0, 90, 40, 255);
+    public static readonly Color DarkGreen2 = new Color(0, 114, 42, 255);
 
     public static void Draw(this Entity entity)
     {

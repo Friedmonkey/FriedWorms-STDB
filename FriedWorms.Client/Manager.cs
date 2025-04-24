@@ -5,6 +5,19 @@ using static Raylib_cs.Raylib;
 
 namespace FriedWorms.Client;
 
+public enum MapColor
+{ 
+    Skyblue = 0,
+    Grass1 = 1,
+    Grass2 = 2,
+    Rock1 = 3,
+    Rock2 = 4,
+
+    Cloud = 5,
+
+
+    Unknown = 255
+}
 partial class Program
 {
     static List<Entity> Entities = new List<Entity>();
@@ -86,25 +99,55 @@ partial class Program
         }
     }
 
-    static void CreateMap()
+    static float[] GenerateLayer(float start = 0.5f, int octaves = 8, float bias = 2.0f)
     {
-        float[] Surface = new float[MapWidth];
+        float[] layer = new float[MapWidth];
         float[] NoiseSeed = new float[MapWidth];
 
         for (int i = 0; i < MapWidth; i++)
             NoiseSeed[i] = Random.Shared.NextSingle();
 
-        NoiseSeed[0] = 0.5f;
-        PerlinNoise1D(MapWidth, NoiseSeed, 8, 2.0f, ref Surface);
+        NoiseSeed[0] = start;
+        PerlinNoise1D(MapWidth, NoiseSeed, octaves, bias, ref layer);
+        return layer;
+    }
+    static void CreateMap()
+    {
+        float[] Clouds = GenerateLayer(0.01f);
+        float[] Surface = GenerateLayer();
+        float[] Rocks = GenerateLayer(0.9f, 10);
+
 
         for (int x = 0; x < MapWidth; x++)
         {
             for (int y = 0; y < MapHeight; y++)
             {
+                byte mapColor = (Random.Shared.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
+
+                if (y >= Clouds[x] * MapHeight)
+                { 
+                    mapColor = (int)MapColor.Skyblue;
+                }
+
                 if (y >= Surface[x] * MapHeight)
-                    Map[y * MapWidth + x] = 1;
-                else
-                    Map[y * MapWidth + x] = 0;
+                {
+                    var rng = Random.Shared.Next(10);
+                    mapColor = rng switch 
+                    {
+                        1 => (byte)MapColor.Grass2,
+                        2 => (byte)MapColor.Grass2,
+                        3 => (byte)MapColor.Grass2,
+                        4 => (byte)MapColor.Grass2,
+                        5 => (byte)MapColor.Grass2,
+                        _ => (byte)MapColor.Grass1,
+                    }; 
+                }
+
+                if (y >= Rocks[x] * MapHeight)
+                { 
+                    mapColor = (Random.Shared.Next(10) == 1) ? (byte)MapColor.Rock2 :(byte)MapColor.Rock1;
+                }
+                Map[y * MapWidth + x] = mapColor;
             }
         }
     }
