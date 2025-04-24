@@ -65,7 +65,6 @@ partial class Program
             CreateExplosion(world.X, world.Y, 10.0f, 50);
         }
 
-
         if (IsKeyDown(KeyboardKey.Equal) || IsKeyDown(KeyboardKey.Minus))
         {
             float oldZoom = Zoom;
@@ -85,8 +84,6 @@ partial class Program
                 CameraPosY = newCam.Y;
             }
         }
-
-
 
         float mapScrollSpeed = 300.0f / Zoom;
         if (mapScrollSpeed < 30)
@@ -196,10 +193,6 @@ partial class Program
                              renderY + CameraPosY);
         return true;
     }
-
-
-
-
 
     // Taken from Perlin Noise Video https://youtu.be/6-0UaeJBumA
     static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)

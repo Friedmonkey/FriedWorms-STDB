@@ -24,19 +24,26 @@ public static partial class Program
 
     public static void Draw(this Entity entity)
     {
-        (List<Vector2> model, Color color) drawObj = ((EntityModelType)entity.ModelData) switch
-        {
-            EntityModelType.None => (shape, Color.Magenta),
-            EntityModelType.Worm => (worm, Color.Pink),
-            EntityModelType.Missile => (missile, Color.Yellow),
-            EntityModelType.Dummy => (dummy, Color.White),
-            EntityModelType.Debris => (debris, Color.DarkGreen),
-            EntityModelType.Granade => (granade, GrenadeGreen),
-            EntityModelType.Gravestone => (gravestone, Color.DarkGray),
+        (List<Vector2> model, Color color, bool clamped) drawObj = ((EntityModelType)entity.ModelData) switch
+        {   
+            EntityModelType.None => (shape, Color.Magenta, false),
+            EntityModelType.Worm => (worm, Color.Pink, true),
+            EntityModelType.Missile => (missile, Color.Yellow, false),
+            EntityModelType.Dummy => (dummy, Color.White, false),
+            EntityModelType.Debris => (debris, Color.DarkGreen, false),
+            EntityModelType.Granade => (grenade, GrenadeGreen, false),
+            EntityModelType.Gravestone => (gravestone, Color.DarkGray, true),
             _ => throw new Exception($"Unknow model data {entity.ModelData}")
         };
 
-        DrawWireFrameModel(drawObj.model, entity.Position.X, entity.Position.Y, MathF.Atan2(entity.Velocity.Y, entity.Velocity.X), 1.0f, drawObj.color);
+        var rotation = MathF.Atan2(entity.Velocity.Y, entity.Velocity.X);
+        if (drawObj.clamped && entity.Stable)
+        {
+            rotation = MathF.Abs(rotation);
+            rotation = Math.Clamp(rotation, 3 - 0.2f, 3 + 0.2f);
+        }
+
+        DrawWireFrameModel(drawObj.model, entity.Position.X, entity.Position.Y, rotation, 1.0f, drawObj.color);
     }
     public static void Damage(this Entity entity, float damage)
     {

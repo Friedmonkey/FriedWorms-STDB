@@ -86,19 +86,32 @@ public partial class Program
         return vecModel;
     }
 
-
-
     static List<Vector2> missile;
     static List<Vector2> dummy;
     static List<Vector2> worm;
     static readonly List<Vector2> gravestone = new()
     {
-        new Vector2(-4, -4),
-        new Vector2(4, -4),
-        new Vector2(4, 4),
-        new Vector2(-4, 4),
+        // Bottom rectangle part
+        new Vector2(-4, -6),
+        new Vector2(4, -6),
+        new Vector2(4, 0),
+
+        // Half-circle top (semi-arc from right to left)
+        new Vector2(3.5f, 2.0f),
+        new Vector2(2.5f, 3.2f),
+        new Vector2(1.2f, 3.8f),
+        new Vector2(0, 4),
+        new Vector2(-1.2f, 3.8f),
+        new Vector2(-2.5f, 3.2f),
+        new Vector2(-3.5f, 2.0f),
+
+        // Back down left side
+        new Vector2(-4, 0),
+        new Vector2(-4, -6), // Close the loop
     };
-    static readonly List<Vector2> granade = new()
+
+
+    static readonly List<Vector2> grenade = new()
     {
         new Vector2(-2.0f, -2.0f),
         new Vector2(2.0f, -2.0f),
