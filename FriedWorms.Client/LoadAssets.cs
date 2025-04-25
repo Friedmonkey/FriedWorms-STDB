@@ -22,7 +22,7 @@ partial class Program
         SetMusicVolume(music, 0.15f);
         PlayMusicStream(music);
 
-        explosions = new FriedSoundBlock("Assets/Audio/explosion.mp3");
+        explosions = new FriedSoundBlock("Assets/Audio/explode1.mp3");
 
         //var (iconExt, _skyBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/FirePowerupAtlas.png");
 
