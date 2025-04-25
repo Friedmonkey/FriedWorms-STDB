@@ -22,15 +22,15 @@ partial class Program
 {
     static List<Entity> Entities = new List<Entity>();
     static byte[] Map = new byte[0];
-    static int MapWidth = 0;
-    static int MapHeight = 0;
+    public static int MapWidth = 0;
+    public static int MapHeight = 0;
 
-    static float CameraPosX = 0.0f;
-    static float CameraPosY = 0.0f;
-    static float TargetCameraPosX = 0.0f;
-    static float TargetCameraPosY = 0.0f;
+    public static float CameraPosX = 0.0f;
+    public static float CameraPosY = 0.0f;
+    public static float TargetCameraPosX = 0.0f;
+    public static float TargetCameraPosY = 0.0f;
 
-    static float Zoom = 1.0f;
+    public static float Zoom = 1.0f;
     static float MaxZoom = 3.0f;
     static bool PhysicsPaused = false;
     static bool UserHasControl = true;

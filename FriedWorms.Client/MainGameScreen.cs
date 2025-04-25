@@ -8,10 +8,11 @@ partial class Program
 {
     //const int TARGET_WIDTH = 384;
     //const int TARGET_HEIGHT = 240;
-    const int TARGET_WIDTH = 448;
-    const int TARGET_HEIGHT = 280;
+    public const int TARGET_WIDTH = 448;
+    public const int TARGET_HEIGHT = 280;
     const int OverlayScale = 4;
     const int UiScale = 4;
+    const int BackgroundScale = 4;
     static void MainGame()
     {
         SetConfigFlags(ConfigFlags.ResizableWindow);
@@ -56,7 +57,7 @@ partial class Program
             BeginDrawing();
             ClearBackground(Color.RayWhite);
             
-            DrawTextureScaled(backgroundTexture, TARGET_WIDTH, TARGET_HEIGHT);
+            DrawTextureScaled(backgroundTexture, TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale);
             DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
             DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);

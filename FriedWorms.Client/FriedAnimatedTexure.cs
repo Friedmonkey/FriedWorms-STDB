@@ -31,12 +31,12 @@ public class FriedAnimatedTexure
         this.texture = texture;
 
         // Init variables for animation
-        frameWidth = (float)(texture.Width / framesPerLine);   // Sprite one frame rectangle width
-        frameHeight = (float)(texture.Height / lines);           // Sprite one frame rectangle height
+        frameWidth = (float)(texture.Width / framesPerLine);    // Sprite one frame rectangle width
+        frameHeight = (float)(texture.Height / lines);          // Sprite one frame rectangle height
         currentFrame = 0;
         currentLine = 0;
 
-        frameRec = new ( 0, 0, frameWidth, frameHeight );
+        frameRec = new ( 0, 0, frameWidth / Program.Zoom, frameHeight / Program.Zoom);
         position = new ( 0.0f, 0.0f );
 
         framesCounter = 0;
@@ -64,11 +64,25 @@ public class FriedAnimatedTexure
             framesCounter = 0;
         }
 
-        frameRec.X = frameWidth * currentFrame;
-        frameRec.Y = frameHeight * currentLine;
+
+        //float zoom = (Raylib.GetScreenWidth() / (float)Program.TARGET_WIDTH);
+
+        //// Calculate new width and height of the scaled texture
+        //int scaledWidth = (int)(Program.TARGET_WIDTH * zoom);
+        //int scaledHeight = (int)(Program.TARGET_HEIGHT * zoom);
+
+        //// Offset so the zoom centers in the middle of the screen
+        //int offsetX = (Raylib.GetScreenWidth() - scaledWidth) / 2;
+        //int offsetY = (Raylib.GetScreenHeight() - scaledHeight) / 2;
+
+        //scaledWidth = (int)(scaledWidth * Program.Zoom);
+        //scaledHeight = (int)(scaledHeight * Program.Zoom);
+
+        frameRec.X = ((frameWidth / Program.Zoom) * (currentFrame * Program.Zoom));
+        frameRec.Y = ((frameHeight / Program.Zoom) * (currentLine * Program.Zoom));
     }
     public void Draw(int x, int y, Color color)
     {
-        Raylib.DrawTextureRec(texture, frameRec, new( (float)(x), (float)(y) ), color);
+        Raylib.DrawTextureRec(texture, frameRec, new( (float)(x - Program.CameraPosX), (float)(y - Program.CameraPosY) ), color);
     }
 }
