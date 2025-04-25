@@ -23,10 +23,10 @@ partial class Program
         {
             var worm = CreateEntityWorm(new(world.X, world.Y));
             if (ControlWorm != null)
-                ControlWorm.Rotation = float.NegativeZero;
+                ControlWorm.ShootingAngle = float.NegativeZero;
 
             ControlWorm = worm;
-            ControlWorm.Rotation = 1;
+            ControlWorm.ShootingAngle = 1;
             CameraTracking = worm;
             Entities.Add(worm);
         }

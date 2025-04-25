@@ -23,8 +23,10 @@ namespace SpacetimeDB.Types
         public DbVector2 Velocity;
         [DataMember(Name = "Acceleration")]
         public DbVector2 Acceleration;
-        [DataMember(Name = "Rotation")]
-        public float Rotation;
+        [DataMember(Name = "ShootingAngle")]
+        public float ShootingAngle;
+        [DataMember(Name = "ExtraGravityForce")]
+        public float ExtraGravityForce;
         [DataMember(Name = "Radius")]
         public float Radius;
         [DataMember(Name = "Stable")]
@@ -39,6 +41,8 @@ namespace SpacetimeDB.Types
         public int MaxBounceCount;
         [DataMember(Name = "Dead")]
         public bool Dead;
+        [DataMember(Name = "CustomColorIndex")]
+        public byte CustomColorIndex;
         [DataMember(Name = "ModelData")]
         public uint ModelData;
 
@@ -48,7 +52,8 @@ namespace SpacetimeDB.Types
             DbVector2 Position,
             DbVector2 Velocity,
             DbVector2 Acceleration,
-            float Rotation,
+            float ShootingAngle,
+            float ExtraGravityForce,
             float Radius,
             bool Stable,
             float Friction,
@@ -56,6 +61,7 @@ namespace SpacetimeDB.Types
             float Health,
             int MaxBounceCount,
             bool Dead,
+            byte CustomColorIndex,
             uint ModelData
         )
         {
@@ -64,7 +70,8 @@ namespace SpacetimeDB.Types
             this.Position = Position;
             this.Velocity = Velocity;
             this.Acceleration = Acceleration;
-            this.Rotation = Rotation;
+            this.ShootingAngle = ShootingAngle;
+            this.ExtraGravityForce = ExtraGravityForce;
             this.Radius = Radius;
             this.Stable = Stable;
             this.Friction = Friction;
@@ -72,6 +79,7 @@ namespace SpacetimeDB.Types
             this.Health = Health;
             this.MaxBounceCount = MaxBounceCount;
             this.Dead = Dead;
+            this.CustomColorIndex = CustomColorIndex;
             this.ModelData = ModelData;
         }
 

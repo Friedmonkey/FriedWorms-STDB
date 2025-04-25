@@ -8,16 +8,20 @@ partial class Program
 {
     static void Overlay()
     {
+        if (EnergyRising && ControlWorm != null && !ControlWorm.Dead)
+        {
+            RenderEnergyBar(ControlWorm);
+        }
         //render health bars
         foreach (var entity in Entities)
         {
             if (entity.MaxHealth != 0)
                 RenderHealthBar(entity);
 
-            if (entity.Rotation != float.NegativeZero)
+            if (entity.ShootingAngle != float.NegativeZero)
             { 
-                int centerX = (int)((entity.Position.X * OverlayScale) + 35.0f * MathF.Cos(entity.Rotation) - (CameraPosX * OverlayScale));
-                int centerY = (int)((entity.Position.Y * OverlayScale) - 35.0f * MathF.Sin(entity.Rotation) - (CameraPosY * OverlayScale));
+                int centerX = (int)((entity.Position.X * OverlayScale) + 35.0f * MathF.Cos(entity.ShootingAngle) - (CameraPosX * OverlayScale));
+                int centerY = (int)((entity.Position.Y * OverlayScale) - 35.0f * MathF.Sin(entity.ShootingAngle) - (CameraPosY * OverlayScale));
 
                 System.Numerics.Vector2 center = new(centerX, centerY);
                 System.Numerics.Vector2 scaleX = new (8, 0);
@@ -42,6 +46,27 @@ partial class Program
         float textX = (entity.Position.X * OverlayScale) - (CameraPosX * OverlayScale);
         float textY = (entity.Position.Y * OverlayScale) - (CameraPosY * OverlayScale);
         DrawText(rotation.ToString(), (int)textX, (int)textY, 5, Color.Black);
+    }
+    static void RenderEnergyBar(Entity entity)
+    {
+        //render energy bar
+        int energyPixels = (int)MathF.Round(EnergyLevel * 50);
+
+        int barPixelsX = 5;
+        int barPixelsY = 50;
+
+        float barX = (entity.Position.X * OverlayScale) - (CameraPosX * OverlayScale);
+        float barY = (entity.Position.Y * OverlayScale) - (CameraPosY * OverlayScale);
+
+        for (int i = 0; i < barPixelsY; i++)
+        {
+            Color color = (i > energyPixels) ? Color.DarkPurple : Color.Blue;
+
+            int newX = (int)Math.Round(barX) - 50;
+            int newY = (int)Math.Round(barY) - i;
+
+            DrawLine(newX, newY, newX + barPixelsX, newY, color);
+        }
     }
     static void RenderHealthBar(Entity entity)
     {

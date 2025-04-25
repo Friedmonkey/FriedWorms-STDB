@@ -44,6 +44,9 @@ public static partial class Program
             rotation = Math.Clamp(rotation, 3 - 0.2f, 3 + 0.2f);
         }
 
+        if (entity.CustomColorIndex != 0)
+            drawObj.color = GetMapColor((MapColor)entity.CustomColorIndex);
+
         DrawWireFrameModel(drawObj.model, entity.Position.X, entity.Position.Y, rotation, 1.0f, drawObj.color);
     }
     public static void Damage(this Entity entity, float damage)
@@ -91,7 +94,7 @@ public static partial class Program
             Friction = 0.8f,
             MaxHealth = 150,
             Health = 50,
-            Rotation = float.NegativeZero,
+            ShootingAngle = float.NegativeZero,
         };
     }
     public static Entity CreateEntityWorm(DbVector2 position)
@@ -104,7 +107,7 @@ public static partial class Program
             Friction = 0.2f,
             MaxHealth = 100.0f,
             Health = 100.0f,
-            Rotation = float.NegativeZero,
+            ShootingAngle = float.NegativeZero,
         };
     }
     public static Entity CreateEntityGravestone(DbVector2 position)
@@ -115,7 +118,7 @@ public static partial class Program
             Position = position,
             Radius = 4f,
             Friction = 0.2f,
-            Rotation = float.NegativeZero,
+            ShootingAngle = float.NegativeZero,
         };
     }
     public static Entity CreateEntityGranade(DbVector2 position)
@@ -127,7 +130,7 @@ public static partial class Program
             Radius = 1f,
             Friction = 0.8f,
             MaxBounceCount = 3,
-            Rotation = float.NegativeZero,
+            ShootingAngle = float.NegativeZero,
         };
     }
     public static Entity CreateEntityMissile(DbVector2 position)
@@ -136,13 +139,13 @@ public static partial class Program
         {
             ModelData = (uint)EntityModelType.Missile,
             Position = position,
-            Radius = 4.0f,
+            Radius = 3.5f,
             Friction = 0.8f,
             MaxBounceCount = 1, //after one bounce it dies (explodes too!)
-            Rotation = float.NegativeZero,
+            ShootingAngle = float.NegativeZero,
         };
     }
-    public static Entity CreateEntityDebris(DbVector2 position)
+    public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)
     {
         float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
         return new Entity()
@@ -153,7 +156,8 @@ public static partial class Program
             MaxBounceCount = 5,
             Radius = 0.8f,
             Friction = 0.8f,
-            Rotation = float.NegativeZero,
+            ShootingAngle = float.NegativeZero,
+            CustomColorIndex = colorIndex,
         };
     }
 }

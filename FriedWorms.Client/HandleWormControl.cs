@@ -17,20 +17,20 @@ partial class Program
 
         if (IsKeyPressed(KeyboardKey.W)) //jump
         {
-            ControlWorm.Velocity.X = 6.0f * MathF.Cos(ControlWorm.Rotation);
-            ControlWorm.Velocity.Y = -12.0f * MathF.Sin(ControlWorm.Rotation);
+            ControlWorm.Velocity.X = 6.0f * MathF.Cos(ControlWorm.ShootingAngle);
+            ControlWorm.Velocity.Y = -12.0f * MathF.Sin(ControlWorm.ShootingAngle);
             ControlWorm.Stable = false;
         }
 
         if (IsKeyDown(KeyboardKey.A)) //aim left
         {
-            ControlWorm.Rotation += 1.5f * elapsedTime;
-            if (ControlWorm.Rotation > MathF.PI) ControlWorm.Rotation -= MathF.PI * 2.0f;
+            ControlWorm.ShootingAngle += 1.5f * elapsedTime;
+            if (ControlWorm.ShootingAngle > MathF.PI) ControlWorm.ShootingAngle -= MathF.PI * 2.0f;
         }
         if (IsKeyDown(KeyboardKey.D)) //aim right
         {
-            ControlWorm.Rotation -= 1.5f * elapsedTime;
-            if (ControlWorm.Rotation < -MathF.PI) ControlWorm.Rotation += MathF.PI * 2.0f;
+            ControlWorm.ShootingAngle -= 1.5f * elapsedTime;
+            if (ControlWorm.ShootingAngle < -MathF.PI) ControlWorm.ShootingAngle += MathF.PI * 2.0f;
         }
 
         if (IsKeyPressed(KeyboardKey.Space))
@@ -67,8 +67,8 @@ partial class Program
             var oy = ControlWorm.Position.Y;
 
             //direction
-            var dx = MathF.Cos(ControlWorm.Rotation);
-            var dy = MathF.Sin(ControlWorm.Rotation);
+            var dx = MathF.Cos(ControlWorm.ShootingAngle);
+            var dy = MathF.Sin(ControlWorm.ShootingAngle);
 
             var missile = CreateEntityMissile(ControlWorm.Position);
             missile.Velocity.X = dx * 40.0f * EnergyLevel;

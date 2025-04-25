@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using System;
 using System.Numerics;
 using static Raylib_cs.Raylib;
 
@@ -6,6 +7,19 @@ namespace FriedWorms.Client;
 
 partial class Program
 {
+    static Color GetMapColor(MapColor color)
+    { 
+        return (color) switch
+        {
+            MapColor.Skyblue => Color.SkyBlue,
+            MapColor.Grass1 => Color.DarkGreen,
+            MapColor.Grass2 => DarkGreen2,
+            MapColor.Rock1 => Color.Gray,
+            MapColor.Rock2 => Color.DarkGray,
+            MapColor.Cloud => Color.White,
+            _ => throw new Exception("Unknown color index:" + (int)color)
+        };
+    }
     static void Display()
     {
         var displayX = TARGET_WIDTH / Zoom;
@@ -23,16 +37,7 @@ partial class Program
 
                 int index = mapY * MapWidth + mapX;
 
-                var color = (Map[index]) switch
-                {
-                    (int)MapColor.Skyblue => Color.SkyBlue,
-                    (int)MapColor.Grass1 => Color.DarkGreen,
-                    (int)MapColor.Grass2 => DarkGreen2,
-                    (int)MapColor.Rock1 => Color.Gray,
-                    (int)MapColor.Rock2 => Color.DarkGray,
-                    (int)MapColor.Cloud => Color.White,
-                    _ => throw new Exception("Unknown color index:" + Map[index])
-                };
+                var color = GetMapColor((MapColor)Map[index]);
                 DrawPixel(x, y, color);
 
                 if (Map[index] == (int)MapColor.Cloud)

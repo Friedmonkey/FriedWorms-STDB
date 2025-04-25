@@ -37,7 +37,8 @@ public static partial class Module
         public DbVector2 Position;
         public DbVector2 Velocity;
         public DbVector2 Acceleration;
-        public float Rotation;
+        public float ShootingAngle;
+        public float ExtraGravityForce;
 
         public float Radius;
         public bool Stable;
@@ -47,8 +48,9 @@ public static partial class Module
         public float Health;
 
         //how many times it can bounce before dying (negative means it dont matter)
-        int MaxBounceCount;
-        bool Dead;
+        public int MaxBounceCount;
+        public bool Dead;
+        public byte CustomColorIndex;
 
 
         public uint ModelData;

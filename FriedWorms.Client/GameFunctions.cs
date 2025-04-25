@@ -1,29 +1,46 @@
 ﻿using Raylib_cs;
 using static Raylib_cs.Raylib;
 using SpacetimeDB.Types;
+using System;
 
 namespace FriedWorms.Client;
 
 partial class Program
 {
-    static void CreateCircle(int xc, int yc, int r, byte fill = 0)
+    static List<byte> CreateCircle(int xc, int yc, int r, byte fill = 0)
     {
-        // Taken from wikipedia
+        List<byte> sampled = new(r); // max size r
+
+        // Sample edge before drawing
+        for (int i = 0; i < r; i++)
+        {
+            double angle = (2 * Math.PI * i) / r;
+            int sx = (int)Math.Round(xc + Math.Cos(angle) * r);
+            int sy = (int)Math.Round(yc + Math.Sin(angle) * r);
+
+            if (sx >= 0 && sx < MapWidth && sy >= 0 && sy < MapHeight)
+            {
+                byte val = Map[sy * MapWidth + sx];
+                if (val != 0)
+                    sampled.Add(val);
+            }
+        }
+
+        // Draw the filled circle (unchanged)
         int x = 0;
         int y = r;
         int p = 3 - 2 * r;
-        if (r == 0) return;
+        if (r == 0) return sampled;
 
         void drawline(int sx, int ex, int ny)
         {
             for (int i = sx; i < ex; i++)
                 if (ny >= 0 && ny < MapHeight && i >= 0 && i < MapWidth)
                     Map[ny * MapWidth + i] = fill;
-        };
+        }
 
         while (y >= x)
         {
-            // Modified to draw scan-lines instead of edges
             drawline(xc - x, xc + x, yc - y);
             drawline(xc - y, xc + y, yc - x);
             drawline(xc - x, xc + x, yc + y);
@@ -31,11 +48,16 @@ partial class Program
             if (p < 0) p += 4 * x++ + 6;
             else p += 4 * (x++ - y--) + 10;
         }
+
+        return sampled;
     }
+
     static void CreateExplosion(float worldX, float worldY, float radius, float baseDamage, float damageFalloff = 1.5f)
     {
         explosions.Play();
-        CreateCircle((int)worldX, (int)worldY, (int)radius);
+        //var color = GetMapColor((MapColor)Map[index]);
+
+        var colorIndices = CreateCircle((int)worldX, (int)worldY, (int)radius);
 
         var currentEntities = Entities.Where(e => !e.Dead).ToList();
 
@@ -78,9 +100,9 @@ partial class Program
             }
         }
 
-        for (int i = 0; i < (int)radius; i++)
+        foreach (byte colorIdx in colorIndices) 
         {
-            Entities.Add(CreateEntityDebris(new DbVector2(worldX, worldY)));
+            Entities.Add(CreateEntityDebris(new DbVector2(worldX, worldY), colorIdx));
         }
     }
 }
