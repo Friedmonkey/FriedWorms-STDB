@@ -17,7 +17,7 @@ partial class Program
     {
         InitAudioDevice();
 
-        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/ザハンド.mp3");
+        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/Tetris.mp3");
         music = LoadMusicStreamFromMemory(musicExt, _musicBytes);
         SetMusicVolume(music, 0.15f);
         PlayMusicStream(music);
