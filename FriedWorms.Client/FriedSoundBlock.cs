@@ -8,10 +8,11 @@ public class FriedSoundBlock
     Sound[] sounds;
     int maxSounds;
     int currentSound;
-    public FriedSoundBlock(string path, int maxSounds = 10)
+    public FriedSoundBlock(string path, int maxSounds = 10, float volume = 0.5f)
     { 
         sounds = new Sound[maxSounds];
         sounds[0] = Program.LoadSound(path);
+        Raylib.SetSoundVolume(sounds[0], volume);
 
         currentSound = 0;
         this.maxSounds = maxSounds;
@@ -19,6 +20,7 @@ public class FriedSoundBlock
         for (int i = 1; i < maxSounds; i++)
         {
             sounds[i] = Raylib.LoadSoundAlias(sounds[0]);        // Load an alias of the sound into slots 1-9. These do not own the sound data, but can be played
+            Raylib.SetSoundVolume(sounds[i], volume);
         }
     }
 

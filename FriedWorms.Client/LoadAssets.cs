@@ -1,7 +1,6 @@
 ﻿using Raylib_cs;
 using SpacetimeDB.Types;
 using static Raylib_cs.Raylib;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace FriedWorms.Client;
 
@@ -13,20 +12,36 @@ partial class Program
 
     static FriedSoundBlock explosions = null!;
 
+    static Image spaceImage;
+    static Texture2D spaceTexure;
+
+    static Image skyImage;
+    static Texture2D skyTexure;
+    static FriedAnimatedTexure skygif;
+
     static void LoadAssets()
     {
         InitAudioDevice();
 
-        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/Tetris.mp3");
+        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/main3.mp3");
         music = LoadMusicStreamFromMemory(musicExt, _musicBytes);
         SetMusicVolume(music, 0.15f);
         PlayMusicStream(music);
 
         explosions = new FriedSoundBlock("Assets/Audio/explode1.mp3");
 
-        //var (iconExt, _skyBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/FirePowerupAtlas.png");
+        var (spaceExt, _spaceBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/space.jpg");
+        spaceImage = LoadImageFromMemory(spaceExt, _spaceBytes);
+        ImageResize(ref spaceImage, TARGET_WIDTH, TARGET_HEIGHT);
+        spaceTexure = LoadTextureFromImage(spaceImage);
 
-        //var skyImage = LoadImageFromMemory(iconExt, _skyBytes);
+
+        var (skyExt, _skyBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/skyatlas.png");
+        skyImage = LoadImageFromMemory(skyExt, _skyBytes);
+        ImageResize(ref skyImage, TARGET_WIDTH, TARGET_HEIGHT*108);
+        skyTexure = LoadTextureFromImage(skyImage);
+        skygif = new FriedAnimatedTexure(skyTexure, 1, 108);
+
         //if (skyImage.Data == IntPtr.Zero)
         //{
         //    Console.WriteLine("Image loading failed :(");

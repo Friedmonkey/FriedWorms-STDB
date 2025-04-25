@@ -20,6 +20,7 @@ partial class Program
 
         Load();
 
+        RenderTexture2D backgroundTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
         RenderTexture2D overlayRenderTexture = LoadRenderTexture(TARGET_WIDTH*OverlayScale, TARGET_HEIGHT* OverlayScale);
         RenderTexture2D UIRenderTexture = LoadRenderTexture(TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
@@ -31,8 +32,14 @@ partial class Program
 
             Tick();
 
+            BeginTextureMode(backgroundTexture);
+            ClearBackground(new Color(0, 0, 0, 0));
+            skygif.Draw(0,0, Color.White);
+            //DrawTexture(spaceTexure, 0,0,Color.White);
+            EndTextureMode();
+
             BeginTextureMode(renderTexture);
-            ClearBackground(Color.White);
+            ClearBackground(new Color(0, 0, 0, 0));
             Display();
             EndTextureMode();
 
@@ -41,17 +48,18 @@ partial class Program
             Overlay();
             EndTextureMode();
 
-            //BeginTextureMode(UIRenderTexture);
-            //ClearBackground(new Color(0, 0, 0, 0));
-            //RenderUI();
-            //EndTextureMode();
+            BeginTextureMode(UIRenderTexture);
+            ClearBackground(new Color(0, 0, 0, 0));
+            RenderUI();
+            EndTextureMode();
 
             BeginDrawing();
             ClearBackground(Color.RayWhite);
             
+            DrawTextureScaled(backgroundTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
-            //DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);
+            DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);
             EndDrawing();
 
 

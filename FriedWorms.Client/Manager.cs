@@ -59,6 +59,7 @@ partial class Program
     }
     static void Tick()
     {
+        skygif.Update();
         UpdateMusicStream(music);
         float elapsedTime = GetFrameTime();
 

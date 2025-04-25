@@ -18,19 +18,19 @@ partial class Program
         if (IsKeyPressed(KeyboardKey.W)) //jump
         {
             ControlWorm.Velocity.X = 6.0f * MathF.Cos(ControlWorm.ShootingAngle);
-            ControlWorm.Velocity.Y = -12.0f * MathF.Sin(ControlWorm.ShootingAngle);
+            ControlWorm.Velocity.Y = 12.0f * MathF.Sin(ControlWorm.ShootingAngle);
             ControlWorm.Stable = false;
         }
 
         if (IsKeyDown(KeyboardKey.A)) //aim left
         {
-            ControlWorm.ShootingAngle += 1.5f * elapsedTime;
-            if (ControlWorm.ShootingAngle > MathF.PI) ControlWorm.ShootingAngle -= MathF.PI * 2.0f;
+            ControlWorm.ShootingAngle -= 1.5f * elapsedTime;
+            if (ControlWorm.ShootingAngle < -MathF.PI) ControlWorm.ShootingAngle += MathF.PI * 2.0f;
         }
         if (IsKeyDown(KeyboardKey.D)) //aim right
         {
-            ControlWorm.ShootingAngle -= 1.5f * elapsedTime;
-            if (ControlWorm.ShootingAngle < -MathF.PI) ControlWorm.ShootingAngle += MathF.PI * 2.0f;
+            ControlWorm.ShootingAngle += 1.5f * elapsedTime;
+            if (ControlWorm.ShootingAngle > MathF.PI) ControlWorm.ShootingAngle -= MathF.PI * 2.0f;
         }
 
         if (IsKeyPressed(KeyboardKey.Space))
@@ -72,7 +72,8 @@ partial class Program
 
             var missile = CreateEntityMissile(ControlWorm.Position);
             missile.Velocity.X = dx * 40.0f * EnergyLevel;
-            missile.Velocity.Y = -(dy * 40.0f * EnergyLevel);
+            missile.Velocity.Y = dy * 40.0f * EnergyLevel;
+            CameraTracking = missile;
             Entities.Add(missile);
 
             EnergyRising = true;

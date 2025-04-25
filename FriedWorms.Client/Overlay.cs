@@ -21,7 +21,7 @@ partial class Program
             if (entity.ShootingAngle != float.NegativeZero)
             { 
                 int centerX = (int)((entity.Position.X * OverlayScale) + 35.0f * MathF.Cos(entity.ShootingAngle) - (CameraPosX * OverlayScale));
-                int centerY = (int)((entity.Position.Y * OverlayScale) - 35.0f * MathF.Sin(entity.ShootingAngle) - (CameraPosY * OverlayScale));
+                int centerY = (int)((entity.Position.Y * OverlayScale) + 35.0f * MathF.Sin(entity.ShootingAngle) - (CameraPosY * OverlayScale));
 
                 System.Numerics.Vector2 center = new(centerX, centerY);
                 System.Numerics.Vector2 scaleX = new (8, 0);

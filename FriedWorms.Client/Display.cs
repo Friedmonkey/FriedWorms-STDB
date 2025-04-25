@@ -11,7 +11,7 @@ partial class Program
     { 
         return (color) switch
         {
-            MapColor.Skyblue => Color.SkyBlue,
+            MapColor.Skyblue => new Color(0,0,0,0),//Color.SkyBlue,
             MapColor.Grass1 => Color.DarkGreen,
             MapColor.Grass2 => DarkGreen2,
             MapColor.Rock1 => Color.Gray,

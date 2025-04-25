@@ -22,7 +22,7 @@
     <EmbeddedResource Include="Assets/Fonts/*.ttf" />
     <EmbeddedResource Include="Assets/Images/*.ico" />
     <EmbeddedResource Include="Assets/Images/*.png" />
-    <EmbeddedResource Include="Assets/Images/*.gif" />
+    <EmbeddedResource Include="Assets/Images/*.jpg" />
   </ItemGroup>
 
   <ItemGroup>
