@@ -14,6 +14,7 @@ public enum EntityModelType : uint
     Debris = 4,
     Gravestone = 5,
     Granade = 6,
+    Smoke = 7,
 }
 public static partial class Program
 {
@@ -34,6 +35,7 @@ public static partial class Program
             EntityModelType.Debris => (debris, Color.DarkGreen, false),
             EntityModelType.Granade => (grenade, GrenadeGreen, false),
             EntityModelType.Gravestone => (gravestone, Color.DarkGray, true),
+            EntityModelType.Smoke => (debris, Color.LightGray, false),
             _ => throw new Exception($"Unknow model data {entity.ModelData}")
         };
 
@@ -69,13 +71,13 @@ public static partial class Program
                 CreateExplosion(entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
                 break;
             case EntityModelType.Granade:
-                CreateExplosion(entity.Position.X, entity.Position.Y, 10.0f, 20, 0.2f);
+                CreateExplosion(entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
                 break;
             case EntityModelType.Worm:
                 {
                     var gravestone = CreateEntityGravestone(entity.Position);
                     gravestone.Velocity = entity.Velocity;
-                    gravestone.Velocity.Y = MathF.Abs(gravestone.Velocity.Y) + 100f;
+                    gravestone.Velocity.Y = -MathF.Abs(gravestone.Velocity.Y) - 25f;
                     Entities.Add(gravestone);
                 }
                 break;
@@ -158,6 +160,22 @@ public static partial class Program
             Friction = 0.8f,
             ShootingAngle = float.NegativeZero,
             CustomColorIndex = colorIndex,
+        };
+    }
+    public static Entity CreateEntitySmoke(DbVector2 position, byte colorIndex = 0)
+    {
+        float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
+        return new Entity()
+        {
+            ModelData = (uint)EntityModelType.Smoke,
+            Position = position,
+            Velocity = new(3 * MathF.Cos(rnd()), 4 * MathF.Sin(rnd())),
+            MaxBounceCount = 2,
+            Radius = 1.2f,
+            Friction = 0.2f,
+            ShootingAngle = float.NegativeZero,
+            CustomColorIndex = colorIndex,
+            ExtraGravityForce = -2.1f
         };
     }
 }

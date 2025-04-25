@@ -9,9 +9,17 @@ public partial class Program
         for (int i = 0; i < Entities.Count; i++)
         {
             Entity? entity = Entities[i];
+            if (entity.ModelData == (byte)EntityModelType.Smoke)
+            {
+                if (entity.Position.Y >= MapHeight || Random.Shared.Next(800) == 10)
+                { 
+                    entity.Dead = true;
+                    continue;
+                }
+            }
 
             //add gravity
-            entity.Acceleration.Y += 2.0f;
+            entity.Acceleration.Y += 2.0f + entity.ExtraGravityForce;
 
             //update velocity
             entity.Velocity.X += entity.Acceleration.X * elapsedTime;

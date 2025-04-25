@@ -9,22 +9,29 @@ partial class Program
 {
     static List<byte> CreateCircle(int xc, int yc, int r, byte fill = 0)
     {
-        List<byte> sampled = new(r); // max size r
+        const int defaultSample = 5;
+        List<byte> sampled = new(defaultSample + r); // max size r
 
-        // Sample edge before drawing
-        for (int i = 0; i < r; i++)
-        {
-            double angle = (2 * Math.PI * i) / r;
-            int sx = (int)Math.Round(xc + Math.Cos(angle) * r);
-            int sy = (int)Math.Round(yc + Math.Sin(angle) * r);
-
-            if (sx >= 0 && sx < MapWidth && sy >= 0 && sy < MapHeight)
+        void Sample(int radius, int multiplier = 1)
+        { 
+            // Sample edge before drawing
+            for (int i = 0; i < radius*multiplier; i++)
             {
-                byte val = Map[sy * MapWidth + sx];
-                if (val != 0)
-                    sampled.Add(val);
+                double angle = (2 * Math.PI * i) / radius;
+                int sx = (int)Math.Round(xc + Math.Cos(angle) * radius);
+                int sy = (int)Math.Round(yc + Math.Sin(angle) * radius);
+
+                if (sx >= 0 && sx < MapWidth && sy >= 0 && sy < MapHeight)
+                {
+                    byte val = Map[sy * MapWidth + sx];
+                    if (val != 0)
+                        sampled.Add(val);
+                }
             }
         }
+        Sample(r);
+        if (sampled.Count < 5)
+            Sample(defaultSample, 4);
 
         // Draw the filled circle (unchanged)
         int x = 0;
@@ -55,7 +62,6 @@ partial class Program
     static void CreateExplosion(float worldX, float worldY, float radius, float baseDamage, float damageFalloff = 1.5f)
     {
         explosions.Play();
-        //var color = GetMapColor((MapColor)Map[index]);
 
         var colorIndices = CreateCircle((int)worldX, (int)worldY, (int)radius);
 
@@ -98,6 +104,11 @@ partial class Program
                 entity.Damage(damage);
 
             }
+        }
+
+        for (int i = 0; i < radius/2; i++)
+        {
+            Entities.Add(CreateEntitySmoke(new DbVector2(worldX, worldY)));
         }
 
         foreach (byte colorIdx in colorIndices) 
