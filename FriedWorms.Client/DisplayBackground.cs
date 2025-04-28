@@ -62,6 +62,7 @@ partial class Program
         }
         public void Render()
         {
+            Console.WriteLine($"Rendering texture with {skyBackground.colorMap.Count} colors!");
             BeginTextureMode(renderTexture);
             ClearBackground(new Color(0, 0, 0, 0));
             for (int x = 0; x < width; x++)
@@ -96,6 +97,7 @@ partial class Program
 
     static void LoadBackgrounds()
     {
+        //rgb(139, 0, 41) - rgb(233, 208, 255)
         // define sky colours however you like:
         Color skyBottom = new Color(90, 200, 255, 255);  // light blue
         Color skyTop = new Color(15, 35, 85, 255);  // deep blue
@@ -112,8 +114,10 @@ partial class Program
 
         for (int y = 0; y < height; y++)
         {
-            float t = (float)y / (height - 1); // How far from top to bottom (0.0 to 1.0)
-            Color rowColor = LerpColor(skyBottom, skyTop, t);
+            float t = (float)y*2 / (height/2 - 1); // How far from top to bottom (0.0 to 1.0)
+            Color rowColor = Color.DarkBlue;
+            //if (t < 1.0f)
+                rowColor = LerpColor(skyBottom, skyTop, t);
 
             for (int x = 0; x < width; x++)
             {
@@ -126,19 +130,19 @@ partial class Program
         {
             for (int y = 0; y < height; y++)
             {
-                if (x == 0 || x == width-1 || y == 0 || y == height-1)
+                //if (x == 0 || x == width-1 || y == 0 || y == height-1)
+                //{ 
+                //    skyBackground.SetPixel(x, y, Color.Red);
+                //    continue;
+                //}
+                //if (x % 20 == 1 || y % 20 == 1)
+                //{ 
+                //    skyBackground.SetPixel(x, y, Color.Gray);
+                //    continue;
+                //}
+                if (y >= stars[x] * height)
                 { 
-                    skyBackground.SetPixel(x, y, Color.Red);
-                    continue;
-                }
-                if (x % 20 == 1 || y % 20 == 1)
-                { 
-                    skyBackground.SetPixel(x, y, Color.Gray);
-                    continue;
-                }
-                if (y <= stars[x] * height)
-                { 
-                    if (Random.Shared.Next(500) == 1)
+                    if (Random.Shared.Next(800) == 1)
                     { 
                         skyBackground.SetPixel(x, y, Color.White);
                     }
