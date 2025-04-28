@@ -60,7 +60,8 @@ partial class Program
     float x, float y,
     float rotation = 0.0f,
     float scale = 1.0f,
-    Color color = default)
+    Color color = default,
+    bool uiscaling = false)
     {
         if (color.Equals(default(Color)))
             color = Color.White;
@@ -73,6 +74,11 @@ partial class Program
         for (int i = 0; i < vertexCount; i++)
         {
             var pt = modelCoords[i];
+            if (uiscaling)
+            {
+                pt.X *= 2.5f;
+                pt.Y *= 2.5f;
+            }
 
             // Rotate
             float rotatedX = pt.X * MathF.Cos(rotation) - pt.Y * MathF.Sin(rotation);
@@ -86,12 +92,15 @@ partial class Program
             float worldX = rotatedX + x;
             float worldY = rotatedY + y;
 
-            // Convert world → screen (Zoom + CameraPos)
-            float screenX = (worldX - CameraPosX);
-            float screenY = (worldY - CameraPosY);
+            if (!uiscaling)
+            { 
+                worldX -= CameraPosX;
+                worldY -= CameraPosY;
+            }
 
-            transformed.Add(new Vector2(screenX, screenY));
+            transformed.Add(new Vector2(worldX, worldY));
         }
+        float thickness = uiscaling ? 3f : 1;
 
         // Draw lines
         for (int i = 0; i < vertexCount; i++)
@@ -99,7 +108,8 @@ partial class Program
             Vector2 p1 = transformed[i];
             Vector2 p2 = transformed[(i + 1) % vertexCount]; // loop back around
 
-            DrawLine((int)p1.X, (int)p1.Y, (int)p2.X, (int)p2.Y, color);
+            //DrawLine((int)p1.X, (int)p1.Y, (int)p2.X, (int)p2.Y, color);
+            DrawLineEx(p1, p2, thickness, color);
         }
     }
 

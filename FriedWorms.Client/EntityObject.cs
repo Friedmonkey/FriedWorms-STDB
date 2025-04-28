@@ -24,7 +24,7 @@ public static partial class Program
     public static readonly Color GrenadeGreen = new Color(0, 90, 40, 255);
     public static readonly Color DarkGreen2 = new Color(0, 114, 42, 255);
 
-    public static void Draw(this Entity entity)
+    public static void Draw(this Entity entity, bool uiscaling = false)
     {
         (List<Vector2> model, Color color, bool clamped) drawObj = ((EntityModelType)entity.ModelData) switch
         {   
@@ -38,8 +38,8 @@ public static partial class Program
             EntityModelType.Smoke => (debris, Color.LightGray, false),
             _ => throw new Exception($"Unknow model data {entity.ModelData}")
         };
-
         var rotation = MathF.Atan2(entity.Velocity.Y, entity.Velocity.X);
+
         if (drawObj.clamped && entity.Stable)
         {
             rotation = MathF.Abs(rotation);
@@ -49,7 +49,7 @@ public static partial class Program
         if (entity.CustomColorIndex != 0)
             drawObj.color = GetMapColor((MapColor)entity.CustomColorIndex);
 
-        DrawWireFrameModel(drawObj.model, entity.Position.X, entity.Position.Y, rotation, 1.0f, drawObj.color);
+        DrawWireFrameModel(drawObj.model, entity.Position.X, entity.Position.Y, rotation, 1.0f, drawObj.color, uiscaling);
     }
     public static void Damage(this Entity entity, float damage)
     {
