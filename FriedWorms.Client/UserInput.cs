@@ -40,6 +40,7 @@ partial class Program
         if (IsKeyPressed(KeyboardKey.M))
         { 
             CreateMap();
+            LoadBackgrounds();
             Entities.Clear();
         }
 

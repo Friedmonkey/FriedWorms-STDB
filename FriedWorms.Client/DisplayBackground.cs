@@ -37,7 +37,7 @@ partial class Program
                 if (existingColorIndex != 0) //its not transparent we have to blend
                 { 
                     Color existingColor = colorMap[existingColorIndex];
-                    blendedColor = BlendColors(existingColor, color);
+                    blendedColor = BlendStar2(existingColor, color, 2f);
                 }
             }
 
@@ -49,17 +49,36 @@ partial class Program
             }
             skyBackground.Map[pixelIndex] = (ushort)idx;
         }
-
-        // Simple average blending
-        private Color BlendColors(Color a, Color b)
+        static byte Clamp(int value)
         {
-            byte r = (byte)((a.R + b.R) / 2);
-            byte g = (byte)((a.G + b.G) / 2);
-            byte b2 = (byte)((a.B + b.B) / 2);
-            byte a2 = (byte)((a.A + b.A) / 2); // Optional: blend alpha too
-
-            return new Color(a2, r, g, b2);
+            return (byte)(value < 0 ? 0 : (value > 255 ? 255 : value));
         }
+
+        static Color BlendStar2(Color background, Color star, float curvePower = 0.5f)
+        {
+            float starAlpha = star.A / 255f;
+
+            // remap brightness non-linearly
+            float rRatio = background.R / 255f;
+            float gRatio = background.G / 255f;
+            float bRatio = background.B / 255f;
+
+            float adjustedR = MathF.Pow(rRatio, curvePower);
+            float adjustedG = MathF.Pow(gRatio, curvePower);
+            float adjustedB = MathF.Pow(bRatio, curvePower);
+
+            byte newR = (byte)(adjustedR * 255f);
+            byte newG = (byte)(adjustedG * 255f);
+            byte newB = (byte)(adjustedB * 255f);
+
+            // Now blend the star onto the ADJUSTED background
+            byte r = Clamp((int)(newR + star.R * (starAlpha*2)));
+            byte g = Clamp((int)(newG + star.G * (starAlpha*2)));
+            byte b = Clamp((int)(newB + star.B * (starAlpha*2)));
+
+            return new Color(r, g, b, (byte)255);
+        }
+
         public void Render()
         {
             Console.WriteLine($"Rendering texture with {skyBackground.colorMap.Count} colors!");
@@ -114,10 +133,15 @@ partial class Program
 
         for (int y = 0; y < height; y++)
         {
-            float t = (float)y*2 / (height/2 - 1); // How far from top to bottom (0.0 to 1.0)
-            Color rowColor = Color.DarkBlue;
-            //if (t < 1.0f)
-                rowColor = LerpColor(skyBottom, skyTop, t);
+            const float offset = 0.42f;
+            const float scaling = 1.4f;
+            float t = (float)y / (height - 1); // 0.0 -> 1.0
+            t = t * scaling - offset;          // Apply your custom scaling
+            t = Math.Clamp(t, 0.0f, 1.0f);
+
+            t = t * t; // <--- ADD THIS! makes it start slow and end faster :)
+
+            Color rowColor = LerpColor(skyBottom, skyTop, t);
 
             for (int x = 0; x < width; x++)
             {
@@ -125,26 +149,24 @@ partial class Program
             }
         }
 
+
         float[] stars = GenerateLayer(width, 0.01f);
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
-                //if (x == 0 || x == width-1 || y == 0 || y == height-1)
-                //{ 
-                //    skyBackground.SetPixel(x, y, Color.Red);
-                //    continue;
-                //}
-                //if (x % 20 == 1 || y % 20 == 1)
-                //{ 
-                //    skyBackground.SetPixel(x, y, Color.Gray);
-                //    continue;
-                //}
-                if (y >= stars[x] * height)
+                if (height-y <= stars[x] * height)
                 { 
-                    if (Random.Shared.Next(800) == 1)
+                    if (Random.Shared.Next(500+((height-y))*15) == 1)
                     { 
-                        skyBackground.SetPixel(x, y, Color.White);
+                        //draw a star
+                        skyBackground.SetPixel(x, y, new Color(244, 255, 125, 125));
+
+                        skyBackground.SetPixel(x, y+1, new Color(251, 255, 209, 75));
+                        skyBackground.SetPixel(x, y-1, new Color(251, 255, 209, 75));
+
+                        skyBackground.SetPixel(x+1, y, new Color(251, 255, 209, 75));
+                        skyBackground.SetPixel(x-1, y, new Color(251, 255, 209, 75));
                     }
                 }
             }
@@ -156,50 +178,7 @@ partial class Program
     {
         skyBackground.Draw();
     }
-    //static void DisplayBackground()
-    //{
-    //    DrawBackgroundFast(skyBackground);
-    //}
-    //static void DrawBackground(Background bg)
-    //{
-    //    if (bg is null) return;
-    //    // how many world-pixels tall/wide we need to fill
-
-
-    //    //// 2) decorators (clouds, planets…) with parallax
-    //    //foreach (var d in bg.decorators)
-    //    //{
-    //    //    float sx = (d.WorldPos.X - CameraPosX) * BackgroundScale * d.Parallax;
-    //    //    float sy = (d.WorldPos.Y - CameraPosY) * BackgroundScale * d.Parallax;
-    //    //    DrawTexture(d.Tex, (int)sx, (int)sy, Color.White);
-    //    //}
-    //}
-    //static void DrawBackgroundFast(Background bg)
-    //{
-    //    var displayX = TARGET_WIDTH * BackgroundScale;
-    //    var displayY = TARGET_HEIGHT * BackgroundScale;
-
-    //    // 1) gradient by scanlines
-    //    for (int y = 0; y < displayY; y++)
-    //    {
-    //        float t = y / (float)(displayY - 1);
-    //        Color c = LerpColor(bg.topColor, bg.bottomColor, t);
-    //        // draw one horizontal line instead of thousands of pixels
-
-    //        int offsetY = ((TARGET_WIDTH) / 2) + (int)(y - (CameraPosY));
-
-    //        DrawLine(0, offsetY, displayX, offsetY, c);
-    //    }
-
-    //    //// 2) decorators as before
-    //    //foreach (var d in bg.decorators)
-    //    //{
-    //    //    float sx = (d.WorldPos.X - CameraPosX) * BackgroundScale * d.Parallax;
-    //    //    float sy = (d.WorldPos.Y - CameraPosY) * BackgroundScale * d.Parallax;
-    //    //    DrawTexture(d.Tex, (int)sx, (int)sy, Color.White);
-    //    //}
-    //}
-
+    
     static Color LerpColor(Color a, Color b, float t)
     {
         return new Color(
@@ -209,7 +188,6 @@ partial class Program
             (byte)(a.A + (b.A - a.A) * t)
         );
     }
-
 
     public struct BackgroundDecorator
     {
