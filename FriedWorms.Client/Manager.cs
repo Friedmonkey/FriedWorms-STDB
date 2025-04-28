@@ -111,21 +111,22 @@ partial class Program
         }
     }
 
-    static float[] GenerateLayer(float start = 0.5f, int octaves = 8, float bias = 2.0f)
+    static float[] GenerateLayer(float start = 0.5f, int octaves = 8, float bias = 2.0f) => GenerateLayer(MapWidth, start, octaves , bias);
+    static float[] GenerateLayer(int width, float start = 0.5f, int octaves = 8, float bias = 2.0f)
     {
-        float[] layer = new float[MapWidth];
-        float[] NoiseSeed = new float[MapWidth];
+        float[] layer = new float[width];
+        float[] NoiseSeed = new float[width];
 
-        for (int i = 0; i < MapWidth; i++)
+        for (int i = 0; i < width; i++)
             NoiseSeed[i] = Random.Shared.NextSingle();
 
         NoiseSeed[0] = start;
-        PerlinNoise1D(MapWidth, NoiseSeed, octaves, bias, ref layer);
+        PerlinNoise1D(width, NoiseSeed, octaves, bias, ref layer);
         return layer;
     }
     static void CreateMap()
     {
-        float[] Clouds = GenerateLayer(0.01f);
+        //float[] Clouds = GenerateLayer(0.01f);
         float[] Surface = GenerateLayer();
         float[] Rocks = GenerateLayer(0.9f, 10);
 
@@ -134,12 +135,13 @@ partial class Program
         {
             for (int y = 0; y < MapHeight; y++)
             {
-                byte mapColor = (Random.Shared.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
+                byte mapColor = (int)MapColor.Skyblue;
+                //byte mapColor = (Random.Shared.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
 
-                if (y >= Clouds[x] * MapHeight)
-                { 
-                    mapColor = (int)MapColor.Skyblue;
-                }
+                //if (y >= Clouds[x] * MapHeight)
+                //{ 
+                //    mapColor = (int)MapColor.Skyblue;
+                //}
 
                 if (y >= Surface[x] * MapHeight)
                 {
