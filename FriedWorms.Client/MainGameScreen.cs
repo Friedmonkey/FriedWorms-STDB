@@ -27,6 +27,7 @@ partial class Program
         RenderTexture2D UIRenderTexture = LoadRenderTexture(TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
 
         LoadBackgrounds();
+        LoadUI();
 
         while (!WindowShouldClose())
         {

@@ -77,7 +77,7 @@ public static partial class Program
                 {
                     var gravestone = CreateEntityGravestone(entity.Position);
                     gravestone.Velocity = entity.Velocity;
-                    gravestone.Velocity.Y = -MathF.Abs(gravestone.Velocity.Y) - 25f;
+                    gravestone.Velocity.Y = -MathF.Abs(gravestone.Velocity.Y) - 15f;
                     Entities.Add(gravestone);
                 }
                 break;
@@ -86,6 +86,20 @@ public static partial class Program
         }
     }
 
+    public static Entity CreateEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
+    {
+        switch (entityType)
+        {
+            case EntityModelType.Worm: return CreateEntityWorm(position);
+            case EntityModelType.Missile: return CreateEntityMissile(position);
+            case EntityModelType.Dummy: return CreateEntityDummy(position);
+            case EntityModelType.Debris: return CreateEntityDebris(position, colorIndex);
+            case EntityModelType.Gravestone: return CreateEntityGravestone(position);
+            case EntityModelType.Granade: return CreateEntityGranade(position);
+            case EntityModelType.Smoke: return CreateEntitySmoke(position, colorIndex);
+            default: throw new Exception($"Unknow model data {entityType}");
+        }
+    }
     public static Entity CreateEntityDummy(DbVector2 position)
     {
         return new Entity()

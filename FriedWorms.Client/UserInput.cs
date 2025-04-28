@@ -7,19 +7,19 @@ namespace FriedWorms.Client;
 
 partial class Program
 {
-    static void HandleUserInput(float elapsedTime)
+    static void HandleMouseClick()
     {
-        if (IsKeyPressed(KeyboardKey.M))
-        { 
-            CreateMap();
-            Entities.Clear();
-        }
+        if (UIClick())
+            return;
+        if (!TryGetMouseWorldPos(out var world))
+            return;
 
-        if (IsMouseButtonPressed(MouseButton.Right) && TryGetMouseWorldPos(out var world))
+
+        if (IsMouseButtonPressed(MouseButton.Right))
         {
             Entities.Add(CreateEntityMissile(new(world.X, world.Y)));
         }
-        if (IsMouseButtonPressed(MouseButton.Left) && TryGetMouseWorldPos(out world))
+        if (IsMouseButtonPressed(MouseButton.Left))
         {
             var worm = CreateEntityWorm(new(world.X, world.Y));
             if (ControlWorm != null)
@@ -30,11 +30,25 @@ partial class Program
             CameraTracking = worm;
             Entities.Add(worm);
         }
-        if (IsMouseButtonPressed(MouseButton.Middle) && TryGetMouseWorldPos(out world))
+        if (IsMouseButtonPressed(MouseButton.Middle))
         {
             Entities.Add(CreateEntityDummy(new(world.X, world.Y)));
         }
-        if (IsKeyPressed(KeyboardKey.G) && TryGetMouseWorldPos(out world))
+    }
+    static void HandleUserInput(float elapsedTime)
+    {
+        if (IsKeyPressed(KeyboardKey.M))
+        { 
+            CreateMap();
+            Entities.Clear();
+        }
+
+
+        if (IsMouseButtonPressed(MouseButton.Left) || IsMouseButtonPressed(MouseButton.Middle) || IsMouseButtonPressed(MouseButton.Right))
+        {
+            HandleMouseClick();    
+        }
+        if (IsKeyPressed(KeyboardKey.G) && TryGetMouseWorldPos(out var world))
         {
             Entities.Add(CreateEntityGranade(new(world.X, world.Y)));
         }

@@ -83,8 +83,8 @@ partial class Program
         {
             Color color = (i > healthPixels) ? Color.Red : Color.Green;
 
-            int newX = (int)Math.Round(barX - (healthPixels / 2) + i);
-            int newY = (int)Math.Round(barY) - 25;
+            int newX = (int)Math.Floor(barX - (healthPixels / 2) + i);
+            int newY = (int)Math.Floor(barY) - 25;
 
             DrawLine(newX, newY, newX, newY + barPixelsY, color);
         }

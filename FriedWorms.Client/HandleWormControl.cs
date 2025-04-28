@@ -10,6 +10,28 @@ partial class Program
     static bool FireWeapon;
     static bool EnergyRising;
     static float EnergyLevel;
+    static EntityModelType weaponType = EntityModelType.Missile;
+    static void ShootWeapon()
+    {
+        //origin
+        var ox = ControlWorm.Position.X;
+        var oy = ControlWorm.Position.Y;
+
+        //direction
+        var dx = MathF.Cos(ControlWorm.ShootingAngle);
+        var dy = MathF.Sin(ControlWorm.ShootingAngle);
+
+
+        //roughly the position of the cursor
+        var cursorPosX = (ox + 8 * dx);
+        var cursorPosY = (oy + 8 * dy);
+
+        var projectile = CreateEntity(new DbVector2(cursorPosX, cursorPosY), weaponType);
+        projectile.Velocity.X = dx * 40.0f * EnergyLevel;
+        projectile.Velocity.Y = dy * 40.0f * EnergyLevel;
+        CameraTracking = projectile;
+        Entities.Add(projectile);
+    }
     static void HandleWormControl(float elapsedTime)
     {
         if (!UserHasControl || ControlWorm == null) //user doest have control so we skip all this
@@ -62,21 +84,8 @@ partial class Program
 
         if (FireWeapon)
         {
-            //origin
-            var ox = ControlWorm.Position.X;
-            var oy = ControlWorm.Position.Y;
-
-            //direction
-            var dx = MathF.Cos(ControlWorm.ShootingAngle);
-            var dy = MathF.Sin(ControlWorm.ShootingAngle);
-
-            var missile = CreateEntityMissile(ControlWorm.Position);
-            missile.Velocity.X = dx * 40.0f * EnergyLevel;
-            missile.Velocity.Y = dy * 40.0f * EnergyLevel;
-            CameraTracking = missile;
-            Entities.Add(missile);
-
-            EnergyRising = true;
+            ShootWeapon();
+            EnergyRising = false;
             FireWeapon = false;
             EnergyLevel = 0.0f;
         }

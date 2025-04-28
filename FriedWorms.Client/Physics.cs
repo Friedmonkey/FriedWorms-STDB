@@ -9,13 +9,18 @@ public partial class Program
         for (int i = 0; i < Entities.Count; i++)
         {
             Entity? entity = Entities[i];
-            if (entity.ModelData == (byte)EntityModelType.Smoke)
+            if (entity.ModelData == (byte)EntityModelType.Smoke) //smoke can randomly die
             {
-                if (entity.Position.Y >= MapHeight || Random.Shared.Next(800) == 10)
+                if (Random.Shared.Next(800) == 10)
                 { 
                     entity.Dead = true;
                     continue;
                 }
+            }
+
+            if (entity.Position.Y >= MapHeight || entity.Position.Y <= 0) //kill offscreen entities
+            {
+                entity.Dead = true;
             }
 
             //add gravity
