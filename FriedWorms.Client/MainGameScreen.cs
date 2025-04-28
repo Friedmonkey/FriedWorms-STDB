@@ -39,6 +39,7 @@ partial class Program
             BeginTextureMode(backgroundTexture);
             ClearBackground(new Color(0, 0, 0, 0));
             DisplayBackground();
+            //DrawCircle((TARGET_WIDTH * BackgroundScale/2), (TARGET_HEIGHT * BackgroundScale/2), 50, Color.Red);
             //spacegif.Draw(0,0, Color.White);
             //DrawTexture(spaceTexure, 0,0,Color.White);
             EndTextureMode();
@@ -61,7 +62,7 @@ partial class Program
             BeginDrawing();
             ClearBackground(Color.RayWhite);
             
-            DrawTextureScaled(backgroundTexture, TARGET_WIDTH, TARGET_HEIGHT);
+            DrawTextureScaled(backgroundTexture, TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale);
             DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
             DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);

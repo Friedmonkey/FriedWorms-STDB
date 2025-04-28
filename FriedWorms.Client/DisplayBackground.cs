@@ -74,21 +74,21 @@ partial class Program
                     DrawPixel(x, y, color);
                 }
             }
+            DrawCircle((width / 2), (height / 2), 50, Color.Red);
             EndTextureMode();
         }
         public void Draw()
         {
             //scale
-            var displayX = TARGET_WIDTH * BackgroundScale;
-            var displayY = TARGET_HEIGHT * BackgroundScale;
-
+            var displayX = MathF.Round(TARGET_WIDTH * BackgroundScale);
+            var displayY = MathF.Round(TARGET_HEIGHT * BackgroundScale);
 
             //offsets
-            float mapX = CameraPosX;
-            float mapY = CameraPosY;
+            float mapX = MathF.Round(CameraPosX * BackgroundScale);
+            float mapY = MathF.Round(CameraPosY * BackgroundScale);
 
             var src = new Rectangle(mapX, mapY, new Vector2(displayX, displayY));
-            var dest = new Rectangle(0, 0, new Vector2(displayX, displayY));
+            var dest = new Rectangle(0, 0, new Vector2(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale));
             DrawTexturePro(renderTexture.Texture, src, dest, new(0, 0), 0, Color.White);
         }
     }
