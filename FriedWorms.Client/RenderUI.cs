@@ -44,9 +44,8 @@ partial class Program
             // Quick squared-distance check
             float dx = uiMouse.X - btnCenter.X;
             float dy = uiMouse.Y - btnCenter.Y;
-            if (dx * dx + dy * dy <= (BUTTON_SCALE * BUTTON_SCALE)+100)
+            if (dx * dx + dy * dy <= (BUTTON_SCALE * BUTTON_SCALE)+150)
             {
-                // HERE you can call e.g. button.OnClick() or whatever
                 if (IsMouseButtonPressed(MouseButton.Left))
                     button.Select();
                 return true;
@@ -65,6 +64,8 @@ partial class Program
 
             Color outline = button.Selected ? button.selectedOutlineColor : button.outlineColor;
             Color outlineOut = new Color(outline.R, outline.G, outline.B, (byte)0);
+
+            //slight shadow of 20 bigger
             DrawCircleGradient(x, y, BUTTON_SCALE + 20, outline, outlineOut);
         }
         foreach (var button in buttons)

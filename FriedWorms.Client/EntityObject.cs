@@ -18,7 +18,7 @@ public enum EntityModelType : uint
 }
 public static partial class Program
 {
-
+    public static uint IdTracker = 0;
     public static readonly Color Green = new Color(0, 228, 48, 255);
     public static readonly Color DarkGreen = new Color(0, 117, 44, 255);
     public static readonly Color GrenadeGreen = new Color(0, 90, 40, 255);
@@ -104,6 +104,7 @@ public static partial class Program
     {
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Dummy,
             Position = position,
             Radius = 4.0f,
@@ -117,6 +118,7 @@ public static partial class Program
     {
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Worm,
             Position = position,
             Radius = 2.5f,
@@ -130,6 +132,7 @@ public static partial class Program
     {
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Gravestone,
             Position = position,
             Radius = 4f,
@@ -141,6 +144,7 @@ public static partial class Program
     {
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Granade,
             Position = position,
             Radius = 1f,
@@ -153,6 +157,7 @@ public static partial class Program
     {
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Missile,
             Position = position,
             Radius = 3.5f,
@@ -166,6 +171,7 @@ public static partial class Program
         float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Debris,
             Position = position,
             Velocity = new(10 * MathF.Cos(rnd()), 10 * MathF.Sin(rnd())),
@@ -181,6 +187,7 @@ public static partial class Program
         float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
         return new Entity()
         {
+            Id = IdTracker++,
             ModelData = (uint)EntityModelType.Smoke,
             Position = position,
             Velocity = new(3 * MathF.Cos(rnd()), 4 * MathF.Sin(rnd())),

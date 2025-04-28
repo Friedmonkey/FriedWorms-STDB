@@ -11,17 +11,18 @@ public partial class Program
             Entity? entity = Entities[i];
             if (entity.ModelData == (byte)EntityModelType.Smoke) //smoke can randomly die
             {
-                if (Random.Shared.Next(800) == 10)
+                if (Random.Shared.Next((int)(20 / elapsedTime)) == 10)
                 { 
                     entity.Dead = true;
                     continue;
                 }
             }
 
-            if (entity.Position.Y >= MapHeight || entity.Position.Y <= 0) //kill offscreen entities
-            {
+            //kill offscreen entities (except tracking entities, so that missiles can go offscreen for a bit and still hit their target)
+            if(entity.Position.Y <= 0 && entity.Id != CameraTracking?.Id) 
                 entity.Dead = true;
-            }
+            if (entity.Position.Y >= MapHeight)
+                entity.Dead = true;
 
             //add gravity
             entity.Acceleration.Y += 2.0f + entity.ExtraGravityForce;
@@ -78,9 +79,6 @@ public partial class Program
                 {
                     entity.MaxBounceCount--;
                     entity.Dead = (entity.MaxBounceCount == 0);
-
-                    if (entity.Dead)
-                        entity.OnDeath();
                 }
             }
             else
@@ -89,6 +87,9 @@ public partial class Program
             }
 
             if (magVelocity < 0.1f) entity.Stable = true;
+
+            if (entity.Dead)
+                entity.OnDeath();
         }
 
         //remove dead entities
