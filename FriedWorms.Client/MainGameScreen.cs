@@ -12,7 +12,7 @@ partial class Program
     public const int TARGET_HEIGHT = 280;
     const int OverlayScale = 4;
     const int UiScale = 4;
-    const int BackgroundScale = 4;
+    public const int BackgroundScale = 4;
     static void MainGame()
     {
         SetConfigFlags(ConfigFlags.ResizableWindow);
@@ -21,10 +21,12 @@ partial class Program
 
         Load();
 
-        RenderTexture2D backgroundTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
+        RenderTexture2D backgroundTexture = LoadRenderTexture(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale);
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
         RenderTexture2D overlayRenderTexture = LoadRenderTexture(TARGET_WIDTH*OverlayScale, TARGET_HEIGHT* OverlayScale);
         RenderTexture2D UIRenderTexture = LoadRenderTexture(TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
+
+        LoadBackgrounds();
 
         while (!WindowShouldClose())
         {
@@ -35,7 +37,8 @@ partial class Program
 
             BeginTextureMode(backgroundTexture);
             ClearBackground(new Color(0, 0, 0, 0));
-            skygif.Draw(0,0, Color.White);
+            DisplayBackground();
+            //spacegif.Draw(0,0, Color.White);
             //DrawTexture(spaceTexure, 0,0,Color.White);
             EndTextureMode();
 
@@ -57,7 +60,7 @@ partial class Program
             BeginDrawing();
             ClearBackground(Color.RayWhite);
             
-            DrawTextureScaled(backgroundTexture, TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale);
+            DrawTextureScaled(backgroundTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
             DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);

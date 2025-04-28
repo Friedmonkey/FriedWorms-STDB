@@ -15,9 +15,13 @@ partial class Program
     static Image spaceImage;
     static Texture2D spaceTexure;
 
+    static Image cloudImage;
+    static Texture2D cloudTexure;
+
     static Image skyImage;
     static Texture2D skyTexure;
     static FriedAnimatedTexure skygif;
+    static FriedAnimatedTexure spacegif;
 
     static void LoadAssets()
     {
@@ -32,9 +36,14 @@ partial class Program
 
         var (spaceExt, _spaceBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/space.jpg");
         spaceImage = LoadImageFromMemory(spaceExt, _spaceBytes);
-        ImageResize(ref spaceImage, TARGET_WIDTH, TARGET_HEIGHT);
+        ImageResize(ref spaceImage, MapWidth * 10, MapHeight * 10);
         spaceTexure = LoadTextureFromImage(spaceImage);
+        spacegif = new FriedAnimatedTexure(spaceTexure, 1, 1);
 
+        var (cloudExt, _cloudBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/cloud.png");
+        cloudImage = LoadImageFromMemory(cloudExt, _cloudBytes);
+        ImageResize(ref cloudImage, 10 * BackgroundScale, 10 * BackgroundScale);
+        cloudTexure = LoadTextureFromImage(cloudImage);
 
         var (skyExt, _skyBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/skyatlas.png");
         skyImage = LoadImageFromMemory(skyExt, _skyBytes);

@@ -20,7 +20,8 @@ public class FriedAnimatedTexure
     int currentFrame;
     int currentLine;
 
-    Rectangle frameRec;
+    Rectangle sourceRec;
+    Rectangle destRec;
     Vector2 position;
 
     int framesCounter;
@@ -36,7 +37,8 @@ public class FriedAnimatedTexure
         currentFrame = 0;
         currentLine = 0;
 
-        frameRec = new ( 0, 0, frameWidth / Program.Zoom, frameHeight / Program.Zoom);
+        sourceRec = new ( 0, 0, frameWidth, frameHeight);
+        destRec = new ( 0, 0, frameWidth, frameHeight);
         position = new ( 0.0f, 0.0f );
 
         framesCounter = 0;
@@ -78,11 +80,31 @@ public class FriedAnimatedTexure
         //scaledWidth = (int)(scaledWidth * Program.Zoom);
         //scaledHeight = (int)(scaledHeight * Program.Zoom);
 
-        frameRec.X = ((frameWidth / Program.Zoom) * (currentFrame * Program.Zoom));
-        frameRec.Y = ((frameHeight / Program.Zoom) * (currentLine * Program.Zoom));
+        //sourceRec.X = ((frameWidth / Program.Zoom) * (currentFrame * Program.Zoom));
+        //sourceRec.Y = ((frameHeight / Program.Zoom) * (currentLine * Program.Zoom));
+        //sourceRec.Width = frameWidth / Program.Zoom;
+        //sourceRec.Height = frameHeight / Program.Zoom;
+
+        //destRec.Width = (Program.MapWidth);/// Program.Zoom) / Program.BackgroundScale;
+        //destRec.Height = (Program.MapHeight);/// Program.Zoom) / Program.BackgroundScale + 150;
+        //destRec.X = Program.CameraPosX;
+        //destRec.Y = Program.CameraPosY;
+
+        sourceRec.X = (frameWidth * currentFrame);
+        sourceRec.Y = (frameHeight * currentLine);
+        sourceRec.Width = frameWidth;
+        sourceRec.Height = frameHeight;
+
+        destRec.X = 0;
+        destRec.Y = 0;
+        destRec.Width = frameWidth;
+        destRec.Height = frameHeight;
+
     }
     public void Draw(int x, int y, Color color)
     {
-        Raylib.DrawTextureRec(texture, frameRec, new( (float)(x - Program.CameraPosX), (float)(y - Program.CameraPosY) ), color);
+        //Raylib.DrawTexture(texture, x, y, color);
+        Raylib.DrawTextureRec(texture, sourceRec, new( (float)(x), (float)(y) ), color);
+        //Raylib.DrawTexturePro(texture, sourceRec, destRec, new((float)(x), (float)(y)), 0f, color);
     }
 }

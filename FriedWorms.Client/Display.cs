@@ -40,19 +40,11 @@ partial class Program
                 var color = GetMapColor((MapColor)Map[index]);
                 DrawPixel(x, y, color);
 
-                if (Map[index] == (int)MapColor.Cloud)
-                {
-                    //DrawCircle(x, y, 10, color);
-                    DrawEllipse(x, y, 15, 6, color);
-                }
-
-                    //case 0:
-                    //    DrawPixel(x, y, Color.SkyBlue);
-                    //    break;
-                    //case 1:
-                    //        colo
-                    //    DrawPixel(x, y, Color.DarkGreen);
-                    //    break;
+                //if (Map[index] == (int)MapColor.Cloud)
+                //{
+                //    //DrawCircle(x, y, 10, color);
+                //    DrawEllipse(x, y, 15, 6, color);
+                //}
             }
         }
 

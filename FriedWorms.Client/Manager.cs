@@ -40,7 +40,6 @@ partial class Program
 
     static void Load()
     {
-        LoadAssets();
         LoadModels();
         var config = gameManager.Conn.Db.Config.Id.Find(0);
         if (config is null)
@@ -48,6 +47,8 @@ partial class Program
 
         MapWidth = config.MapWidth;
         MapHeight = config.MapHeight;
+        LoadAssets();
+
 
         CameraPosY = (MapHeight - TARGET_HEIGHT) / 2;
         CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
@@ -59,7 +60,7 @@ partial class Program
     }
     static void Tick()
     {
-        skygif.Update();
+        //spacegif.Update();
         UpdateMusicStream(music);
         float elapsedTime = GetFrameTime();
 
