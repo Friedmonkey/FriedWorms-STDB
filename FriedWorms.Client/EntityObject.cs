@@ -69,9 +69,11 @@ public static partial class Program
         {
             case EntityModelType.Missile:
                 CreateExplosion(entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
+                CameraTracking = ControlWorm;
                 break;
             case EntityModelType.Granade:
                 CreateExplosion(entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
+                CameraTracking = ControlWorm;
                 break;
             case EntityModelType.Worm:
                 {

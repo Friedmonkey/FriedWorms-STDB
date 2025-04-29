@@ -72,8 +72,12 @@ partial class Program
 
         if (CameraTracking != null)
         {
-            CameraPosX = CameraTracking.Position.X - viewWidth / 2;
-            CameraPosY = CameraTracking.Position.Y - viewHeight / 2;
+            TargetCameraPosX = CameraTracking.Position.X - viewWidth / 2;
+            TargetCameraPosY = CameraTracking.Position.Y - viewHeight / 2;
+
+            CameraPosX += (TargetCameraPosX - CameraPosX) * 5.0f * elapsedTime;
+            CameraPosY += (TargetCameraPosY - CameraPosY) * 5.0f * elapsedTime;
+
             if (CameraTracking.Dead) CameraTracking = null;
         }
 
