@@ -38,13 +38,9 @@ partial class Program
     static void HandleUserInput(float elapsedTime)
     {
         if (IsKeyPressed(KeyboardKey.M))
-        { 
-            CreateMap();
-            LoadBackgrounds();
-            Entities.Clear();
+        {
+            NextState = GameState.Reset;
         }
-
-
         if (IsMouseButtonPressed(MouseButton.Left) || IsMouseButtonPressed(MouseButton.Middle) || IsMouseButtonPressed(MouseButton.Right))
         {
             HandleMouseClick();    

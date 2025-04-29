@@ -9,17 +9,16 @@ public partial class Program
         for (int i = 0; i < Entities.Count; i++)
         {
             Entity? entity = Entities[i];
-            if (entity.ModelData == (byte)EntityModelType.Smoke) //smoke can randomly die
-            {
-                if (Random.Shared.Next((int)(20 / elapsedTime)) == 10)
-                { 
-                    entity.Dead = true;
-                    continue;
-                }
-            }
+            entity.OnTick(elapsedTime);
+
+            if (entity.DeathTimer != float.PositiveInfinity)
+                entity.DeathTimer -= 1 * elapsedTime;
+
+            if (entity.DeathTimer <= 0)
+                entity.Dead = true;
 
             //kill offscreen entities (except tracking entities, so that missiles can go offscreen for a bit and still hit their target)
-            if(entity.Position.Y <= 0 && entity.Id != CameraTracking?.Id) 
+            if (entity.Position.Y <= 0 && entity.Id != CameraTracking?.Id) 
                 entity.Dead = true;
             if (entity.Position.Y >= MapHeight)
                 entity.Dead = true;

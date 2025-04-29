@@ -11,6 +11,7 @@ partial class Program
     public static Music music;
 
     static FriedSoundBlock explosions = null!;
+    static FriedSoundBlock rockets = null!;
 
     static Image spaceImage;
     static Texture2D spaceTexure;
@@ -33,6 +34,7 @@ partial class Program
         PlayMusicStream(music);
 
         explosions = new FriedSoundBlock("Assets/Audio/explode1.mp3");
+        rockets = new FriedSoundBlock("Assets/Audio/rocket.mp3");
 
         var (spaceExt, _spaceBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/space.jpg");
         spaceImage = LoadImageFromMemory(spaceExt, _spaceBytes);

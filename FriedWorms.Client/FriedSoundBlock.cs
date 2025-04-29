@@ -24,14 +24,24 @@ public class FriedSoundBlock
         }
     }
 
-    public void Play()
+    public void Stop(int soundIdx)
     {
-        Raylib.PlaySound(sounds[currentSound]);            // play the next open sound slot
+        if (soundIdx > maxSounds)
+            return;
+
+        if (Raylib.IsSoundPlaying(sounds[soundIdx]))
+            Raylib.StopSound(sounds[soundIdx]);
+    }
+    public int Play()
+    {
+        int soundIdx = currentSound;
+        Raylib.PlaySound(sounds[soundIdx]);            // play the next open sound slot
         currentSound++;                                 // increment the sound slot
         if (currentSound >= maxSounds)                 // if the sound slot is out of bounds, go back to 0
             currentSound = 0;
 
         // Note: a better way would be to look at the list for the first sound that is not playing and use that slot
+        return soundIdx;
     }
 
     ~FriedSoundBlock()

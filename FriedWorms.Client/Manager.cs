@@ -33,7 +33,6 @@ partial class Program
     public static float Zoom = 1.0f;
     static float MaxZoom = 3.0f;
     static bool PhysicsPaused = false;
-    static bool UserHasControl = true;
 
     static Entity ControlWorm = null!;
     static Entity CameraTracking = null!;
@@ -54,9 +53,12 @@ partial class Program
         CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
 
         Map = new byte[MapWidth * MapHeight];
-        CreateMap();
+        //CreateMap();
 
         Entities = gameManager.Conn.Db.Entities.Iter().ToList();
+
+        //LoadBackgrounds();
+        LoadUI();
     }
     static void Tick()
     {
@@ -64,7 +66,19 @@ partial class Program
         UpdateMusicStream(music);
         float elapsedTime = GetFrameTime();
 
-        HandleUserInput(elapsedTime);
+        GameIsStable = Entities.TrueForAll(e => e.Stable);
+
+        ExecuteStateMachine();
+        if (IsKeyPressed(KeyboardKey.H)) //admin
+        {
+            UserHasControl = true;
+            NextState = GameState.Idle;
+            CurrentState = GameState.Idle;
+            ControlWorm = null!;
+        }
+
+        if (UserHasControl)
+            HandleUserInput(elapsedTime);
 
         float viewWidth = TARGET_WIDTH / Zoom;
         float viewHeight = TARGET_HEIGHT / Zoom;

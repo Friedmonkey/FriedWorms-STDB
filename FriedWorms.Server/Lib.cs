@@ -46,6 +46,9 @@ public static partial class Module
 
         public float MaxHealth;
         public float Health;
+        public float DeathTimer;
+
+        public int SoundIdx;
 
         //how many times it can bounce before dying (negative means it dont matter)
         public int MaxBounceCount;

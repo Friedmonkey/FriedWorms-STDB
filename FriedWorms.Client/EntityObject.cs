@@ -2,6 +2,7 @@
 using static Raylib_cs.Raylib;
 using SpacetimeDB.Types;
 using System.Numerics;
+using System.Threading.Channels;
 
 namespace FriedWorms.Client;
 
@@ -63,17 +64,30 @@ public static partial class Program
             entity.OnDeath();
         }
     }
+    public static void OnTick(this Entity entity, float elapsedTime)
+    {
+        //bool random(int chance) => (Random.Shared.Next((int)(chance / elapsedTime)) == 1);
+        switch ((EntityModelType)entity.ModelData)
+        {
+            case EntityModelType.Missile:
+                var smoke = CreateEntitySmoke(entity.Position);
+                smoke.DeathTimer = 1f;
+                Entities.Add(smoke);
+                break;
+            default:
+                break;
+        }
+    }
     public static void OnDeath(this Entity entity)
     {
         switch ((EntityModelType)entity.ModelData)
         {
             case EntityModelType.Missile:
                 CreateExplosion(entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
-                CameraTracking = ControlWorm;
+                rockets.Stop(entity.SoundIdx);
                 break;
             case EntityModelType.Granade:
                 CreateExplosion(entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
-                CameraTracking = ControlWorm;
                 break;
             case EntityModelType.Worm:
                 {
@@ -88,7 +102,7 @@ public static partial class Program
         }
     }
 
-    public static Entity CreateEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
+    public static Entity SpawnEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
     {
         switch (entityType)
         {
@@ -114,6 +128,7 @@ public static partial class Program
             MaxHealth = 150,
             Health = 50,
             ShootingAngle = float.NegativeZero,
+            DeathTimer = float.PositiveInfinity,
         };
     }
     public static Entity CreateEntityWorm(DbVector2 position)
@@ -128,6 +143,7 @@ public static partial class Program
             MaxHealth = 100.0f,
             Health = 100.0f,
             ShootingAngle = float.NegativeZero,
+            DeathTimer = float.PositiveInfinity,
         };
     }
     public static Entity CreateEntityGravestone(DbVector2 position)
@@ -140,6 +156,7 @@ public static partial class Program
             Radius = 4f,
             Friction = 0.2f,
             ShootingAngle = float.NegativeZero,
+            DeathTimer = float.PositiveInfinity,
         };
     }
     public static Entity CreateEntityGranade(DbVector2 position)
@@ -153,6 +170,7 @@ public static partial class Program
             Friction = 0.8f,
             MaxBounceCount = 3,
             ShootingAngle = float.NegativeZero,
+            DeathTimer = float.PositiveInfinity,
         };
     }
     public static Entity CreateEntityMissile(DbVector2 position)
@@ -166,6 +184,7 @@ public static partial class Program
             Friction = 0.8f,
             MaxBounceCount = 1, //after one bounce it dies (explodes too!)
             ShootingAngle = float.NegativeZero,
+            DeathTimer = float.PositiveInfinity,
         };
     }
     public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)
@@ -182,6 +201,7 @@ public static partial class Program
             Friction = 0.8f,
             ShootingAngle = float.NegativeZero,
             CustomColorIndex = colorIndex,
+            DeathTimer = float.PositiveInfinity,
         };
     }
     public static Entity CreateEntitySmoke(DbVector2 position, byte colorIndex = 0)
@@ -198,7 +218,8 @@ public static partial class Program
             Friction = 0.2f,
             ShootingAngle = float.NegativeZero,
             CustomColorIndex = colorIndex,
-            ExtraGravityForce = -2.1f
+            ExtraGravityForce = -2.1f,
+            DeathTimer = rnd()*8
         };
     }
 }

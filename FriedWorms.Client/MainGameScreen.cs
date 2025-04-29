@@ -19,15 +19,12 @@ partial class Program
         InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");
         SetTargetFPS(60);
 
-        Load();
-
         RenderTexture2D backgroundTexture = LoadRenderTexture(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale);
         RenderTexture2D renderTexture = LoadRenderTexture(TARGET_WIDTH, TARGET_HEIGHT);
         RenderTexture2D overlayRenderTexture = LoadRenderTexture(TARGET_WIDTH*OverlayScale, TARGET_HEIGHT* OverlayScale);
         RenderTexture2D UIRenderTexture = LoadRenderTexture(TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale);
 
-        LoadBackgrounds();
-        LoadUI();
+        Load();
 
         while (!WindowShouldClose())
         {
@@ -61,11 +58,13 @@ partial class Program
 
             BeginDrawing();
             ClearBackground(Color.RayWhite);
-            
             DrawTextureScaled(backgroundTexture, TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale);
             DrawTextureScaled(renderTexture, TARGET_WIDTH, TARGET_HEIGHT);
             DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
             DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);
+
+            if (GameIsStable)
+                DrawCircle(4,4,4, Color.Red);
             EndDrawing();
 
 

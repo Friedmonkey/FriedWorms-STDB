@@ -56,6 +56,9 @@ partial class Program
     }
     static void RenderUI()
     {
+        if (!UserHasControl)
+            return;
+
         var offset = (buttons.Count * (BUTTON_SCALE * 2 + BUTTON_PADDING) / 2);
         foreach (var button in buttons)
         {
@@ -102,7 +105,7 @@ partial class Program
 
             outlineColor = Color.Black,
             selectedOutlineColor = Color.White,
-            entityModel = CreateEntity(new(0,0), model),
+            entityModel = SpawnEntity(new(0,0), model),
             onClick = () => weaponType = model
         });
     }

@@ -95,7 +95,7 @@ partial class Program
                     DrawPixel(x, y, color);
                 }
             }
-            DrawCircle((width / 2), (height / 2), 50, Color.Red);
+            //DrawCircle((width / 2), (height / 2), 50, Color.Red);
             EndTextureMode();
         }
         public void Draw()
@@ -193,7 +193,7 @@ partial class Program
     }
     static void DisplayBackground()
     {
-        skyBackground.Draw();
+        skyBackground?.Draw();
     }
     
     static Color LerpColor(Color a, Color b, float t)

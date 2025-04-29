@@ -37,6 +37,10 @@ namespace SpacetimeDB.Types
         public float MaxHealth;
         [DataMember(Name = "Health")]
         public float Health;
+        [DataMember(Name = "DeathTimer")]
+        public float DeathTimer;
+        [DataMember(Name = "SoundIdx")]
+        public int SoundIdx;
         [DataMember(Name = "MaxBounceCount")]
         public int MaxBounceCount;
         [DataMember(Name = "Dead")]
@@ -59,6 +63,8 @@ namespace SpacetimeDB.Types
             float Friction,
             float MaxHealth,
             float Health,
+            float DeathTimer,
+            int SoundIdx,
             int MaxBounceCount,
             bool Dead,
             byte CustomColorIndex,
@@ -77,6 +83,8 @@ namespace SpacetimeDB.Types
             this.Friction = Friction;
             this.MaxHealth = MaxHealth;
             this.Health = Health;
+            this.DeathTimer = DeathTimer;
+            this.SoundIdx = SoundIdx;
             this.MaxBounceCount = MaxBounceCount;
             this.Dead = Dead;
             this.CustomColorIndex = CustomColorIndex;
