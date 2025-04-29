@@ -105,11 +105,11 @@ partial class Program
             var displayY = MathF.Round(TARGET_HEIGHT * BackgroundScale);
 
             //offsets
-            float mapX = MathF.Round(CameraPosX * BackgroundScale);
-            float mapY = MathF.Round(CameraPosY * BackgroundScale);
+            float mapX = MathF.Round(CameraPosX * Parallax * BackgroundScale);
+            float mapY = MathF.Round(CameraPosY * Parallax * BackgroundScale);
 
-            var src = new Rectangle(mapX * Parallax, mapY * Parallax, new Vector2(displayX, displayY));
-            var dest = new Rectangle(0 * Parallax, 0 * Parallax, new Vector2(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale));
+            var src = new Rectangle(mapX, mapY, new Vector2(displayX, displayY));
+            var dest = new Rectangle(0, 0, new Vector2(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale));
             DrawTexturePro(renderTexture.Texture, src, dest, new(0, 0), 0, Color.White);
 
             foreach (var decorator in Decorators)
@@ -136,7 +136,7 @@ partial class Program
         var width = MapWidth * BackgroundScale;
         var height = MapHeight * BackgroundScale;
         skyBackground = new Background(width, height);
-        //skyBackground.Parallax = 0.4f;
+        skyBackground.Parallax = 0.4f;
 
         Color skyBottom = new Color(90, 200, 255, 255);  // light blue
         Color skyTop = new Color(15, 35, 85, 255);  // deep blue

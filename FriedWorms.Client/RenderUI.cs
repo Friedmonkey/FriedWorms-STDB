@@ -21,7 +21,7 @@ partial class Program
 
         AddButton(EntityModelType.Missile, selected:true);
         AddButton(EntityModelType.Granade);
-        AddButton(EntityModelType.Worm);
+        AddButton(EntityModelType.GrassGranade);
         AddButton(EntityModelType.Gravestone);
     }
     static bool UIClick()
@@ -105,7 +105,7 @@ partial class Program
 
             outlineColor = Color.Black,
             selectedOutlineColor = Color.White,
-            entityModel = SpawnEntity(new(0,0), model),
+            entityModel = new Entity() { ModelData=(byte)model },
             onClick = () => weaponType = model
         });
     }

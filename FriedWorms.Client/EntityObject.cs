@@ -16,6 +16,8 @@ public enum EntityModelType : uint
     Gravestone = 5,
     Granade = 6,
     Smoke = 7,
+    GrassGranade = 8,
+    Airstrike = 9,
 }
 public static partial class Program
 {
@@ -35,6 +37,7 @@ public static partial class Program
             EntityModelType.Dummy => (dummy, Color.White, false),
             EntityModelType.Debris => (debris, Color.DarkGreen, false),
             EntityModelType.Granade => (grenade, GrenadeGreen, false),
+            EntityModelType.GrassGranade => (grenade, Color.Lime, false),
             EntityModelType.Gravestone => (gravestone, Color.DarkGray, true),
             EntityModelType.Smoke => (debris, Color.LightGray, false),
             _ => throw new Exception($"Unknow model data {entity.ModelData}")
@@ -89,12 +92,20 @@ public static partial class Program
             case EntityModelType.Granade:
                 CreateExplosion(entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
                 break;
+            case EntityModelType.GrassGranade:
+                CreateImplosion(entity.Position.X, entity.Position.Y, 15.0f, 10, 0.1f);
+                break;
             case EntityModelType.Worm:
                 {
+                    deathSounds.Play();
                     var gravestone = CreateEntityGravestone(entity.Position);
                     gravestone.Velocity = entity.Velocity;
                     gravestone.Velocity.Y = -MathF.Abs(gravestone.Velocity.Y) - 15f;
                     Entities.Add(gravestone);
+                    for (int i = 0; i < 5; i++)
+                    {
+                        Entities.Add(CreateEntityDebris(entity.Position, (byte)MapColor.Worm));
+                    }
                 }
                 break;
             default:
@@ -102,7 +113,7 @@ public static partial class Program
         }
     }
 
-    public static Entity SpawnEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
+    public static Entity CreateEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
     {
         switch (entityType)
         {
@@ -112,6 +123,7 @@ public static partial class Program
             case EntityModelType.Debris: return CreateEntityDebris(position, colorIndex);
             case EntityModelType.Gravestone: return CreateEntityGravestone(position);
             case EntityModelType.Granade: return CreateEntityGranade(position);
+            case EntityModelType.GrassGranade: return CreateEntityGrassGranade(position);
             case EntityModelType.Smoke: return CreateEntitySmoke(position, colorIndex);
             default: throw new Exception($"Unknow model data {entityType}");
         }
@@ -159,6 +171,13 @@ public static partial class Program
             DeathTimer = float.PositiveInfinity,
         };
     }
+    public static Entity CreateEntityGrassGranade(DbVector2 position)
+    {
+        var granade = CreateEntityGranade(position);
+        granade.ModelData = (byte)EntityModelType.GrassGranade;
+        granade.MaxBounceCount = 1;
+        return granade;
+    }
     public static Entity CreateEntityGranade(DbVector2 position)
     {
         return new Entity()
@@ -175,6 +194,7 @@ public static partial class Program
     }
     public static Entity CreateEntityMissile(DbVector2 position)
     {
+        var soundIdx = rockets.Play();
         return new Entity()
         {
             Id = IdTracker++,
@@ -185,6 +205,7 @@ public static partial class Program
             MaxBounceCount = 1, //after one bounce it dies (explodes too!)
             ShootingAngle = float.NegativeZero,
             DeathTimer = float.PositiveInfinity,
+            SoundIdx = soundIdx,
         };
     }
     public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)

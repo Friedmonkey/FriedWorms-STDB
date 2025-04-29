@@ -13,7 +13,7 @@ public enum MapColor
     Rock1 = 3,
     Rock2 = 4,
 
-    Cloud = 5,
+    Worm = 5,
 
 
     Unknown = 255
@@ -83,6 +83,25 @@ partial class Program
         float viewWidth = TARGET_WIDTH / Zoom;
         float viewHeight = TARGET_HEIGHT / Zoom;
 
+        if (IsKeyDown(KeyboardKey.Equal) || IsKeyDown(KeyboardKey.Minus))
+        {
+            float oldZoom = Zoom;
+
+            Vector2 center = new(TARGET_WIDTH / 2f, TARGET_HEIGHT / 2f);
+            Vector2 worldCenter = new Vector2(CameraPosX, CameraPosY) + center / oldZoom;
+
+            if (IsKeyDown(KeyboardKey.Equal))
+                Zoom = Math.Clamp(Zoom + 0.1f, 1.0f, MaxZoom);
+            else
+                Zoom = Math.Clamp(Zoom - 0.1f, 1.0f, MaxZoom);
+
+            if (Zoom != oldZoom)
+            {
+                Vector2 newCam = worldCenter - center / Zoom;
+                CameraPosX = newCam.X;
+                CameraPosY = newCam.Y;
+            }
+        }
 
         if (CameraTracking != null)
         {

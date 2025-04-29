@@ -16,7 +16,7 @@ partial class Program
             MapColor.Grass2 => DarkGreen2,
             MapColor.Rock1 => Color.Gray,
             MapColor.Rock2 => Color.DarkGray,
-            MapColor.Cloud => Color.White,
+            MapColor.Worm => Color.Pink,
             _ => throw new Exception("Unknown color index:" + (int)color)
         };
     }

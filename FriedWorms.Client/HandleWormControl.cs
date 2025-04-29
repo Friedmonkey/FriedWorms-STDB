@@ -28,9 +28,7 @@ partial class Program
         var cursorPosX = (ox + 8 * dx);
         var cursorPosY = (oy + 8 * dy);
 
-        var projectile = SpawnEntity(new DbVector2(cursorPosX, cursorPosY), weaponType);
-        var soundIdx = rockets.Play();
-        projectile.SoundIdx = soundIdx;
+        var projectile = CreateEntity(new DbVector2(cursorPosX, cursorPosY), weaponType);
         projectile.Velocity.X = dx * 40.0f * EnergyLevel;
         projectile.Velocity.Y = dy * 40.0f * EnergyLevel;
         CameraTracking = projectile;

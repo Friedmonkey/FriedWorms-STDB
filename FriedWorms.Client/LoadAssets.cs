@@ -10,8 +10,10 @@ partial class Program
     static byte[] _musicBytes = null!;
     public static Music music;
 
+    static FriedSoundBlock implosions = null!;
     static FriedSoundBlock explosions = null!;
     static FriedSoundBlock rockets = null!;
+    static FriedSoundBlock deathSounds = null!;
 
     static Image spaceImage;
     static Texture2D spaceTexure;
@@ -28,13 +30,15 @@ partial class Program
     {
         InitAudioDevice();
 
-        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/main3.mp3");
+        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/main2.mp3");
         music = LoadMusicStreamFromMemory(musicExt, _musicBytes);
         SetMusicVolume(music, 0.15f);
         PlayMusicStream(music);
 
         explosions = new FriedSoundBlock("Assets/Audio/explode1.mp3");
         rockets = new FriedSoundBlock("Assets/Audio/rocket.mp3");
+        deathSounds = new FriedSoundBlock("Assets/Audio/among-us-kill-sound-effect-hd_gIEZqxo.mp3");
+        implosions = new FriedSoundBlock("Assets/Audio/placeDirt.mp3");
 
         var (spaceExt, _spaceBytes) = ResourceLoader.GetMemoryLoader("Assets/Images/space.jpg");
         spaceImage = LoadImageFromMemory(spaceExt, _spaceBytes);
