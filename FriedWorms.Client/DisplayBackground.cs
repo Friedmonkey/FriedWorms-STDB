@@ -19,8 +19,9 @@ partial class Program
         public RenderTexture2D renderTexture;
         public int width;
         public int height;
+        public float Parallax = 1f;
         public ushort[] Map;
-        public List<BackgroundDecorator> Decorators;
+        public List<BackgroundDecorator> Decorators = new();
         public List<Color> colorMap = new List<Color>() { new Color(0,0,0,0) };
         public void SetPixel(int x, int y, Color color)
         {
@@ -107,9 +108,22 @@ partial class Program
             float mapX = MathF.Round(CameraPosX * BackgroundScale);
             float mapY = MathF.Round(CameraPosY * BackgroundScale);
 
-            var src = new Rectangle(mapX, mapY, new Vector2(displayX, displayY));
-            var dest = new Rectangle(0, 0, new Vector2(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale));
+            var src = new Rectangle(mapX * Parallax, mapY * Parallax, new Vector2(displayX, displayY));
+            var dest = new Rectangle(0 * Parallax, 0 * Parallax, new Vector2(TARGET_WIDTH * BackgroundScale, TARGET_HEIGHT * BackgroundScale));
             DrawTexturePro(renderTexture.Texture, src, dest, new(0, 0), 0, Color.White);
+
+            foreach (var decorator in Decorators)
+            {
+                //BackgroundDecorator decorator = Decorators[i];
+                //decorator.WorldPos.X += decorator.Parallax * GetFrameTime();
+                //
+                //if (decorator.WorldPos.X > width) decorator.WorldPos.X = 0;
+                //if (decorator.WorldPos.X < 0) decorator.WorldPos.X = width;
+
+                var posX = (int)((decorator.WorldPos.X - CameraPosX * BackgroundScale) * decorator.Parallax);
+                var posY = (int)((decorator.WorldPos.Y - CameraPosY * BackgroundScale) * decorator.Parallax);
+                DrawTexture(decorator.Tex, posX, posY, Color.White);
+            }
         }
     }
     static Background skyBackground;
@@ -118,19 +132,14 @@ partial class Program
     {
         //rgb(139, 0, 41) - rgb(233, 208, 255)
         // define sky colours however you like:
-        Color skyBottom = new Color(90, 200, 255, 255);  // light blue
-        Color skyTop = new Color(15, 35, 85, 255);  // deep blue
-
-        // build a decorator list once, maybe on Load():
-        var decorators = new List<BackgroundDecorator>{
-             new BackgroundDecorator(cloudTexure, new Vector2(100,50), 0.3f),
-             //new BackgroundDecorator(planetTex,new Vector2(300,30), 0.1f),
-        };
 
         var width = MapWidth * BackgroundScale;
         var height = MapHeight * BackgroundScale;
         skyBackground = new Background(width, height);
+        //skyBackground.Parallax = 0.4f;
 
+        Color skyBottom = new Color(90, 200, 255, 255);  // light blue
+        Color skyTop = new Color(15, 35, 85, 255);  // deep blue
         for (int y = 0; y < height; y++)
         {
             const float offset = 0.42f;
@@ -148,7 +157,6 @@ partial class Program
                 skyBackground.SetPixel(x, y, rowColor);
             }
         }
-
 
         float[] stars = GenerateLayer(width, 0.01f);
         for (int x = 0; x < width; x++)
@@ -171,6 +179,15 @@ partial class Program
                 }
             }
         }
+
+
+        // build a decorator list once, maybe on Load():
+        skyBackground.Decorators = new List<BackgroundDecorator>{
+             new BackgroundDecorator(cloudTexure, new Vector2(1000,500), 0.95f),
+             new BackgroundDecorator(cloudTexure, new Vector2(2658,665), 0.95f),
+             new BackgroundDecorator(cloudTexure, new Vector2(4489,496), 0.95f),
+             //new BackgroundDecorator(planetTex,new Vector2(300,30), 0.1f),
+        };
 
         skyBackground.Render();
     }
