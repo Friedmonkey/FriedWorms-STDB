@@ -51,10 +51,14 @@ partial class Program
         Map = new byte[MapWidth * MapHeight];
         //CreateMap();
 
-        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
+        //Entities = gameManager.Conn.Db.Entities.Iter().ToList();
 
         //LoadBackgrounds();
         LoadUI();
+    }
+    private static void GameManager_OnEntityInsert(EventContext context, Entity row)
+    {
+        Entities.Add(row);
     }
     static void Tick()
     {
@@ -65,6 +69,14 @@ partial class Program
         GameIsStable = Entities.TrueForAll(e => e.Stable);
 
         ExecuteStateMachine();
+        if (IsKeyPressed(KeyboardKey.K)) //admin entity test
+        {
+            if (TryGetMouseWorldPos(out var world))
+            {
+                var entity = CreateEntityGranade(new (world.X, world.Y));
+                gameManager.Conn.Reducers.AddEntity(entity);
+            }
+        }
         if (IsKeyPressed(KeyboardKey.H)) //admin
         {
             UserHasControl = true;

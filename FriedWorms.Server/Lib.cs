@@ -115,4 +115,31 @@ public static partial class Module
         ctx.Db.Players.Identity.Delete(player.Identity);
         Log.Info("Player session logged out.");
     }
+
+    [Reducer]
+    public static void AddEntity(ReducerContext ctx, Entity entity)
+    {
+        ctx.Db.Entities.Insert(entity);
+        Log.Info($"Added {entity.ModelData.ToString()}");
+    }
+
+    [Reducer]
+    public static void DeleteEntityByID(ReducerContext ctx, uint entityId)
+    {
+        ctx.Db.Entities.Id.Delete(entityId);
+        Log.Info($"removed entity with id {entityId}");
+    }
+
+    [Reducer]
+    public static void ClearEntities(ReducerContext ctx)
+    {
+        foreach (var entity in ctx.Db.Entities.Iter())
+        {
+            ctx.Db.Entities.Delete(entity);
+            Log.Info($"Deleted {entity.ModelData.ToString()}");
+        }
+        Log.Debug("Entities cleared!");
+        Log.Info("Entities cleared!");
+        Log.Warn("Entities cleared!");
+    }
 }

@@ -432,7 +432,10 @@ namespace SpacetimeDB.Types
             var encodedArgs = update.ReducerCall.Args;
             return update.ReducerCall.ReducerName switch
             {
+                "AddEntity" => BSATNHelpers.Decode<Reducer.AddEntity>(encodedArgs),
+                "ClearEntities" => BSATNHelpers.Decode<Reducer.ClearEntities>(encodedArgs),
                 "Connect" => BSATNHelpers.Decode<Reducer.Connect>(encodedArgs),
+                "DeleteEntityByID" => BSATNHelpers.Decode<Reducer.DeleteEntityById>(encodedArgs),
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };
@@ -455,7 +458,10 @@ namespace SpacetimeDB.Types
             var eventContext = (ReducerEventContext)context;
             return reducer switch
             {
+                Reducer.AddEntity args => Reducers.InvokeAddEntity(eventContext, args),
+                Reducer.ClearEntities args => Reducers.InvokeClearEntities(eventContext, args),
                 Reducer.Connect args => Reducers.InvokeConnect(eventContext, args),
+                Reducer.DeleteEntityById args => Reducers.InvokeDeleteEntityById(eventContext, args),
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };

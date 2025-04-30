@@ -40,6 +40,7 @@ static partial class Program
                     CreateMap();
                     LoadBackgrounds();
                     Entities.Clear();
+                    Entities = gameManager.Conn.Db.Entities.Iter().ToList();
                     NextState = GameState.GeneratingTerrain;
                 }
                 break;

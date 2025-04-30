@@ -111,6 +111,8 @@ public static partial class Program
             default:
                 break;
         }
+        if (entity.Id != 0)
+            gameManager.Conn.Reducers.DeleteEntityById(entity.Id);
     }
 
     public static Entity CreateEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)

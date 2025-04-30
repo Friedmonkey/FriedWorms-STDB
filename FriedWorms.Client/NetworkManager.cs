@@ -1,5 +1,6 @@
 ﻿using SpacetimeDB;
 using SpacetimeDB.Types;
+using static SpacetimeDB.RemoteTableHandle<SpacetimeDB.Types.EventContext, SpacetimeDB.Types.Entity>;
 
 namespace FriedWorms.Client;
 
@@ -7,6 +8,7 @@ public class NetworkManager
 {
     public event Action? OnConnected;
     public event Action? OnSubscriptionApplied;
+    public event RowEventHandler? OnEntityInsert;
 
 
     public DbConnection Conn { get; private set; }
@@ -40,6 +42,8 @@ public class NetworkManager
         LocalIdentity = identity;
 
         OnConnected?.Invoke();
+        if (OnEntityInsert != null)
+            _conn.Db.Entities.OnInsert += OnEntityInsert!;
 
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
@@ -49,6 +53,7 @@ public class NetworkManager
             //]);
         connected = true;
     }
+
     void HandleConnectError(Exception e)
     {
         Console.WriteLine("Connection error:" + e.Message);

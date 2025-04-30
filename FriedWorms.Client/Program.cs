@@ -10,6 +10,7 @@ partial class Program
     static void Main(string[] args)
     {
         gameManager = new NetworkManager();
+        gameManager.OnEntityInsert += GameManager_OnEntityInsert;
         string serverUrl = string.Empty;
 
         if (File.Exists("../../../../server.txt"))
@@ -38,6 +39,7 @@ partial class Program
         thread.Join();
         CloseWindow();
     }
+
     static void ProcessThread(DbConnection conn, CancellationToken ct)
     {
         try
