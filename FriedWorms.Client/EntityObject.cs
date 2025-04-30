@@ -69,7 +69,7 @@ public static partial class Program
     }
     public static void OnTick(this Entity entity, float elapsedTime)
     {
-        //bool random(int chance) => (Random.Shared.Next((int)(chance / elapsedTime)) == 1);
+        //bool random(int chance) => (DeterministicRandom.Next((int)(chance / elapsedTime)) == 1);
         switch ((EntityModelType)entity.ModelData)
         {
             case EntityModelType.Missile:
@@ -210,7 +210,7 @@ public static partial class Program
     }
     public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)
     {
-        float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
+        float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);
         return new Entity()
         {
             Id = IdTracker++,
@@ -227,7 +227,7 @@ public static partial class Program
     }
     public static Entity CreateEntitySmoke(DbVector2 position, byte colorIndex = 0)
     {
-        float rnd() => (Random.Shared.NextSingle() * 2 * MathF.PI);
+        float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);
         return new Entity()
         {
             Id = IdTracker++,

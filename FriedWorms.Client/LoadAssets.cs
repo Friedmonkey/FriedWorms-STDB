@@ -30,7 +30,7 @@ partial class Program
     {
         InitAudioDevice();
 
-        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/main2.mp3");
+        (var musicExt, _musicBytes) = ResourceLoader.GetMemoryLoader("Assets/Audio/main4.mp3");
         music = LoadMusicStreamFromMemory(musicExt, _musicBytes);
         SetMusicVolume(music, 0.15f);
         PlayMusicStream(music);

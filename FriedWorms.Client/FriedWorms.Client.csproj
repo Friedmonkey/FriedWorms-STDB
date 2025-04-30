@@ -25,10 +25,4 @@
     <EmbeddedResource Include="Assets/Images/*.jpg" />
   </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Update="Assets\Images\skyatlas.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-  </ItemGroup>
-
 </Project>

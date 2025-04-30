@@ -1,4 +1,5 @@
 ﻿using Raylib_cs;
+using SpacetimeDB.Types;
 using System.Numerics;
 using static Raylib_cs.Raylib;
 
@@ -12,9 +13,17 @@ partial class Program
     public const int TARGET_HEIGHT = 280;
     const int OverlayScale = 4;
     const int UiScale = 4;
-    public const int BackgroundScale = 4;
+    const int BackgroundScale = 4;
+
+    static Config Config = null!;
+    static Random DeterministicRandom = null!;
     static void MainGame()
     {
+        Config = gameManager.Conn.Db.Config.Id.Find(0)!;
+        if (Config is null)
+            throw new Exception("Unable to get config from server!");
+        DeterministicRandom = new Random(Config.RandomSeed);
+
         SetConfigFlags(ConfigFlags.ResizableWindow);
         InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");
         SetTargetFPS(60);

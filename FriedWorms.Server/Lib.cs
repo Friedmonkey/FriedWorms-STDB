@@ -11,6 +11,8 @@ public static partial class Module
 
         public int MapWidth;
         public int MapHeight;
+
+        public int RandomSeed;
     }
 
     [SpacetimeDB.Type]
@@ -76,10 +78,11 @@ public static partial class Module
     public static void Init(ReducerContext ctx)
     {
         Log.Info("Initializing...");
-        ctx.Db.Config.Insert(new Config() 
+        ctx.Db.Config.Insert(new Config()
         {
             MapWidth = 1024,
-            MapHeight = 512
+            MapHeight = 512,
+            RandomSeed = Random.Shared.Next()
         });
     }
 

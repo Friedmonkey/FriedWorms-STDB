@@ -19,16 +19,20 @@ namespace SpacetimeDB.Types
         public int MapWidth;
         [DataMember(Name = "MapHeight")]
         public int MapHeight;
+        [DataMember(Name = "RandomSeed")]
+        public int RandomSeed;
 
         public Config(
             uint Id,
             int MapWidth,
-            int MapHeight
+            int MapHeight,
+            int RandomSeed
         )
         {
             this.Id = Id;
             this.MapWidth = MapWidth;
             this.MapHeight = MapHeight;
+            this.RandomSeed = RandomSeed;
         }
 
         public Config()

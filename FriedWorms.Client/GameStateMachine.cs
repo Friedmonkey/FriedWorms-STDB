@@ -54,7 +54,7 @@ static partial class Program
             case GameState.DeployUnits:
                 {
                     UserHasControl = false;
-                    var worm = CreateEntityWorm(new (32f, 1.0f));
+                    var worm = CreateEntityWorm(new (100f, 1.0f));
                     worm.ShootingAngle = 90;
                     Entities.Add(worm);
                     ControlWorm = worm;

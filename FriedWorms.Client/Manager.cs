@@ -40,12 +40,8 @@ partial class Program
     static void Load()
     {
         LoadModels();
-        var config = gameManager.Conn.Db.Config.Id.Find(0);
-        if (config is null)
-            throw new Exception("Unable to get config from server!");
-
-        MapWidth = config.MapWidth;
-        MapHeight = config.MapHeight;
+        MapWidth = Config.MapWidth;
+        MapHeight = Config.MapHeight;
         LoadAssets();
 
 
@@ -155,7 +151,7 @@ partial class Program
         float[] NoiseSeed = new float[width];
 
         for (int i = 0; i < width; i++)
-            NoiseSeed[i] = Random.Shared.NextSingle();
+            NoiseSeed[i] = DeterministicRandom.NextSingle();
 
         NoiseSeed[0] = start;
         PerlinNoise1D(width, NoiseSeed, octaves, bias, ref layer);
@@ -173,7 +169,7 @@ partial class Program
             for (int y = 0; y < MapHeight; y++)
             {
                 byte mapColor = (int)MapColor.Skyblue;
-                //byte mapColor = (Random.Shared.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
+                //byte mapColor = (DeterministicRandom.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
 
                 //if (y >= Clouds[x] * MapHeight)
                 //{ 
@@ -182,7 +178,7 @@ partial class Program
 
                 if (y >= Surface[x] * MapHeight)
                 {
-                    var rng = Random.Shared.Next(10);
+                    var rng = DeterministicRandom.Next(10);
                     mapColor = rng switch 
                     {
                         1 => (byte)MapColor.Grass2,
@@ -196,7 +192,7 @@ partial class Program
 
                 if (y >= Rocks[x] * MapHeight)
                 { 
-                    mapColor = (Random.Shared.Next(10) == 1) ? (byte)MapColor.Rock2 :(byte)MapColor.Rock1;
+                    mapColor = (DeterministicRandom.Next(10) == 1) ? (byte)MapColor.Rock2 :(byte)MapColor.Rock1;
                 }
                 Map[y * MapWidth + x] = mapColor;
             }

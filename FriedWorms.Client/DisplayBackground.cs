@@ -130,7 +130,7 @@ partial class Program
 
     static void LoadBackgrounds()
     {
-        //rgb(139, 0, 41) - rgb(233, 208, 255)
+        //rgb(233, 208, 255) - rgb(139, 0, 41)
         // define sky colours however you like:
 
         var width = MapWidth * BackgroundScale;
@@ -138,8 +138,8 @@ partial class Program
         skyBackground = new Background(width, height);
         skyBackground.Parallax = 0.4f;
 
-        Color skyBottom = new Color(90, 200, 255, 255);  // light blue
-        Color skyTop = new Color(15, 35, 85, 255);  // deep blue
+        Color skyBottom = new Color(233, 208, 255, 255);  // light blue
+        Color skyTop = new Color(139, 0, 41, 255);  // deep blue
         for (int y = 0; y < height; y++)
         {
             const float offset = 0.42f;
@@ -165,7 +165,7 @@ partial class Program
             {
                 if (height-y <= stars[x] * height)
                 { 
-                    if (Random.Shared.Next(500+((height-y))*15) == 1)
+                    if (DeterministicRandom.Next(500+((height-y))*15) == 1)
                     { 
                         //draw a star
                         skyBackground.SetPixel(x, y, new Color(244, 255, 125, 125));
