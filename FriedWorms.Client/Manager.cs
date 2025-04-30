@@ -21,7 +21,7 @@ public enum MapColor
 partial class Program
 {
     static List<Entity> Entities = new List<Entity>();
-    static byte[] Map = new byte[0];
+    static List<byte> Map = new();
     public static int MapWidth = 0;
     public static int MapHeight = 0;
 
@@ -39,7 +39,6 @@ partial class Program
 
     static void Load()
     {
-        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
         LoadModels();
         MapWidth = Config.MapWidth;
         MapHeight = Config.MapHeight;
@@ -48,8 +47,7 @@ partial class Program
 
         CameraPosY = (MapHeight - TARGET_HEIGHT) / 2;
         CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
-
-        Map = Config.Map.ToArray();
+        Map = new(new byte[MapWidth * MapHeight]);
         LoadBackgrounds();
         //CreateMap();
 
@@ -64,6 +62,9 @@ partial class Program
     }
     static void Tick()
     {
+        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
+        Map = Config.Map;
+
         //spacegif.Update();
         UpdateMusicStream(music);
         float elapsedTime = GetFrameTime();
@@ -171,47 +172,47 @@ partial class Program
         PerlinNoise1D(width, NoiseSeed, octaves, bias, ref layer);
         return layer;
     }
-    static void CreateMap()
-    {
-        //float[] Clouds = GenerateLayer(0.01f);
-        float[] Surface = GenerateLayer();
-        float[] Rocks = GenerateLayer(0.9f, 10);
+    //static void CreateMap()
+    //{
+    //    //float[] Clouds = GenerateLayer(0.01f);
+    //    float[] Surface = GenerateLayer();
+    //    float[] Rocks = GenerateLayer(0.9f, 10);
 
 
-        for (int x = 0; x < MapWidth; x++)
-        {
-            for (int y = 0; y < MapHeight; y++)
-            {
-                byte mapColor = (int)MapColor.Skyblue;
-                //byte mapColor = (DeterministicRandom.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
+    //    for (int x = 0; x < MapWidth; x++)
+    //    {
+    //        for (int y = 0; y < MapHeight; y++)
+    //        {
+    //            byte mapColor = (int)MapColor.Skyblue;
+    //            //byte mapColor = (DeterministicRandom.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
 
-                //if (y >= Clouds[x] * MapHeight)
-                //{ 
-                //    mapColor = (int)MapColor.Skyblue;
-                //}
+    //            //if (y >= Clouds[x] * MapHeight)
+    //            //{ 
+    //            //    mapColor = (int)MapColor.Skyblue;
+    //            //}
 
-                if (y >= Surface[x] * MapHeight)
-                {
-                    var rng = DeterministicRandom.Next(10);
-                    mapColor = rng switch 
-                    {
-                        1 => (byte)MapColor.Grass2,
-                        2 => (byte)MapColor.Grass2,
-                        3 => (byte)MapColor.Grass2,
-                        4 => (byte)MapColor.Grass2,
-                        5 => (byte)MapColor.Grass2,
-                        _ => (byte)MapColor.Grass1,
-                    }; 
-                }
+    //            if (y >= Surface[x] * MapHeight)
+    //            {
+    //                var rng = DeterministicRandom.Next(10);
+    //                mapColor = rng switch 
+    //                {
+    //                    1 => (byte)MapColor.Grass2,
+    //                    2 => (byte)MapColor.Grass2,
+    //                    3 => (byte)MapColor.Grass2,
+    //                    4 => (byte)MapColor.Grass2,
+    //                    5 => (byte)MapColor.Grass2,
+    //                    _ => (byte)MapColor.Grass1,
+    //                }; 
+    //            }
 
-                if (y >= Rocks[x] * MapHeight)
-                { 
-                    mapColor = (DeterministicRandom.Next(10) == 1) ? (byte)MapColor.Rock2 :(byte)MapColor.Rock1;
-                }
-                Map[y * MapWidth + x] = mapColor;
-            }
-        }
-    }
+    //            if (y >= Rocks[x] * MapHeight)
+    //            { 
+    //                mapColor = (DeterministicRandom.Next(10) == 1) ? (byte)MapColor.Rock2 :(byte)MapColor.Rock1;
+    //            }
+    //            Map[y * MapWidth + x] = mapColor;
+    //        }
+    //    }
+    //}
 
     static bool TryGetMouseWorldPos(out Vector2 output)
     {

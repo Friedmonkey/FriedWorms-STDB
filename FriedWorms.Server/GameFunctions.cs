@@ -20,7 +20,7 @@ public static partial class Module
 
                 if (sx >= 0 && sx < config.MapWidth && sy >= 0 && sy < config.MapHeight)
                 {
-                    byte val = config.Map[sy * config.MapWidth + sx];
+                    byte val = config.Mapp[sy * config.MapWidth + sx];
                     if (val != 0)
                         sampled.Add(val);
                 }
@@ -40,7 +40,7 @@ public static partial class Module
         {
             for (int i = sx; i < ex; i++)
                 if (ny >= 0 && ny < config.MapHeight && i >= 0 && i < config.MapWidth)
-                    config.Map[ny * config.MapWidth + i] = fill;
+                    config.Mapp[ny * config.MapWidth + i] = fill;
         }
 
         while (y >= x)

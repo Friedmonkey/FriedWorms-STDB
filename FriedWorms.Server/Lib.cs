@@ -36,7 +36,7 @@ public static partial class Module
 
         public int MapWidth;
         public int MapHeight;
-        public List<byte> Map;
+        public byte[] Mapp;
 
         public uint ControlWormId;
         public uint CameraTrackingId;
@@ -119,7 +119,7 @@ public static partial class Module
             RandomSeed = Random.Shared.Next()
         };
 
-        config.Map = Enumerable.Range(0, config.MapWidth * config.MapHeight).Select(i => (byte)0).ToList();
+        config.Mapp = new byte[config.MapWidth * config.MapHeight];
         ctx.Db.Config.Insert(config);
         CreateMap(ctx);
     }
@@ -141,50 +141,50 @@ public static partial class Module
     {
         var config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("no config");
         //float[] Clouds = GenerateLayer(0.01f);
-        //float[] Surface = GenerateLayer(config.MapWidth);
-        //float[] Rocks = GenerateLayer(config.MapWidth, 0.9f, 10);
+        float[] Surface = GenerateLayer(config.MapWidth);
+        float[] Rocks = GenerateLayer(config.MapWidth, 0.9f, 10);
 
 
         for (int x = 0; x < config.MapWidth; x++)
         {
             for (int y = 0; y < config.MapHeight; y++)
             {
-                byte mapColor = (byte)((Random.Shared.Next(10)==1) ? MapColor.Grass1 : MapColor.Grass2);
+                //byte mapColor = (byte)((Random.Shared.Next(10)==1) ? MapColor.Grass1 : MapColor.Grass2);
 
-                if (y <= config.MapHeight/2)
-                    mapColor = (int)MapColor.Worm;
-                //byte mapColor = (int)MapColor.Skyblue;
-                ////byte mapColor = (DeterministicRandom.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
+                //if (y <= config.MapHeight/2)
+                //    mapColor = (int)MapColor.Worm;
+                byte mapColor = (int)MapColor.Skyblue;
+                //byte mapColor = (DeterministicRandom.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
 
-                ////if (y >= Clouds[x] * MapHeight)
-                ////{ 
-                ////    mapColor = (int)MapColor.Skyblue;
-                ////}
-
-                //if (y >= Surface[x] * config.MapHeight)
-                //{
-                //    var rng = Random.Shared.Next(10);
-                //    mapColor = rng switch
-                //    {
-                //        1 => (byte)MapColor.Grass2,
-                //        2 => (byte)MapColor.Grass2,
-                //        3 => (byte)MapColor.Grass2,
-                //        4 => (byte)MapColor.Grass2,
-                //        5 => (byte)MapColor.Grass2,
-                //        _ => (byte)MapColor.Grass1,
-                //    };
+                //if (y >= Clouds[x] * MapHeight)
+                //{ 
+                //    mapColor = (int)MapColor.Skyblue;
                 //}
 
-                //if (y >= Rocks[x] * config.MapHeight)
-                //{
-                //    mapColor = (Random.Shared.Next(10) == 1) ? (byte)MapColor.Rock2 : (byte)MapColor.Rock1;
-                //}
-                config.Map[y * config.MapWidth + x] = mapColor;
+                if (y >= Surface[x] * config.MapHeight)
+                {
+                    var rng = Random.Shared.Next(10);
+                    mapColor = rng switch
+                    {
+                        1 => (byte)MapColor.Grass2,
+                        2 => (byte)MapColor.Grass2,
+                        3 => (byte)MapColor.Grass2,
+                        4 => (byte)MapColor.Grass2,
+                        5 => (byte)MapColor.Grass2,
+                        _ => (byte)MapColor.Grass1,
+                    };
+                }
+
+                if (y >= Rocks[x] * config.MapHeight)
+                {
+                    mapColor = (Random.Shared.Next(10) == 1) ? (byte)MapColor.Rock2 : (byte)MapColor.Rock1;
+                }
+                config.Mapp[y * config.MapWidth + x] = mapColor;
             }
         }
 
         ctx.Db.Config.Id.Update(config);
-        Log.Info("Map has been created! with " + config.Map.Distinct().Count() + "unique");
+        Log.Info("Map has been created! with " + config.Mapp.Distinct().Count() + "unique");
     }
     static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)
     {
@@ -243,6 +243,15 @@ public static partial class Module
     }
 
     [Reducer]
+    public static void Join(ReducerContext ctx)
+    { 
+        
+    }
+    [Reducer]
+    public static void Leave(ReducerContext ctx)
+    {
+
+    }
     public static void AddEntity(ReducerContext ctx, Entity entity)
     {
         ctx.Db.Entities.Insert(entity);

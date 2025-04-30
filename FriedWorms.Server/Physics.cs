@@ -58,7 +58,7 @@ public static partial class Module
                 if (testPosX < 0) testPosX = 0;
                 if (testPosY < 0) testPosY = 0;
 
-                if (config.Map[(int)testPosY * config.MapWidth + (int)testPosX] != (byte)MapColor.Skyblue) //if not sky
+                if (config.Mapp[(int)testPosY * config.MapWidth + (int)testPosX] != (byte)MapColor.Skyblue) //if not sky
                 {
                     responseX += potentialX - testPosX;
                     responseY += potentialY - testPosY;
