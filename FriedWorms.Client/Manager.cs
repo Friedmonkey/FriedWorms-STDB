@@ -49,7 +49,7 @@ partial class Program
         CameraPosY = (MapHeight - TARGET_HEIGHT) / 2;
         CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
 
-        Map = new byte[MapWidth * MapHeight];
+        Map = Config.Map.ToArray();
         LoadBackgrounds();
         //CreateMap();
 

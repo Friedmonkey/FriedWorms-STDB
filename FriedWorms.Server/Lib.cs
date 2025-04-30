@@ -119,7 +119,7 @@ public static partial class Module
             RandomSeed = Random.Shared.Next()
         };
 
-        config.Map = new List<byte>(config.MapWidth * config.MapHeight);
+        config.Map = Enumerable.Range(0, config.MapWidth * config.MapHeight).Select(i => (byte)0).ToList();
         ctx.Db.Config.Insert(config);
         CreateMap(ctx);
     }
@@ -182,6 +182,8 @@ public static partial class Module
                 config.Map[y * config.MapWidth + x] = mapColor;
             }
         }
+
+        ctx.Db.Config.Id.Update(config);
         Log.Info("Map has been created! with " + config.Map.Distinct().Count() + "unique");
     }
     static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)
