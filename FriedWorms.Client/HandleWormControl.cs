@@ -13,31 +13,31 @@ partial class Program
     static EntityModelType weaponType = EntityModelType.Missile;
     static void ShootWeapon()
     {
-        PlayerActionComplete = true;
+        //PlayerActionComplete = true;
 
-        //origin
-        var ox = ControlWorm.Position.X;
-        var oy = ControlWorm.Position.Y;
+        ////origin
+        //var ox = ControlWorm.Position.X;
+        //var oy = ControlWorm.Position.Y;
 
-        //direction
-        var dx = MathF.Cos(ControlWorm.ShootingAngle);
-        var dy = MathF.Sin(ControlWorm.ShootingAngle);
+        ////direction
+        //var dx = MathF.Cos(ControlWorm.ShootingAngle);
+        //var dy = MathF.Sin(ControlWorm.ShootingAngle);
 
 
-        //roughly the position of the cursor
-        var cursorPosX = (ox + 8 * dx);
-        var cursorPosY = (oy + 8 * dy);
+        ////roughly the position of the cursor
+        //var cursorPosX = (ox + 8 * dx);
+        //var cursorPosY = (oy + 8 * dy);
 
-        var projectile = CreateEntity(new DbVector2(cursorPosX, cursorPosY), weaponType);
-        projectile.Velocity.X = dx * 40.0f * EnergyLevel;
-        projectile.Velocity.Y = dy * 40.0f * EnergyLevel;
-        CameraTracking = projectile;
-        Entities.Add(projectile);
+        //var projectile = CreateEntity(new DbVector2(cursorPosX, cursorPosY), weaponType);
+        //projectile.Velocity.X = dx * 40.0f * EnergyLevel;
+        //projectile.Velocity.Y = dy * 40.0f * EnergyLevel;
+        //CameraTracking = projectile;
+        //Entities.Add(projectile);
     }
     static void HandleWormControl(float elapsedTime)
     {
-        if (!UserHasControl || ControlWorm == null) //user doest have control so we skip all this
-            return;
+        //if (!UserHasControl || ControlWorm == null) //user doest have control so we skip all this
+        //    return;
 
         if (IsKeyPressed(KeyboardKey.W)) //jump
         {

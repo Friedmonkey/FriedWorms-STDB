@@ -66,26 +66,26 @@ partial class Program
         UpdateMusicStream(music);
         float elapsedTime = GetFrameTime();
 
-        GameIsStable = Entities.TrueForAll(e => e.Stable);
+        //GameIsStable = Entities.TrueForAll(e => e.Stable);
 
-        ExecuteStateMachine();
-        if (IsKeyPressed(KeyboardKey.K)) //admin entity test
-        {
-            if (TryGetMouseWorldPos(out var world))
-            {
-                var entity = CreateEntityGranade(new (world.X, world.Y));
-                gameManager.Conn.Reducers.AddEntity(entity);
-            }
-        }
-        if (IsKeyPressed(KeyboardKey.H)) //admin
-        {
-            UserHasControl = true;
-            NextState = GameState.Idle;
-            CurrentState = GameState.Idle;
-            ControlWorm = null!;
-        }
+        //ExecuteStateMachine();
+        //if (IsKeyPressed(KeyboardKey.K)) //admin entity test
+        //{
+        //    if (TryGetMouseWorldPos(out var world))
+        //    {
+        //        var entity = CreateEntityGranade(new (world.X, world.Y));
+        //        gameManager.Conn.Reducers.AddEntity(entity);
+        //    }
+        //}
+        //if (IsKeyPressed(KeyboardKey.H)) //admin
+        //{
+        //    UserHasControl = true;
+        //    NextState = GameState.Idle;
+        //    CurrentState = GameState.Idle;
+        //    ControlWorm = null!;
+        //}
 
-        if (UserHasControl)
+        //if (UserHasControl)
             HandleUserInput(elapsedTime);
 
         float viewWidth = TARGET_WIDTH / Zoom;
@@ -141,19 +141,19 @@ partial class Program
             }
         }
 
-        if (PhysicsPaused)
-        {
-            if (IsKeyDown(KeyboardKey.O))
-                HandlePhysics(elapsedTime);
-        }
-        else
-        {
-            //do 10 physics steps
-            for (int i = 0; i < 10; i++)
-            {
-                HandlePhysics(elapsedTime);
-            }
-        }
+        //if (PhysicsPaused)
+        //{
+        //    if (IsKeyDown(KeyboardKey.O))
+        //        HandlePhysics(elapsedTime);
+        //}
+        //else
+        //{
+        //    //do 10 physics steps
+        //    for (int i = 0; i < 10; i++)
+        //    {
+        //        HandlePhysics(elapsedTime);
+        //    }
+        //}
     }
 
     static float[] GenerateLayer(float start = 0.5f, int octaves = 8, float bias = 2.0f) => GenerateLayer(MapWidth, start, octaves , bias);

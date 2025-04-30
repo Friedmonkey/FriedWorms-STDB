@@ -56,8 +56,8 @@ partial class Program
     }
     static void RenderUI()
     {
-        if (!UserHasControl)
-            return;
+        //if (!UserHasControl)
+        //    return;
 
         var offset = (buttons.Count * (BUTTON_SCALE * 2 + BUTTON_PADDING) / 2);
         foreach (var button in buttons)

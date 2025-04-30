@@ -21,7 +21,6 @@ public enum EntityModelType : uint
 }
 public static partial class Program
 {
-    public static uint IdTracker = 0;
     public static readonly Color Green = new Color(0, 228, 48, 255);
     public static readonly Color DarkGreen = new Color(0, 117, 44, 255);
     public static readonly Color GrenadeGreen = new Color(0, 90, 40, 255);
@@ -55,194 +54,190 @@ public static partial class Program
 
         DrawWireFrameModel(drawObj.model, entity.Position.X, entity.Position.Y, rotation, 1.0f, drawObj.color, uiscaling);
     }
-    public static void Damage(this Entity entity, float damage)
-    {
-        if (entity.MaxHealth == 0) //entity cant take damage
-            return;
+    //public static void Damage(this Entity entity, float damage)
+    //{
+    //    return;
+    //    if (entity.MaxHealth == 0) //entity cant take damage
+    //        return;
 
-        entity.Health -= damage;
-        if (entity.Health <= 0)
-        {
-            entity.Dead = true;
-            entity.OnDeath();
-        }
-    }
-    public static void OnTick(this Entity entity, float elapsedTime)
-    {
-        //bool random(int chance) => (DeterministicRandom.Next((int)(chance / elapsedTime)) == 1);
-        switch ((EntityModelType)entity.ModelData)
-        {
-            case EntityModelType.Missile:
-                var smoke = CreateEntitySmoke(entity.Position);
-                smoke.DeathTimer = 1f;
-                Entities.Add(smoke);
-                break;
-            default:
-                break;
-        }
-    }
-    public static void OnDeath(this Entity entity)
-    {
-        switch ((EntityModelType)entity.ModelData)
-        {
-            case EntityModelType.Missile:
-                CreateExplosion(entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
-                rockets.Stop(entity.SoundIdx);
-                break;
-            case EntityModelType.Granade:
-                CreateExplosion(entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
-                break;
-            case EntityModelType.GrassGranade:
-                CreateImplosion(entity.Position.X, entity.Position.Y, 15.0f, 10, 0.1f);
-                break;
-            case EntityModelType.Worm:
-                {
-                    deathSounds.Play();
-                    var gravestone = CreateEntityGravestone(entity.Position);
-                    gravestone.Velocity = entity.Velocity;
-                    gravestone.Velocity.Y = -MathF.Abs(gravestone.Velocity.Y) - 15f;
-                    Entities.Add(gravestone);
-                    for (int i = 0; i < 5; i++)
-                    {
-                        Entities.Add(CreateEntityDebris(entity.Position, (byte)MapColor.Worm));
-                    }
-                }
-                break;
-            default:
-                break;
-        }
-        if (entity.Id != 0)
-            gameManager.Conn.Reducers.DeleteEntityById(entity.Id);
-    }
+    //    entity.Health -= damage;
+    //    if (entity.Health <= 0)
+    //    {
+    //        entity.Dead = true;
+    //        entity.OnDeath();
+    //    }
+    //}
+    //public static void OnTick(this Entity entity, float elapsedTime)
+    //{
+    //    return;
+    //    //bool random(int chance) => (DeterministicRandom.Next((int)(chance / elapsedTime)) == 1);
+    //    switch ((EntityModelType)entity.ModelData)
+    //    {
+    //        case EntityModelType.Missile:
+    //            var smoke = CreateEntitySmoke(entity.Position);
+    //            smoke.DeathTimer = 1f;
+    //            Entities.Add(smoke);
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //}
+    //public static void OnDeath(this Entity entity)
+    //{
+    //    return;
+    //    switch ((EntityModelType)entity.ModelData)
+    //    {
+    //        case EntityModelType.Missile:
+    //            CreateExplosion(entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
+    //            rockets.Stop(entity.SoundIdx);
+    //            break;
+    //        case EntityModelType.Granade:
+    //            CreateExplosion(entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
+    //            break;
+    //        case EntityModelType.GrassGranade:
+    //            CreateImplosion(entity.Position.X, entity.Position.Y, 15.0f, 10, 0.1f);
+    //            break;
+    //        case EntityModelType.Worm:
+    //            {
+    //                deathSounds.Play();
+    //                var gravestone = CreateEntityGravestone(entity.Position);
+    //                gravestone.Velocity = entity.Velocity;
+    //                gravestone.Velocity.Y = -MathF.Abs(gravestone.Velocity.Y) - 15f;
+    //                Entities.Add(gravestone);
+    //                for (int i = 0; i < 5; i++)
+    //                {
+    //                    Entities.Add(CreateEntityDebris(entity.Position, (byte)MapColor.Worm));
+    //                }
+    //            }
+    //            break;
+    //        default:
+    //            break;
+    //    }
+    //    if (entity.Id != 0)
+    //        gameManager.Conn.Reducers.DeleteEntityById(entity.Id);
+    //}
 
-    public static Entity CreateEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
-    {
-        switch (entityType)
-        {
-            case EntityModelType.Worm: return CreateEntityWorm(position);
-            case EntityModelType.Missile: return CreateEntityMissile(position);
-            case EntityModelType.Dummy: return CreateEntityDummy(position);
-            case EntityModelType.Debris: return CreateEntityDebris(position, colorIndex);
-            case EntityModelType.Gravestone: return CreateEntityGravestone(position);
-            case EntityModelType.Granade: return CreateEntityGranade(position);
-            case EntityModelType.GrassGranade: return CreateEntityGrassGranade(position);
-            case EntityModelType.Smoke: return CreateEntitySmoke(position, colorIndex);
-            default: throw new Exception($"Unknow model data {entityType}");
-        }
-    }
-    public static Entity CreateEntityDummy(DbVector2 position)
-    {
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Dummy,
-            Position = position,
-            Radius = 4.0f,
-            Friction = 0.8f,
-            MaxHealth = 150,
-            Health = 50,
-            ShootingAngle = float.NegativeZero,
-            DeathTimer = float.PositiveInfinity,
-        };
-    }
-    public static Entity CreateEntityWorm(DbVector2 position)
-    {
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Worm,
-            Position = position,
-            Radius = 2.5f,
-            Friction = 0.2f,
-            MaxHealth = 100.0f,
-            Health = 100.0f,
-            ShootingAngle = float.NegativeZero,
-            DeathTimer = float.PositiveInfinity,
-        };
-    }
-    public static Entity CreateEntityGravestone(DbVector2 position)
-    {
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Gravestone,
-            Position = position,
-            Radius = 4f,
-            Friction = 0.2f,
-            ShootingAngle = float.NegativeZero,
-            DeathTimer = float.PositiveInfinity,
-        };
-    }
-    public static Entity CreateEntityGrassGranade(DbVector2 position)
-    {
-        var granade = CreateEntityGranade(position);
-        granade.ModelData = (byte)EntityModelType.GrassGranade;
-        granade.MaxBounceCount = 1;
-        return granade;
-    }
-    public static Entity CreateEntityGranade(DbVector2 position)
-    {
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Granade,
-            Position = position,
-            Radius = 1f,
-            Friction = 0.8f,
-            MaxBounceCount = 3,
-            ShootingAngle = float.NegativeZero,
-            DeathTimer = float.PositiveInfinity,
-        };
-    }
-    public static Entity CreateEntityMissile(DbVector2 position)
-    {
-        var soundIdx = rockets.Play();
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Missile,
-            Position = position,
-            Radius = 3.5f,
-            Friction = 0.8f,
-            MaxBounceCount = 1, //after one bounce it dies (explodes too!)
-            ShootingAngle = float.NegativeZero,
-            DeathTimer = float.PositiveInfinity,
-            SoundIdx = soundIdx,
-        };
-    }
-    public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)
-    {
-        float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Debris,
-            Position = position,
-            Velocity = new(10 * MathF.Cos(rnd()), 10 * MathF.Sin(rnd())),
-            MaxBounceCount = 5,
-            Radius = 0.8f,
-            Friction = 0.8f,
-            ShootingAngle = float.NegativeZero,
-            CustomColorIndex = colorIndex,
-            DeathTimer = float.PositiveInfinity,
-        };
-    }
-    public static Entity CreateEntitySmoke(DbVector2 position, byte colorIndex = 0)
-    {
-        float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);
-        return new Entity()
-        {
-            Id = IdTracker++,
-            ModelData = (uint)EntityModelType.Smoke,
-            Position = position,
-            Velocity = new(3 * MathF.Cos(rnd()), 4 * MathF.Sin(rnd())),
-            MaxBounceCount = 2,
-            Radius = 1.2f,
-            Friction = 0.2f,
-            ShootingAngle = float.NegativeZero,
-            CustomColorIndex = colorIndex,
-            ExtraGravityForce = -2.1f,
-            DeathTimer = rnd()*8
-        };
-    }
+    //public static Entity CreateEntity(DbVector2 position, EntityModelType entityType, byte colorIndex = 0)
+    //{
+    //    switch (entityType)
+    //    {
+    //        case EntityModelType.Worm: return CreateEntityWorm(position);
+    //        case EntityModelType.Missile: return CreateEntityMissile(position);
+    //        case EntityModelType.Dummy: return CreateEntityDummy(position);
+    //        case EntityModelType.Debris: return CreateEntityDebris(position, colorIndex);
+    //        case EntityModelType.Gravestone: return CreateEntityGravestone(position);
+    //        case EntityModelType.Granade: return CreateEntityGranade(position);
+    //        case EntityModelType.GrassGranade: return CreateEntityGrassGranade(position);
+    //        case EntityModelType.Smoke: return CreateEntitySmoke(position, colorIndex);
+    //        default: throw new Exception($"Unknow model data {entityType}");
+    //    }
+    //}
+    //public static Entity CreateEntityDummy(DbVector2 position)
+    //{
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Dummy,
+    //        Position = position,
+    //        Radius = 4.0f,
+    //        Friction = 0.8f,
+    //        MaxHealth = 150,
+    //        Health = 50,
+    //        ShootingAngle = float.NegativeZero,
+    //        DeathTimer = float.PositiveInfinity,
+    //    };
+    //}
+    //public static Entity CreateEntityWorm(DbVector2 position)
+    //{
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Worm,
+    //        Position = position,
+    //        Radius = 2.5f,
+    //        Friction = 0.2f,
+    //        MaxHealth = 100.0f,
+    //        Health = 100.0f,
+    //        ShootingAngle = float.NegativeZero,
+    //        DeathTimer = float.PositiveInfinity,
+    //    };
+    //}
+    //public static Entity CreateEntityGravestone(DbVector2 position)
+    //{
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Gravestone,
+    //        Position = position,
+    //        Radius = 4f,
+    //        Friction = 0.2f,
+    //        ShootingAngle = float.NegativeZero,
+    //        DeathTimer = float.PositiveInfinity,
+    //    };
+    //}
+    //public static Entity CreateEntityGrassGranade(DbVector2 position)
+    //{
+    //    var granade = CreateEntityGranade(position);
+    //    granade.ModelData = (byte)EntityModelType.GrassGranade;
+    //    granade.MaxBounceCount = 1;
+    //    return granade;
+    //}
+    //public static Entity CreateEntityGranade(DbVector2 position)
+    //{
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Granade,
+    //        Position = position,
+    //        Radius = 1f,
+    //        Friction = 0.8f,
+    //        MaxBounceCount = 3,
+    //        ShootingAngle = float.NegativeZero,
+    //        DeathTimer = float.PositiveInfinity,
+    //    };
+    //}
+    //public static Entity CreateEntityMissile(DbVector2 position)
+    //{
+    //    var soundIdx = rockets.Play();
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Missile,
+    //        Position = position,
+    //        Radius = 3.5f,
+    //        Friction = 0.8f,
+    //        MaxBounceCount = 1, //after one bounce it dies (explodes too!)
+    //        ShootingAngle = float.NegativeZero,
+    //        DeathTimer = float.PositiveInfinity,
+    //        SoundIdx = soundIdx,
+    //    };
+    //}
+    //public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)
+    //{
+    //    float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Debris,
+    //        Position = position,
+    //        Velocity = new(10 * MathF.Cos(rnd()), 10 * MathF.Sin(rnd())),
+    //        MaxBounceCount = 5,
+    //        Radius = 0.8f,
+    //        Friction = 0.8f,
+    //        ShootingAngle = float.NegativeZero,
+    //        CustomColorIndex = colorIndex,
+    //        DeathTimer = float.PositiveInfinity,
+    //    };
+    //}
+    //public static Entity CreateEntitySmoke(DbVector2 position, byte colorIndex = 0)
+    //{
+    //    float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);
+    //    return new Entity()
+    //    {
+    //        ModelData = (uint)EntityModelType.Smoke,
+    //        Position = position,
+    //        Velocity = new(3 * MathF.Cos(rnd()), 4 * MathF.Sin(rnd())),
+    //        MaxBounceCount = 2,
+    //        Radius = 1.2f,
+    //        Friction = 0.2f,
+    //        ShootingAngle = float.NegativeZero,
+    //        CustomColorIndex = colorIndex,
+    //        ExtraGravityForce = -2.1f,
+    //        DeathTimer = rnd()*8
+    //    };
+    //}
 }

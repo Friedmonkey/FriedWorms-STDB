@@ -1,7 +1,32 @@
 using SpacetimeDB;
 
+public enum MapColor
+{
+    Skyblue = 0,
+    Grass1 = 1,
+    Grass2 = 2,
+    Rock1 = 3,
+    Rock2 = 4,
+
+    Worm = 5,
+
+
+    Unknown = 255
+}
 public static partial class Module
 {
+    [Type]
+    public enum GameState
+    {
+        Idle,
+        Reset,
+        GenerateTerrain,
+        GeneratingTerrain,
+        DeployUnits,
+        DeployingUnits,
+        StartPlay,
+        CameraMode,
+    }
     //singleton
     [Table(Name = "Config", Public = true)]
     public partial struct Config
@@ -11,6 +36,15 @@ public static partial class Module
 
         public int MapWidth;
         public int MapHeight;
+        public byte[] Map;
+
+        public uint ControlWormId;
+        public uint CameraTrackingId;
+        public GameState CurrentState;
+        public GameState NextState;
+
+        public bool GameIsStable;
+        public bool PlayerActionComplete;
 
         public int RandomSeed;
     }
@@ -78,12 +112,96 @@ public static partial class Module
     public static void Init(ReducerContext ctx)
     {
         Log.Info("Initializing...");
-        ctx.Db.Config.Insert(new Config()
+        var config = new Config()
         {
             MapWidth = 1024,
             MapHeight = 512,
             RandomSeed = Random.Shared.Next()
-        });
+        };
+
+        config.Map = new byte[config.MapWidth * config.MapHeight];
+        CreateMap(config);
+
+        ctx.Db.Config.Insert(config);
+    }
+
+    static float[] GenerateLayer(int width, float start = 0.5f, int octaves = 8, float bias = 2.0f)
+    {
+        float[] layer = new float[width];
+        float[] NoiseSeed = new float[width];
+
+        for (int i = 0; i < width; i++)
+            NoiseSeed[i] = Random.Shared.NextSingle();
+
+        NoiseSeed[0] = start;
+        PerlinNoise1D(width, NoiseSeed, octaves, bias, ref layer);
+        return layer;
+    }
+    public static void CreateMap(Config config)
+    {
+        //float[] Clouds = GenerateLayer(0.01f);
+        float[] Surface = GenerateLayer(config.MapWidth);
+        float[] Rocks = GenerateLayer(config.MapWidth, 0.9f, 10);
+
+
+        for (int x = 0; x < config.MapWidth; x++)
+        {
+            for (int y = 0; y < config.MapHeight; y++)
+            {
+                byte mapColor = (int)MapColor.Skyblue;
+                //byte mapColor = (DeterministicRandom.Next(500) == 1) ? (byte)MapColor.Cloud :(byte)MapColor.Skyblue;
+
+                //if (y >= Clouds[x] * MapHeight)
+                //{ 
+                //    mapColor = (int)MapColor.Skyblue;
+                //}
+
+                if (y >= Surface[x] * config.MapHeight)
+                {
+                    var rng = Random.Shared.Next(10);
+                    mapColor = rng switch
+                    {
+                        1 => (byte)MapColor.Grass2,
+                        2 => (byte)MapColor.Grass2,
+                        3 => (byte)MapColor.Grass2,
+                        4 => (byte)MapColor.Grass2,
+                        5 => (byte)MapColor.Grass2,
+                        _ => (byte)MapColor.Grass1,
+                    };
+                }
+
+                if (y >= Rocks[x] * config.MapHeight)
+                {
+                    mapColor = (Random.Shared.Next(10) == 1) ? (byte)MapColor.Rock2 : (byte)MapColor.Rock1;
+                }
+                config.Map[y * config.MapWidth + x] = mapColor;
+            }
+        }
+    }
+    static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)
+    {
+        // Used 1D Perlin Noise
+        for (int x = 0; x < nCount; x++)
+        {
+            float fNoise = 0.0f;
+            float fScaleAcc = 0.0f;
+            float fScale = 1.0f;
+
+            for (int o = 0; o < nOctaves; o++)
+            {
+                int nPitch = nCount >> o;
+                int nSample1 = (x / nPitch) * nPitch;
+                int nSample2 = (nSample1 + nPitch) % nCount;
+                float fBlend = (float)(x - nSample1) / (float)nPitch;
+                float fSample = (1.0f - fBlend) * fSeed[nSample1] + fBlend * fSeed[nSample2];
+                fScaleAcc += fScale;
+                fNoise += fSample * fScale;
+                fScale = fScale / fBias;
+            }
+
+            // Scale to seed range
+            fOutput[x] = fNoise / fScaleAcc;
+        }
     }
 
     [Reducer(ReducerKind.ClientConnected)]

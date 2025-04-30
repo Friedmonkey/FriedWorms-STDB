@@ -72,8 +72,8 @@ partial class Program
             DrawTextureScaled(overlayRenderTexture, TARGET_WIDTH * OverlayScale, TARGET_HEIGHT * OverlayScale);
             DrawTextureScaled(UIRenderTexture, TARGET_WIDTH * UiScale, TARGET_HEIGHT * UiScale, zoomAffected:false);
 
-            if (GameIsStable)
-                DrawCircle(4,4,4, Color.Red);
+            //if (GameIsStable)
+            //    DrawCircle(4,4,4, Color.Red);
             EndDrawing();
 
 
