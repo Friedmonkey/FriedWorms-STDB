@@ -435,8 +435,13 @@ namespace SpacetimeDB.Types
                 "AddEntity" => BSATNHelpers.Decode<Reducer.AddEntity>(encodedArgs),
                 "ClearEntities" => BSATNHelpers.Decode<Reducer.ClearEntities>(encodedArgs),
                 "Connect" => BSATNHelpers.Decode<Reducer.Connect>(encodedArgs),
+                "CreateMap" => BSATNHelpers.Decode<Reducer.CreateMap>(encodedArgs),
                 "DeleteEntityByID" => BSATNHelpers.Decode<Reducer.DeleteEntityById>(encodedArgs),
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
+                "HandlePhysics" => BSATNHelpers.Decode<Reducer.HandlePhysics>(encodedArgs),
+                "Jump" => BSATNHelpers.Decode<Reducer.Jump>(encodedArgs),
+                "SetshootingAngle" => BSATNHelpers.Decode<Reducer.SetshootingAngle>(encodedArgs),
+                "ShootWeapon" => BSATNHelpers.Decode<Reducer.ShootWeapon>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };
         }
@@ -461,8 +466,13 @@ namespace SpacetimeDB.Types
                 Reducer.AddEntity args => Reducers.InvokeAddEntity(eventContext, args),
                 Reducer.ClearEntities args => Reducers.InvokeClearEntities(eventContext, args),
                 Reducer.Connect args => Reducers.InvokeConnect(eventContext, args),
+                Reducer.CreateMap args => Reducers.InvokeCreateMap(eventContext, args),
                 Reducer.DeleteEntityById args => Reducers.InvokeDeleteEntityById(eventContext, args),
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
+                Reducer.HandlePhysics args => Reducers.InvokeHandlePhysics(eventContext, args),
+                Reducer.Jump args => Reducers.InvokeJump(eventContext, args),
+                Reducer.SetshootingAngle args => Reducers.InvokeSetshootingAngle(eventContext, args),
+                Reducer.ShootWeapon args => Reducers.InvokeShootWeapon(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
             };
         }

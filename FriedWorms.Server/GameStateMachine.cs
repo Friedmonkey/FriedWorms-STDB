@@ -23,7 +23,7 @@ public static partial class Module
             case GameState.GenerateTerrain:
                 {
                     UserHasControl = false;
-                    CreateMap(config);
+                    CreateMap(ctx);
                     ClearEntities(ctx);
                     //Entities = gameManager.Conn.Db.Entities.Iter().ToList();
                     config.NextState = GameState.GeneratingTerrain;

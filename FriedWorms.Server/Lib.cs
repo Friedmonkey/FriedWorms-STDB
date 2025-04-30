@@ -120,9 +120,8 @@ public static partial class Module
         };
 
         config.Map = new byte[config.MapWidth * config.MapHeight];
-        CreateMap(config);
-
         ctx.Db.Config.Insert(config);
+        CreateMap(ctx);
     }
 
     static float[] GenerateLayer(int width, float start = 0.5f, int octaves = 8, float bias = 2.0f)
@@ -137,8 +136,10 @@ public static partial class Module
         PerlinNoise1D(width, NoiseSeed, octaves, bias, ref layer);
         return layer;
     }
-    public static void CreateMap(Config config)
+    [Reducer]
+    public static void CreateMap(ReducerContext ctx)
     {
+        var config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("no config");
         //float[] Clouds = GenerateLayer(0.01f);
         float[] Surface = GenerateLayer(config.MapWidth);
         float[] Rocks = GenerateLayer(config.MapWidth, 0.9f, 10);
@@ -177,6 +178,7 @@ public static partial class Module
                 config.Map[y * config.MapWidth + x] = mapColor;
             }
         }
+        Log.Info("Map has been created! with " + config.Map.Distinct().Count() + "unique");
     }
     static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)
     {

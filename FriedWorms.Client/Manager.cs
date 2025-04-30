@@ -39,6 +39,7 @@ partial class Program
 
     static void Load()
     {
+        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
         LoadModels();
         MapWidth = Config.MapWidth;
         MapHeight = Config.MapHeight;
@@ -49,6 +50,7 @@ partial class Program
         CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
 
         Map = new byte[MapWidth * MapHeight];
+        LoadBackgrounds();
         //CreateMap();
 
         //Entities = gameManager.Conn.Db.Entities.Iter().ToList();
