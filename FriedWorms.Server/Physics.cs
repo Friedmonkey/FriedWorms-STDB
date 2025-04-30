@@ -4,15 +4,38 @@ namespace SpacetimeDB;
 
 public static partial class Module
 {
-    [Reducer]
-    public static void HandlePhysics(ReducerContext ctx, float elapsedTime)
+    [Table(Name = "physics_schedule", Scheduled = nameof(HandlePhysics), ScheduledAt = nameof(ScheduledAt))]
+    public partial struct PhysicsSchedule
     {
+        [PrimaryKey, AutoInc]
+        public ulong Id;
+        public ScheduleAt ScheduledAt;
+        public Timestamp LastTick; // Add this field
+    }
+
+    [Reducer]
+    public static void HandlePhysics(ReducerContext ctx, PhysicsSchedule schedule)
+    {
+        //if (ctx.Sender != ctx.Identity)
+        //{
+        //    throw new Exception("Reducer HandlePhysics may not be invoked by clients, only via scheduling.");
+        //}
+
+        //var now = ctx.Timestamp.ToStd();
+        //var elapsed = now - schedule.LastTick.ToStd(); // Calculate elapsed time
+        //float elapsedTime = (float)elapsed.TotalMilliseconds;
+        float elapsedTime = 1;
+        // ... your physics logic using 'elapsed' ...
+
+        // Update LastTick for the next schedule
+        // (Insert a new PhysicsSchedule row with updated LastTick)
+
         var Entities = ctx.Db.Entities.Iter().ToList();
         Config config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("No config availible");
         for (int i = 0; i < Entities.Count; i++)
         {
             Entity entity = Entities[i];
-            entity.OnTick(ctx, elapsedTime);
+            //entity.OnTick(ctx, elapsedTime);
 
             if (entity.DeathTimer != float.PositiveInfinity)
                 entity.DeathTimer -= 1 * elapsedTime;
@@ -58,7 +81,7 @@ public static partial class Module
                 if (testPosX < 0) testPosX = 0;
                 if (testPosY < 0) testPosY = 0;
 
-                if (config.Mapp[(int)testPosY * config.MapWidth + (int)testPosX] != (byte)MapColor.Skyblue) //if not sky
+                if (config.Map[(int)testPosY * config.MapWidth + (int)testPosX] != (byte)MapColor.Skyblue) //if not sky
                 {
                     responseX += potentialX - testPosX;
                     responseY += potentialY - testPosY;
@@ -90,11 +113,16 @@ public static partial class Module
 
             if (magVelocity < 0.1f) entity.Stable = true;
 
+            ctx.Db.Entities.Id.Update(entity);
+
             if (entity.Dead)
+            { 
                 entity.OnDeath(ctx, config);
+                ctx.Db.Entities.Delete(entity);
+                Entities.Remove(entity);
+            }
         }
 
-        //remove dead entities
-        Entities.RemoveAll(x => x.Dead);
+        Log.Info($"Looped over {Entities.Count} entities");
     }
 }

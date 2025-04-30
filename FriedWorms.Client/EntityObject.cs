@@ -192,21 +192,21 @@ public static partial class Program
     //        DeathTimer = float.PositiveInfinity,
     //    };
     //}
-    //public static Entity CreateEntityMissile(DbVector2 position)
-    //{
-    //    var soundIdx = rockets.Play();
-    //    return new Entity()
-    //    {
-    //        ModelData = (uint)EntityModelType.Missile,
-    //        Position = position,
-    //        Radius = 3.5f,
-    //        Friction = 0.8f,
-    //        MaxBounceCount = 1, //after one bounce it dies (explodes too!)
-    //        ShootingAngle = float.NegativeZero,
-    //        DeathTimer = float.PositiveInfinity,
-    //        SoundIdx = soundIdx,
-    //    };
-    //}
+    public static Entity CreateEntityMissile(DbVector2 position)
+    {
+        //var soundIdx = rockets.Play();
+        return new Entity()
+        {
+            ModelData = (uint)EntityModelType.Missile,
+            Position = position,
+            Radius = 3.5f,
+            Friction = 0.8f,
+            MaxBounceCount = 1, //after one bounce it dies (explodes too!)
+            ShootingAngle = float.NegativeZero,
+            DeathTimer = float.PositiveInfinity,
+            //SoundIdx = soundIdx,
+        };
+    }
     //public static Entity CreateEntityDebris(DbVector2 position, byte colorIndex = 0)
     //{
     //    float rnd() => (DeterministicRandom.NextSingle() * 2 * MathF.PI);

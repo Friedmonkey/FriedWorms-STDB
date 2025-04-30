@@ -15,10 +15,10 @@ partial class Program
             return;
 
 
-        //if (IsMouseButtonPressed(MouseButton.Right))
-        //{
-        //    Entities.Add(CreateEntityMissile(new(world.X, world.Y)));
-        //}
+        if (IsMouseButtonPressed(MouseButton.Left))
+        {
+            gameManager.Conn.Reducers.AddEntity(CreateEntityMissile(new(world.X, world.Y)));
+        }
         //if (IsMouseButtonPressed(MouseButton.Left))
         //{
         //    var worm = CreateEntityWorm(new(world.X, world.Y));

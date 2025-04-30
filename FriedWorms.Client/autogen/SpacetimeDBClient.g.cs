@@ -24,6 +24,7 @@ namespace SpacetimeDB.Types
             AddTable(Entities = new(conn));
             AddTable(LoggedOutPlayers = new(conn));
             AddTable(Players = new(conn));
+            AddTable(PhysicsSchedule = new(conn));
         }
     }
 

@@ -36,7 +36,7 @@ public static partial class Module
 
         public int MapWidth;
         public int MapHeight;
-        public byte[] Mapp;
+        public List<byte> Map;
 
         public uint ControlWormId;
         public uint CameraTrackingId;
@@ -88,6 +88,8 @@ public static partial class Module
 
         //how many times it can bounce before dying (negative means it dont matter)
         public int MaxBounceCount;
+
+        //[SpacetimeDB.Index.BTree]
         public bool Dead;
         public byte CustomColorIndex;
 
@@ -119,9 +121,14 @@ public static partial class Module
             RandomSeed = Random.Shared.Next()
         };
 
-        config.Mapp = new byte[config.MapWidth * config.MapHeight];
+        config.Map = new(new byte[config.MapWidth * config.MapHeight]);
         ctx.Db.Config.Insert(config);
         CreateMap(ctx);
+
+        ctx.Db.physics_schedule.Insert(new()
+        {
+            ScheduledAt = new ScheduleAt.Interval(TimeSpan.FromMilliseconds(60))
+        });
     }
 
     static float[] GenerateLayer(int width, float start = 0.5f, int octaves = 8, float bias = 2.0f)
@@ -179,12 +186,12 @@ public static partial class Module
                 {
                     mapColor = (Random.Shared.Next(10) == 1) ? (byte)MapColor.Rock2 : (byte)MapColor.Rock1;
                 }
-                config.Mapp[y * config.MapWidth + x] = mapColor;
+                config.Map[y * config.MapWidth + x] = mapColor;
             }
         }
 
         ctx.Db.Config.Id.Update(config);
-        Log.Info("Map has been created! with " + config.Mapp.Distinct().Count() + "unique");
+        Log.Info("Map has been created! with " + config.Map.Distinct().Count() + "unique");
     }
     static void PerlinNoise1D(int nCount, float[] fSeed, int nOctaves, float fBias, ref float[] fOutput)
     {
@@ -242,16 +249,17 @@ public static partial class Module
         Log.Info("Player session logged out.");
     }
 
-    [Reducer]
-    public static void Join(ReducerContext ctx)
-    { 
+    //[Reducer]
+    //public static void Join(ReducerContext ctx)
+    //{ 
         
-    }
-    [Reducer]
-    public static void Leave(ReducerContext ctx)
-    {
+    //}
+    //[Reducer]
+    //public static void Leave(ReducerContext ctx)
+    //{
 
-    }
+    //}
+    [Reducer]
     public static void AddEntity(ReducerContext ctx, Entity entity)
     {
         ctx.Db.Entities.Insert(entity);

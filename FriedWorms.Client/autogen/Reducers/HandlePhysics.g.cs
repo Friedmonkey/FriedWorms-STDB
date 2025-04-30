@@ -12,12 +12,12 @@ namespace SpacetimeDB.Types
 {
     public sealed partial class RemoteReducers : RemoteBase
     {
-        public delegate void HandlePhysicsHandler(ReducerEventContext ctx, float elapsedTime);
+        public delegate void HandlePhysicsHandler(ReducerEventContext ctx, PhysicsSchedule schedule);
         public event HandlePhysicsHandler? OnHandlePhysics;
 
-        public void HandlePhysics(float elapsedTime)
+        public void HandlePhysics(PhysicsSchedule schedule)
         {
-            conn.InternalCallReducer(new Reducer.HandlePhysics(elapsedTime), this.SetCallReducerFlags.HandlePhysicsFlags);
+            conn.InternalCallReducer(new Reducer.HandlePhysics(schedule), this.SetCallReducerFlags.HandlePhysicsFlags);
         }
 
         public bool InvokeHandlePhysics(ReducerEventContext ctx, Reducer.HandlePhysics args)
@@ -25,7 +25,7 @@ namespace SpacetimeDB.Types
             if (OnHandlePhysics == null) return false;
             OnHandlePhysics(
                 ctx,
-                args.ElapsedTime
+                args.Schedule
             );
             return true;
         }
@@ -37,16 +37,17 @@ namespace SpacetimeDB.Types
         [DataContract]
         public sealed partial class HandlePhysics : Reducer, IReducerArgs
         {
-            [DataMember(Name = "elapsedTime")]
-            public float ElapsedTime;
+            [DataMember(Name = "schedule")]
+            public PhysicsSchedule Schedule;
 
-            public HandlePhysics(float ElapsedTime)
+            public HandlePhysics(PhysicsSchedule Schedule)
             {
-                this.ElapsedTime = ElapsedTime;
+                this.Schedule = Schedule;
             }
 
             public HandlePhysics()
             {
+                this.Schedule = new();
             }
 
             string IReducerArgs.ReducerName => "HandlePhysics";

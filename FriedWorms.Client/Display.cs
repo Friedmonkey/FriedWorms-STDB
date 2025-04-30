@@ -47,10 +47,10 @@ partial class Program
                 //}
             }
         }
-
-        foreach (var entity in Entities.Where(e => !e.Dead))
+        for (int i = 0; i < Entities.Count; i++)
         {
-            entity.Draw();
+            if (Entities[i].Dead) continue;
+            Entities[i].Draw();
         }
 
     }
