@@ -1,4 +1,5 @@
-﻿using Raylib_cs;
+﻿using FriedWorms.Common;
+using Raylib_cs;
 using SpacetimeDB.Types;
 using System.Numerics;
 using static Raylib_cs.Raylib;
@@ -48,6 +49,8 @@ partial class Program
         CameraPosY = (MapHeight - TARGET_HEIGHT) / 2;
         CameraPosX = (MapWidth - TARGET_WIDTH) / 4;
         Map = new(new byte[MapWidth * MapHeight]);
+        var DeterministicRandom = new Random(Config.RandomSeed);
+        MapHandeler.CreateMap(DeterministicRandom, ref Map, MapWidth, MapHeight);
         LoadBackgrounds();
         //CreateMap();
 
@@ -56,6 +59,10 @@ partial class Program
         //LoadBackgrounds();
         LoadUI();
     }
+    private static void GameManager_OnExplosionInsert(EventContext context, Explosion row)
+    { 
+        MapHandeler.CreateCircle(ref Map, MapWidth, MapHeight, (int)row.Position.X, (int)row.Position.Y, (int)row.Radius);
+    }
     private static void GameManager_OnEntityInsert(EventContext context, Entity row)
     {
         Entities.Add(row);
@@ -63,7 +70,6 @@ partial class Program
     static void Tick()
     {
         Entities = gameManager.Conn.Db.Entities.Iter().ToList();
-        Map = Config.Map;
 
         //spacegif.Update();
         UpdateMusicStream(music);

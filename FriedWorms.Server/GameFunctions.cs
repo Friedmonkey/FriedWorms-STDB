@@ -9,6 +9,14 @@ public static partial class Module
     static void CreateExplosion(ReducerContext ctx, Config config, Game game, float worldX, float worldY, float radius, float baseDamage, float damageFalloff = 1.5f)
     {
         var colorIndices = MapHandeler.CreateCircle(ref game.Map, config.MapWidth, config.MapHeight, (int)worldX, (int)worldY, (int)radius);
+        ctx.Db.Explosions.Insert(new Explosion()
+        {
+            Position = new DbVector2(worldX, worldY),
+            Radius = radius,
+
+            BaseDamage = baseDamage,
+            DamageFalloff = damageFalloff,
+        });
 
         var currentEntities = ctx.Db.Entities.Iter().Where(e => !e.Dead).ToList();
 
@@ -48,26 +56,19 @@ public static partial class Module
                 float damage = baseDamage * scaledProximity;
 
                 entity.Damage(ctx, config, game, damage);
+                ctx.Db.Entities.Id.Update(entity);
             }
-            ctx.Db.Explosions.Insert(new Explosion() 
-            {
-                Position = new DbVector2(worldX, worldY),
-                Radius = radius,
-
-                BaseDamage = baseDamage,
-                DamageFalloff = damageFalloff,
-            });
         }
 
-        for (int i = 0; i < radius/2; i++)
-        {
-            ctx.Db.Entities.Insert(CreateEntitySmoke(new DbVector2(worldX, worldY)));
-        }
+        //for (int i = 0; i < radius/2; i++)
+        //{
+        //    ctx.Db.Entities.Insert(CreateEntitySmoke(new DbVector2(worldX, worldY)));
+        //}
 
-        foreach (byte colorIdx in colorIndices) 
-        {
-            ctx.Db.Entities.Insert(CreateEntityDebris(new DbVector2(worldX, worldY), colorIdx));
-        }
+        //foreach (byte colorIdx in colorIndices) 
+        //{
+        //    ctx.Db.Entities.Insert(CreateEntityDebris(new DbVector2(worldX, worldY), colorIdx));
+        //}
     }
     //static void CreateImplosion(float worldX, float worldY, float radius, float baseDamage, float damageFalloff = 1.5f)
     //{

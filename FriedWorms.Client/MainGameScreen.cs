@@ -14,7 +14,6 @@ partial class Program
     const int OverlayScale = 4;
     const int UiScale = 4;
     const int BackgroundScale = 4;
-
     static Config Config = null!;
     static Random DeterministicRandom = null!;
     static void MainGame()
@@ -23,7 +22,7 @@ partial class Program
         if (Config is null)
             throw new Exception("Unable to get config from server!");
         DeterministicRandom = new Random(Config.RandomSeed);
-        Console.WriteLine("Map has been created! with " + Config.Map.Distinct().Count() + "unique");
+        Console.WriteLine("Map has been created! with " + Map.Distinct().Count() + "unique");
 
         SetConfigFlags(ConfigFlags.ResizableWindow);
         InitWindow(TARGET_WIDTH*2, TARGET_HEIGHT*2, "Hello World");

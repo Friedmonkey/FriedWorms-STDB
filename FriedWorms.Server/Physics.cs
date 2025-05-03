@@ -31,11 +31,12 @@ public static partial class Module
         // Update LastTick for the next schedule
         // (Insert a new PhysicsSchedule row with updated LastTick)
 
-        var Entities = ctx.Db.Entities.Iter().ToList();
+        //var Entities = ctx.Db.Entities.Iter().ToList();
         Config config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("No config availible");
         Game game = ctx.Db.Game.Id.Find(0) ?? throw new Exception("No game availible");
         for (int j = 0; j < 10; j++)
         {
+            var Entities = ctx.Db.Entities.Iter().ToList();
 
             for (int i = 0; i < Entities.Count; i++)
             {
@@ -123,13 +124,26 @@ public static partial class Module
                 if (entity.Dead)
                 {
                     entity.OnDeath(ctx, config, game);
+                }
+            }
+
+            for (int i = 0; i < Entities.Count; i++)
+            {
+                var entity = Entities[i];
+
+                //ctx.Db.Entities.Id.Update(entity);
+                if (entity.Dead)
+                {
                     ctx.Db.Entities.Delete(entity);
                     Entities.Remove(entity);
+                    //i--;
                 }
             }
         }
 
 
-        Log.Info($"Looped over {Entities.Count} entities");
+
+
+        //Log.Info($"Looped over {Entities.Count} entities");
     }
 }

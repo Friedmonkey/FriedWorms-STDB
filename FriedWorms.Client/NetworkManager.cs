@@ -1,14 +1,15 @@
 ﻿using SpacetimeDB;
 using SpacetimeDB.Types;
-using static SpacetimeDB.RemoteTableHandle<SpacetimeDB.Types.EventContext, SpacetimeDB.Types.Entity>;
 
 namespace FriedWorms.Client;
 
+public delegate void DbEvent<T>(EventContext context, T row);
 public class NetworkManager
 {
     public event Action? OnConnected;
     public event Action? OnSubscriptionApplied;
-    public event RowEventHandler? OnEntityInsert;
+    public DbEvent<Entity>? OnEntityInsert;
+    public DbEvent<Explosion>? OnExplosionInsert;
 
 
     public DbConnection Conn { get; private set; }
@@ -43,13 +44,15 @@ public class NetworkManager
 
         OnConnected?.Invoke();
         if (OnEntityInsert != null)
-            _conn.Db.Entities.OnInsert += OnEntityInsert!;
+            _conn.Db.Entities.OnInsert += OnEntityInsert.Invoke;
+
+        if (OnExplosionInsert != null)
+            _conn.Db.Explosions.OnInsert += OnExplosionInsert.Invoke;
+
 
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
-            .Subscribe([
-                "SELECT Id, MapWidth, MapHeight, RandomSeed, ControlWormId, CameraTrackingId FROM Config"
-            ]);
+            .SubscribeToAllTables();
 
         connected = true;
     }

@@ -10,6 +10,7 @@ partial class Program
     static void Main(string[] args)
     {
         gameManager = new NetworkManager();
+        gameManager.OnExplosionInsert += GameManager_OnExplosionInsert;
         gameManager.OnEntityInsert += GameManager_OnEntityInsert;
         string serverUrl = string.Empty;
 

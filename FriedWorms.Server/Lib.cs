@@ -131,7 +131,7 @@ public static partial class Module
 
         ctx.Db.physics_schedule.Insert(new()
         {
-            ScheduledAt = new ScheduleAt.Interval(TimeSpan.FromMilliseconds(60))
+            ScheduledAt = new ScheduleAt.Interval(TimeSpan.FromSeconds(2))
         });
     }
 
@@ -146,6 +146,7 @@ public static partial class Module
         MapHandeler.CreateMap(DeterministicRandom, ref game.Map, config.MapWidth, config.MapHeight);
 
         ctx.Db.Config.Id.Update(config);
+        ctx.Db.Game.Id.Update(game);
         Log.Info("Map has been created! with " + game.Map.Distinct().Count() + "unique");
     }
     
@@ -222,6 +223,10 @@ public static partial class Module
             ctx.Db.Entities.Delete(entity);
         foreach (var explosion in ctx.Db.Explosions.Iter())
             ctx.Db.Explosions.Delete(explosion);
+        foreach (var player in ctx.Db.Players.Iter())
+            ctx.Db.Players.Delete(player);
+        foreach (var player in ctx.Db.LoggedOutPlayers.Iter())
+            ctx.Db.LoggedOutPlayers.Delete(player);
 
         var config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("no config found!");
         config.RandomSeed = Random.Shared.Next();
