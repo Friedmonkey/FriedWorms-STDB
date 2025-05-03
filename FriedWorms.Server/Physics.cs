@@ -17,6 +17,12 @@ public static partial class Module
     [Reducer]
     public static void HandlePhysics(ReducerContext ctx, PhysicsSchedule schedule)
     {
+        //if (schedule.Id != 79)
+        //{
+        //    ctx.Db.physics_schedule.Id.Delete(schedule.Id);
+        //    schedule.Id = 79;
+        //    Log.Debug("physics started!");
+        //}
         //if (ctx.Sender != ctx.Identity)
         //{
         //    throw new Exception("Reducer HandlePhysics may not be invoked by clients, only via scheduling.");
@@ -34,13 +40,14 @@ public static partial class Module
         //var Entities = ctx.Db.Entities.Iter().ToList();
         Config config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("No config availible");
         Game game = ctx.Db.Game.Id.Find(0) ?? throw new Exception("No game availible");
-        //for (int j = 0; j < 10; j++)
+        for (int j = 0; j < 2; j++)
         {
-            var Entities = ctx.Db.Entities.Iter().ToList();
+            //var Entities = ctx.Db.Entities.Iter().ToList();
 
-            for (int i = 0; i < Entities.Count; i++)
+            //for (int i = 0; i < Entities.Count; i++)
+            foreach (var dbEntity in ctx.Db.Entities.Iter())
             {
-                Entity entity = Entities[i];
+                Entity entity = dbEntity;
                 //entity.OnTick(ctx, elapsedTime);
 
                 if (entity.DeathTimer != float.PositiveInfinity)
@@ -121,29 +128,34 @@ public static partial class Module
 
                 ctx.Db.Entities.Id.Update(entity);
 
-                if (entity.Dead)
-                {
-                    //entity.OnDeath(ctx, config, game);
-                }
+                //if (entity.Dead)
+                //{
+                //    //entity.OnDeath(ctx, config, game);
+                //}
             }
+            //ctx.Identity.
 
-            for (int i = 0; i < Entities.Count; i++)
+            //for (int i = 0; i < Entities.Count; i++)
+            foreach (var entity in ctx.Db.Entities.Iter().Where(e => e.Dead))
             {
-                var entity = Entities[i];
+                ctx.Db.Entities.Id.Delete(entity.Id);
+
+                //var entity = Entities[i];
 
                 //ctx.Db.Entities.Id.Update(entity);
-                if (entity.Dead)
-                {
-                    ctx.Db.Entities.Id.Delete(entity.Id);
-                    Entities.Remove(entity);
-                    //i--;
-                }
+                //if (entity.Dead)
+                //{
+                //    ctx.Db.Entities.Id.Delete(entity.Id);
+                //    Entities.Remove(entity);
+                //    //i--;
+                //}
             }
         }
 
 
 
-
+        //Thread.Sleep(50);
         //Log.Info($"Looped over {Entities.Count} entities");
+        //HandlePhysics(ctx, schedule);
     }
 }

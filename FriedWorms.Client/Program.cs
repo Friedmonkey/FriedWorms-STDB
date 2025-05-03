@@ -50,13 +50,18 @@ partial class Program
         try
         {
             // loop until cancellation token
+            while (!ct.IsCancellationRequested && !(gameManager.IsConnected && gameManager.Subscribed))
+            {
+                conn.FrameTick();
+                Thread.Sleep(100);
+            }
+
+            Console.WriteLine("Connection success enering fast ticking mode");
+
             while (!ct.IsCancellationRequested)
             {
                 conn.FrameTick();
-
-                //ProcessCommands(conn.Reducers);
-
-                Thread.Sleep(100);
+                Thread.Sleep(1);
             }
         }
         finally
