@@ -75,8 +75,15 @@ partial class Program
     }
     private static void GameManager_OnEntityUpdate(EventContext context, Entity oldRow, Entity newRow)
     {
-        Entities.Remove(oldRow);
-        Entities.Add(newRow);
+        //Entities.Remove(oldRow);
+        //Entities.Add(newRow);
+        var oldEntity = Entities.FirstOrDefault(e => e.Id == oldRow.Id);
+        if (oldEntity is not null)
+        { 
+            oldEntity.Position = newRow.Position;
+            oldEntity.Acceleration = newRow.Acceleration;
+            oldEntity.Velocity = newRow.Velocity;
+        }
     }
     private static void GameManager_OnEntityDelete(EventContext context, Entity row)
     {

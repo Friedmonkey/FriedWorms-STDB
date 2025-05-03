@@ -40,7 +40,7 @@ public static partial class Module
         //var Entities = ctx.Db.Entities.Iter().ToList();
         Config config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("No config availible");
         Game game = ctx.Db.Game.Id.Find(0) ?? throw new Exception("No game availible");
-        for (int j = 0; j < 2; j++)
+        //for (int j = 0; j < 2; j++)
         {
             //var Entities = ctx.Db.Entities.Iter().ToList();
 
@@ -155,7 +155,7 @@ public static partial class Module
 
 
         //Thread.Sleep(50);
-        //Log.Info($"Looped over {Entities.Count} entities");
+        //Log.Info($"physycs step complete");
         //HandlePhysics(ctx, schedule);
     }
 }
