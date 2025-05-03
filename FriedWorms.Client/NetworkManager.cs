@@ -47,10 +47,10 @@ public class NetworkManager
 
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
-            .SubscribeToAllTables();
-            //.Subscribe([
-            //    "SELECT * FROM Config"
-            //]);
+            .Subscribe([
+                "SELECT Id, MapWidth, MapHeight, RandomSeed, ControlWormId, CameraTrackingId FROM Config"
+            ]);
+
         connected = true;
     }
 

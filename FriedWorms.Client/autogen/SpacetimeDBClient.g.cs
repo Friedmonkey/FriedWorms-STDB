@@ -22,6 +22,8 @@ namespace SpacetimeDB.Types
         {
             AddTable(Config = new(conn));
             AddTable(Entities = new(conn));
+            AddTable(Explosions = new(conn));
+            AddTable(Game = new(conn));
             AddTable(LoggedOutPlayers = new(conn));
             AddTable(Players = new(conn));
             AddTable(PhysicsSchedule = new(conn));
@@ -441,6 +443,7 @@ namespace SpacetimeDB.Types
                 "Disconnect" => BSATNHelpers.Decode<Reducer.Disconnect>(encodedArgs),
                 "HandlePhysics" => BSATNHelpers.Decode<Reducer.HandlePhysics>(encodedArgs),
                 "Jump" => BSATNHelpers.Decode<Reducer.Jump>(encodedArgs),
+                "Reset" => BSATNHelpers.Decode<Reducer.Reset>(encodedArgs),
                 "SetshootingAngle" => BSATNHelpers.Decode<Reducer.SetshootingAngle>(encodedArgs),
                 "ShootWeapon" => BSATNHelpers.Decode<Reducer.ShootWeapon>(encodedArgs),
                 var reducer => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")
@@ -472,6 +475,7 @@ namespace SpacetimeDB.Types
                 Reducer.Disconnect args => Reducers.InvokeDisconnect(eventContext, args),
                 Reducer.HandlePhysics args => Reducers.InvokeHandlePhysics(eventContext, args),
                 Reducer.Jump args => Reducers.InvokeJump(eventContext, args),
+                Reducer.Reset args => Reducers.InvokeReset(eventContext, args),
                 Reducer.SetshootingAngle args => Reducers.InvokeSetshootingAngle(eventContext, args),
                 Reducer.ShootWeapon args => Reducers.InvokeShootWeapon(eventContext, args),
                 _ => throw new ArgumentOutOfRangeException("Reducer", $"Unknown reducer {reducer}")

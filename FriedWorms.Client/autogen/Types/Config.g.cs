@@ -19,20 +19,10 @@ namespace SpacetimeDB.Types
         public int MapWidth;
         [DataMember(Name = "MapHeight")]
         public int MapHeight;
-        [DataMember(Name = "Map")]
-        public System.Collections.Generic.List<byte> Map;
         [DataMember(Name = "ControlWormId")]
         public uint ControlWormId;
         [DataMember(Name = "CameraTrackingId")]
         public uint CameraTrackingId;
-        [DataMember(Name = "CurrentState")]
-        public GameState CurrentState;
-        [DataMember(Name = "NextState")]
-        public GameState NextState;
-        [DataMember(Name = "GameIsStable")]
-        public bool GameIsStable;
-        [DataMember(Name = "PlayerActionComplete")]
-        public bool PlayerActionComplete;
         [DataMember(Name = "RandomSeed")]
         public int RandomSeed;
 
@@ -40,32 +30,21 @@ namespace SpacetimeDB.Types
             uint Id,
             int MapWidth,
             int MapHeight,
-            System.Collections.Generic.List<byte> Map,
             uint ControlWormId,
             uint CameraTrackingId,
-            GameState CurrentState,
-            GameState NextState,
-            bool GameIsStable,
-            bool PlayerActionComplete,
             int RandomSeed
         )
         {
             this.Id = Id;
             this.MapWidth = MapWidth;
             this.MapHeight = MapHeight;
-            this.Map = Map;
             this.ControlWormId = ControlWormId;
             this.CameraTrackingId = CameraTrackingId;
-            this.CurrentState = CurrentState;
-            this.NextState = NextState;
-            this.GameIsStable = GameIsStable;
-            this.PlayerActionComplete = PlayerActionComplete;
             this.RandomSeed = RandomSeed;
         }
 
         public Config()
         {
-            this.Map = new();
         }
     }
 }

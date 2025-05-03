@@ -1,4 +1,5 @@
-﻿using static Module;
+﻿using FriedWorms.Common;
+using static Module;
 
 namespace SpacetimeDB;
 
@@ -18,7 +19,7 @@ public enum EntityModelType : uint
 
 public static partial class Module
 {
-    public static void Damage(this Entity entity, ReducerContext ctx, Config config, float damage)
+    public static void Damage(this Entity entity, ReducerContext ctx, Config config, Game game, float damage)
     {
         if (entity.MaxHealth == 0) //entity cant take damage
             return;
@@ -27,7 +28,7 @@ public static partial class Module
         if (entity.Health <= 0)
         {
             entity.Dead = true;
-            entity.OnDeath(ctx, config);
+            entity.OnDeath(ctx, config, game);
         }
     }
     public static void OnTick(this Entity entity, ReducerContext ctx, float elapsedTime)
@@ -44,15 +45,15 @@ public static partial class Module
                 break;
         }
     }
-    public static void OnDeath(this Entity entity, ReducerContext ctx, Config config)
+    public static void OnDeath(this Entity entity, ReducerContext ctx, Config config, Game game)
     {
         switch ((EntityModelType)entity.ModelData)
         {
             case EntityModelType.Missile:
-                CreateExplosion(ctx, config, entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
+                CreateExplosion(ctx, config, game, entity.Position.X, entity.Position.Y, 20.0f, 85, 0.2f);
                 break;
             case EntityModelType.Granade:
-                CreateExplosion(ctx, config, entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
+                CreateExplosion(ctx, config, game, entity.Position.X, entity.Position.Y, 15.0f, 90, 0.1f);
                 break;
             //case EntityModelType.GrassGranade:
             //    CreateImplosion(entity.Position.X, entity.Position.Y, 15.0f, 10, 0.1f);

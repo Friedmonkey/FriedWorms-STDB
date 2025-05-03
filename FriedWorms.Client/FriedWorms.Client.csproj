@@ -25,4 +25,8 @@
     <EmbeddedResource Include="Assets/Images/*.jpg" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\FriedWorms.Common\FriedWorms.Common.csproj" />
+  </ItemGroup>
+
 </Project>

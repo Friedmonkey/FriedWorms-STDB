@@ -1,4 +1,5 @@
-﻿using static Module;
+﻿using FriedWorms.Common;
+using static Module;
 
 namespace SpacetimeDB;
 
@@ -7,16 +8,16 @@ public static partial class Module
     static bool GameIsStable = false;
     static bool PlayerActionComplete = false;
     static bool UserHasControl = true;
-    static void ExecuteStateMachine(ReducerContext ctx, Config config)
+    static void ExecuteStateMachine(ReducerContext ctx, Config config, Game game)
     {
-        switch (config.CurrentState)
+        switch ((GameState)game.CurrentState)
         {
             case GameState.Idle:
                 break;
             case GameState.Reset:
                 {
                     UserHasControl = false;
-                    config.NextState = GameState.GenerateTerrain;
+                    game.NextState = (byte)GameState.GenerateTerrain;
                 }
                 break;
             
@@ -26,14 +27,14 @@ public static partial class Module
                     CreateMap(ctx);
                     ClearEntities(ctx);
                     //Entities = gameManager.Conn.Db.Entities.Iter().ToList();
-                    config.NextState = GameState.GeneratingTerrain;
+                    game.NextState = (byte)GameState.GeneratingTerrain;
                 }
                 break;
             
             case GameState.GeneratingTerrain:
                 {
                     UserHasControl = false;
-                    config.NextState = GameState.DeployUnits;
+                    game.NextState = (byte)GameState.DeployUnits;
                 }
                 break;
             
@@ -45,7 +46,7 @@ public static partial class Module
                     ctx.Db.Entities.Insert(worm);
                     config.ControlWormId = worm.Id;
                     config.CameraTrackingId = config.ControlWormId;
-                    config.NextState = GameState.DeployingUnits;
+                    game.NextState = (byte)GameState.DeployingUnits;
                 }
                 break;
             
@@ -55,7 +56,7 @@ public static partial class Module
                     if (GameIsStable)
                     {
                         PlayerActionComplete = false;
-                        config.NextState = GameState.StartPlay;
+                        game.NextState = (byte)GameState.StartPlay;
                     }
                 }
                 break;
@@ -64,7 +65,7 @@ public static partial class Module
                 {
                     UserHasControl = true;
                     if (PlayerActionComplete)
-                        config.NextState = GameState.CameraMode;
+                        game.NextState = (byte)GameState.CameraMode;
                 }
                 break;
             
@@ -76,14 +77,14 @@ public static partial class Module
                     if (GameIsStable)
                     {
                         config.CameraTrackingId = config.ControlWormId;
-                        config.NextState = GameState.StartPlay;
+                        game.NextState = (byte)GameState.StartPlay;
                     }
                 }
                 break;
             
-            default: throw new Exception("Unknown game state:"+config.CurrentState);
+            default: throw new Exception("Unknown game state:"+game.CurrentState);
         }
 
-        config.CurrentState = config.NextState;
+        game.CurrentState = game.NextState;
     }
 }
