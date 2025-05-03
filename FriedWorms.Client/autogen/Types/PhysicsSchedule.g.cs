@@ -17,18 +17,14 @@ namespace SpacetimeDB.Types
         public ulong Id;
         [DataMember(Name = "ScheduledAt")]
         public SpacetimeDB.ScheduleAt ScheduledAt;
-        [DataMember(Name = "LastTick")]
-        public SpacetimeDB.Timestamp LastTick;
 
         public PhysicsSchedule(
             ulong Id,
-            SpacetimeDB.ScheduleAt ScheduledAt,
-            SpacetimeDB.Timestamp LastTick
+            SpacetimeDB.ScheduleAt ScheduledAt
         )
         {
             this.Id = Id;
             this.ScheduledAt = ScheduledAt;
-            this.LastTick = LastTick;
         }
 
         public PhysicsSchedule()

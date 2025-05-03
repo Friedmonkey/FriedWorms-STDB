@@ -51,10 +51,16 @@ partial class Program
         Map = new(new byte[MapWidth * MapHeight]);
         var DeterministicRandom = new Random(Config.RandomSeed);
         MapHandeler.CreateMap(DeterministicRandom, ref Map, MapWidth, MapHeight);
+        var explosions = gameManager.Conn.Db.Explosions.Iter().ToList();
+        foreach (var row in explosions)
+        {
+            MapHandeler.CreateCircle(ref Map, MapWidth, MapHeight, (int)row.Position.X, (int)row.Position.Y, (int)row.Radius);
+        }
+
         LoadBackgrounds();
         //CreateMap();
 
-        //Entities = gameManager.Conn.Db.Entities.Iter().ToList();
+        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
 
         //LoadBackgrounds();
         LoadUI();
@@ -67,9 +73,18 @@ partial class Program
     {
         Entities.Add(row);
     }
+    private static void GameManager_OnEntityUpdate(EventContext context, Entity oldRow, Entity newRow)
+    {
+        Entities.Remove(oldRow);
+        Entities.Add(newRow);
+    }
+    private static void GameManager_OnEntityDelete(EventContext context, Entity row)
+    {
+        Entities.Remove(row);
+    }
     static void Tick()
     {
-        Entities = gameManager.Conn.Db.Entities.Iter().ToList();
+        //Entities = gameManager.Conn.Db.Entities.Iter().ToList();
 
         //spacegif.Update();
         UpdateMusicStream(music);

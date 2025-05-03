@@ -131,7 +131,7 @@ public static partial class Module
 
         ctx.Db.physics_schedule.Insert(new()
         {
-            ScheduledAt = new ScheduleAt.Interval(TimeSpan.FromSeconds(2))
+            ScheduledAt = new ScheduleAt.Interval(TimeSpan.FromMilliseconds(100))
         });
     }
 

@@ -11,7 +11,7 @@ public static partial class Module
         [PrimaryKey, AutoInc]
         public ulong Id;
         public ScheduleAt ScheduledAt;
-        public Timestamp LastTick; // Add this field
+        //public Timestamp LastTick; // Add this field
     }
 
     [Reducer]
@@ -34,7 +34,7 @@ public static partial class Module
         //var Entities = ctx.Db.Entities.Iter().ToList();
         Config config = ctx.Db.Config.Id.Find(0) ?? throw new Exception("No config availible");
         Game game = ctx.Db.Game.Id.Find(0) ?? throw new Exception("No game availible");
-        for (int j = 0; j < 10; j++)
+        //for (int j = 0; j < 10; j++)
         {
             var Entities = ctx.Db.Entities.Iter().ToList();
 
@@ -123,7 +123,7 @@ public static partial class Module
 
                 if (entity.Dead)
                 {
-                    entity.OnDeath(ctx, config, game);
+                    //entity.OnDeath(ctx, config, game);
                 }
             }
 
@@ -134,7 +134,7 @@ public static partial class Module
                 //ctx.Db.Entities.Id.Update(entity);
                 if (entity.Dead)
                 {
-                    ctx.Db.Entities.Delete(entity);
+                    ctx.Db.Entities.Id.Delete(entity.Id);
                     Entities.Remove(entity);
                     //i--;
                 }

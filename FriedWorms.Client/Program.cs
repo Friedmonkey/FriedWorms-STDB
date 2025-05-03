@@ -10,8 +10,12 @@ partial class Program
     static void Main(string[] args)
     {
         gameManager = new NetworkManager();
-        gameManager.OnExplosionInsert += GameManager_OnExplosionInsert;
         gameManager.OnEntityInsert += GameManager_OnEntityInsert;
+        gameManager.OnEntityUpdate += GameManager_OnEntityUpdate;
+        gameManager.OnEntityDelete += GameManager_OnEntityDelete;
+
+        gameManager.OnExplosionInsert += GameManager_OnExplosionInsert;
+
         string serverUrl = string.Empty;
 
         if (File.Exists("../../../../server.txt"))

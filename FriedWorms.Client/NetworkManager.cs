@@ -4,11 +4,16 @@ using SpacetimeDB.Types;
 namespace FriedWorms.Client;
 
 public delegate void DbEvent<T>(EventContext context, T row);
+public delegate void DbUpdateEvent<T>(EventContext context, T oldRow, T newRow);
 public class NetworkManager
 {
     public event Action? OnConnected;
     public event Action? OnSubscriptionApplied;
+
     public DbEvent<Entity>? OnEntityInsert;
+    public DbUpdateEvent<Entity>? OnEntityUpdate;
+    public DbEvent<Entity>? OnEntityDelete;
+
     public DbEvent<Explosion>? OnExplosionInsert;
 
 
@@ -45,14 +50,24 @@ public class NetworkManager
         OnConnected?.Invoke();
         if (OnEntityInsert != null)
             _conn.Db.Entities.OnInsert += OnEntityInsert.Invoke;
+        if (OnEntityUpdate != null)
+            _conn.Db.Entities.OnUpdate += OnEntityUpdate.Invoke;
+        if (OnEntityDelete != null)
+            _conn.Db.Entities.OnDelete += OnEntityDelete.Invoke;
 
         if (OnExplosionInsert != null)
             _conn.Db.Explosions.OnInsert += OnExplosionInsert.Invoke;
 
 
+
         Conn.SubscriptionBuilder()
             .OnApplied(HandleSubscriptionApplied)
-            .SubscribeToAllTables();
+            //.SubscribeToAllTables();
+            .Subscribe([
+                "SELECT * FROM Config",
+                "SELECT * FROM Entities",
+                "SELECT * FROM Explosions",
+            ]);
 
         connected = true;
     }
